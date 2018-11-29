@@ -45,6 +45,11 @@ public interface PtableDao {
 	void resetPtableState(String pid);
 
 	List<PlayTable> getTableByTwoId(String statusId1, String statusId2);
+	
+	
+	//7.15
+	void modifyPlayTableNumbyDelAll(String ppid, String sortNum);
+	
 
 
 	

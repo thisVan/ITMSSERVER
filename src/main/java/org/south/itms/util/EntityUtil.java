@@ -82,7 +82,8 @@ public class EntityUtil {
 //		}
 //		return listDto;
 //	}
-
+	
+	//7.16
 	public static List<PtableDto> ptableDto(List<Terminal> list, List<Period> listPeriod, List<User> listUser,
 			List<PlayTable> listPtable) {
 		List<PtableDto> listDto = new ArrayList<PtableDto>();
@@ -91,7 +92,7 @@ public class EntityUtil {
 			String periodName = checkPeriod(pt.getPeriodId(), listPeriod, 0);
 			String periodTime = checkPeriod(pt.getPeriodId(), listPeriod, 1);
 			String userName = checkName(pt.getUserId(), listUser);
-			PtableDto ptd = new PtableDto(pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(),
+			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(),
 					pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(),
 					pt.getCreateTime(), pt.getMin(), pt.getInsertFlag(), pt.getState());
 			ptd.setTerminalName(terminalName);

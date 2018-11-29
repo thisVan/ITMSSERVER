@@ -372,4 +372,39 @@ public class SqlUpdate {
 			e.printStackTrace();
 		}
 	}
+	
+	//7.15
+	public void updateFilebydelAll(String pid, String[] nums) {
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed())
+				System.out.println("Succeeded connecting to the Database!");
+			
+			for(int i = 0; i < nums.length; i++) {
+				int num=i+1;
+				// statement用来执行SQL语句
+				String insertSql = "INSERT INTO ptable_file"+
+						"(mid, pid, num, deleted)"+
+						"values(?,?,?,?)";
+				PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
+				System.out.println(insertSql);
+				statement.setInt(1, Integer.parseInt(nums[i]));
+				statement.setInt(2, Integer.parseInt(pid));
+				statement.setInt(3, num);
+				statement.setInt(4, 0);
+				statement.executeUpdate();
+			}
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

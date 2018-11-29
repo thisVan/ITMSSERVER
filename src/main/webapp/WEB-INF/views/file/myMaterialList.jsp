@@ -108,14 +108,14 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/searchMyFile.do'
-    		    ,height: 550
+    		    //,height: 550
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名', fixed: true, sort: true}
-    		      ,{field:'terminalName',width:200, event: 'set3', title: '终端名(已智能选择待绑定)', fixed: true, sort: true
+    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名',  sort: true}
+    		      ,{field:'terminalName',width:200, event: 'set3', title: '终端名(已智能选择待绑定)',  sort: true
     		    	  ,templet: function(d){
     		    		  var tis1 = d.tis;
       		    		  var tname = d.terminal;
@@ -123,7 +123,7 @@
       		    		  var mid = d.mid;
       		    		  console.log(name);
       		    		  if(tis1 == "0"){
-      		    			 var content = '<select name="terminal' + mid + '" id="terminal' + mid + '" style="width: 100px; height: 35px;" lay-filter="test"> ';
+      		    			 var content = '<select lay-ignore name="terminal' + mid + '" id="terminal' + mid + '" style="width: 150px; height: 30px;" lay-filter="test"> ';
       		    			 for(var i = 0; i < terminalVal.length; i++){
       		    				 if(name == terminalVal[i].terminalName){
       		    					content = content + ' <option value="' + terminalVal[i].terminalId + '" selected>' + terminalVal[i].terminalName + '</option> ';
@@ -225,16 +225,29 @@
     								});
     			    	  });
     				    }
-    		  ,getTisData: function(){ //获取选中数据
+    		  ,getTisData: function(){ //获取选中数据，2018.7.11 增加判断素材分辨率与终端分辨率是否相同功能 张一鸣
 			      var checkStatus = table.checkStatus('flagTwo')
 			      ,data = checkStatus.data;
 			      var tids = [];
 			      var flaglen = 0;
+			      var flagresolution=0;
 			      for(var i = 0; i < data.length; i++){
 			    	  var mid = data[i].mid;
+			    	  var mresolution=data[i].resolution;
 			    	  var obj = document.getElementById("terminal" + mid);
 			    	  if(obj != null){
-			    		  var tid = obj.value;
+			    		  var tid = obj.value;//获取到终端id
+			    		  for(var j=0;j< terminalVal.length; j++)
+			    			  {
+			    			  	if(tid==terminalVal[j].terminalId)
+			    			  		{
+			    			  			var tledresolution=terminalVal[j].ledLength+'X'+terminalVal[j].ledWidth;
+			    			  			if(tledresolution!=mresolution)
+			    			  				{flagresolution=flagresolution+1;}
+			    			  				
+			    			  		}
+			    			  }
+			    		  
 			    		  tids.push(mid + "-" + tid);
 			    	  }else{
 			    		  flaglen = flaglen + 1;
@@ -247,6 +260,32 @@
 			      if(tids.length == 0){
 			    	  layer.msg('请选择要保存的素材!',{icon:6,time:1500});
 			    	  return ;
+			      }
+			      
+			      if(flagresolution!=0){
+			    	  //批量保存
+				      layer.confirm('素材分辨率与所选终端LED分辨率不一致，确定绑定吗', function(index){
+					         //obj.del();
+					         layer.close(index);
+					         console.log(tids.length);
+					         $.ajax({
+									type: "POST",
+									url: "<%=request.getContextPath()%>/material/tidMaterial.do",
+									data: {"tid":tids},
+									traditional: true,
+									dataType : "json",
+									success : function(msg){
+										var value = msg.toString();
+										if(value=="true"){
+											terminalVal = [];
+									    	getAllTerminal();
+											init();
+											layer.msg('保存成功!',{icon:6,time:4000});
+										}
+									}
+								});
+			    	  });
+			    	  return;
 			      }
 			      
 			      //批量保存
@@ -333,6 +372,7 @@
     			  var name = filePath.split("/");
     			  var realname = name[name.length - 1];
     			  document.getElementById("videoView").value = realname;
+    			 
     			  if(obj.event === 'mediaView'){
     				  $.ajax({
     						type:"POST",
@@ -445,7 +485,7 @@
 			
 		<div class="layui-btn-container">
 	        	<button class="layui-btn operatorTable" function="getTisData" data-type="getTisData">
-			      <i class="layui-icon">&#xe618;</i>绑定终端
+			      <i class="layui-icon">&#xe605;</i>绑定终端
 			    </button>
 	        	<button class="layui-btn operatorTable" function="getUpdateData" data-type="getUpdateData">
 			      <i class="layui-icon">&#xe642;</i>修改

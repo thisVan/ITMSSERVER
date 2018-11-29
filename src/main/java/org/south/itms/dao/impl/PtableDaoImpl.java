@@ -1,12 +1,15 @@
 package org.south.itms.dao.impl;
 
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.Table;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,6 +20,7 @@ import org.south.itms.entity.Material;
 import org.south.itms.entity.PlayTable;
 import org.south.itms.util.SqlUpdate;
 import org.south.netty.NettyChannelMap;
+import org.south.netty.TableAutoGenerate;
 import org.south.netty.msg.DataKey;
 import org.south.netty.msg.InsertDto;
 import org.south.netty.msg.MsgType;
@@ -308,6 +312,20 @@ public class PtableDaoImpl implements PtableDao {
 		List<PlayTable> list = query.list();
 		return list;
 	}
+
+	//7.15
+	@Override
+	public void modifyPlayTableNumbyDelAll(String ppid, String sortNum) {
+		// TODO Auto-generated method stub
+		String[] nums = sortNum.split(",");
+		TableAutoGenerate tableAutoGenerate=new TableAutoGenerate();
+		tableAutoGenerate.delAllSqlPlayFile(ppid);
+		SqlUpdate su = new SqlUpdate();
+		su.updateFilebydelAll(ppid, nums);
+		
+	}
+	
+	
 	
 
 }

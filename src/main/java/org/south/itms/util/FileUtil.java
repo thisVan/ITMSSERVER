@@ -287,15 +287,15 @@ public class FileUtil {
 	}
 	
 	public static String getSize(String path) {
-		String size = "0Mb";
+		String size = "0MB";
 		File source = new File(path);
         long fileSize = source.length();
         if(fileSize != 0) {
         	double d = (double)fileSize/1024/1024;
-            DecimalFormat df = new DecimalFormat("#,###.00");
+            DecimalFormat df = new DecimalFormat("#,##0.##");
             //System.out.println(df.format(d));
             //System.out.println(fileSize);
-            size = df.format(d) + "Mb";
+            size = df.format(d) + "MB";
             System.out.println(size);
         }
 		return size;
@@ -382,15 +382,15 @@ public class FileUtil {
 //        return "" + width + "X" + height;
 //	}
 
-	public static void main(String[] args) {
-		long start=System.currentTimeMillis();   //获取开始时间  
-		FileUtil.getSize("D:/迅雷下载/7号房的礼物_bd.mp4");  //测试的代码段  
-		long end=System.currentTimeMillis(); //获取结束时间  
-		System.out.println("程序运行时间： "+(end-start)+"ms");
-		
-		long start1=System.currentTimeMillis();   //获取开始时间  
-		//String s = FileUtil.getResolution("C:/Users/MrLiao/Desktop/南方/视频/1024 (5).mp4"); //测试的代码段  
-		long end1=System.currentTimeMillis(); //获取结束时间  
-		System.out.println("程序运行时间： "+(end1-start1)+"ms");
-	}
+//	public static void main(String[] args) {
+//		long start=System.currentTimeMillis();   //获取开始时间  
+//		FileUtil.getSize("D:/迅雷下载/[暴走大事件][第五季]第02集_bd.mp4");  //测试的代码段  
+//		long end=System.currentTimeMillis(); //获取结束时间  
+//		System.out.println("程序运行时间： "+(end-start)+"ms");
+//		
+//		long start1=System.currentTimeMillis();   //获取开始时间  
+//		//String s = FileUtil.getResolution("C:/Users/MrLiao/Desktop/南方/视频/1024 (5).mp4"); //测试的代码段  
+//		long end1=System.currentTimeMillis(); //获取结束时间  
+//		System.out.println("程序运行时间： "+(end1-start1)+"ms");
+//	}
 }

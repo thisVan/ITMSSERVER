@@ -195,6 +195,49 @@ public class SqlUtil {
 		return HqlStr;
 	}
 	
+	//排除已有的Mid
+	public static String growSearchHqlTemplate(String entityClass, Map<String, ValueParam> whereMap, String alreadymid,String orderBy) {
+		if(StringUtil.isEmpty(entityClass) || whereMap == null) {
+			return "";
+		}
+		
+		StringBuilder hql = new StringBuilder("");
+		//拼类名
+		hql.append(" from ");
+		hql.append(entityClass);
+		hql.append(" where deleted = 0 ");
+		//拼where的参数字段
+		if(!whereMap.isEmpty()) {
+			for(Map.Entry<String, ValueParam> entry : whereMap.entrySet()) {
+				 hql.append(" and ");
+				 hql.append(entry.getKey());
+				 hql.append(" ");
+				 hql.append(entry.getValue().getSymbol());  //查询要用 =号还是like符号
+				 hql.append(" :");
+				 hql.append(entry.getKey());
+			}
+		}
+		if(!StringUtil.isEmpty(alreadymid))
+		{
+			String notmids=" ( "+alreadymid+" ) ";
+			hql.append(" and ");
+			hql.append("mid not in ");
+			hql.append(notmids);
+		}
+		
+		
+		
+		
+		if(orderBy != null && !"".equals(orderBy)) {
+			 hql.append(" order by ");
+			 hql.append(orderBy);
+		}
+		
+		String HqlStr = hql.toString();
+		System.out.println("生成的search HQL:" + HqlStr);
+		return HqlStr;
+	}
+	
 	//添加日期范围
 	public static String growSearchHqlTemplate(String start, String end, String entityClass, Map<String, ValueParam> whereMap, String orderBy) {
 		if(StringUtil.isEmpty(entityClass) || whereMap == null) {

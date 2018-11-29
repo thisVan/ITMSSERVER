@@ -33,7 +33,8 @@ public interface CommonService {
 	Page pageSearchInsertByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
 
 	Page pageSearchSecondByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
-
+    //7.16
+	Page pageSearchByTemplateHQL(String[] params, String alreadymid,int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
 	void saveVideoFile(org.south.itms.entity.File upload);
 
 	void delFile(String[] fileId);
@@ -126,6 +127,12 @@ public interface CommonService {
 	void saveInsetPlayTable(PlayTable ptable, String mid);
 
 	void deleteItems(String[] itemIds);
+	
+	//7.14
+    boolean copyOneToPlayFile(String pid, String mid,int num);
+    
+    //7.15
+    boolean delOneFromPlayFile(String pid, String mid,int num);
 
  
 }  

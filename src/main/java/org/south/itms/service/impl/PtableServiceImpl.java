@@ -3,6 +3,7 @@ package org.south.itms.service.impl;
 import java.util.List;
 
 import org.south.itms.dao.impl.PtableDao;
+import org.south.itms.dto.Result;
 import org.south.itms.entity.IPTable;
 import org.south.itms.entity.PlayTable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +99,18 @@ public class PtableServiceImpl implements PtableService {
 	@Override
 	public List<PlayTable> getTableByTwoId(String statusId1, String statusId2) {
 		return ptableDao.getTableByTwoId(statusId1, statusId2);
+	}
+
+	//7.15
+	@Override
+	public void modifyPlayTableNumbyDelAll(String ppid, String sortNum) {
+		// TODO Auto-generated method stub
+		ptableDao.modifyPlayTableNumbyDelAll(ppid, sortNum);
 	}  
 	
-	
+	public PlayTable getPlayTableByPid(String pid) {
+		return ptableDao.getById(pid);
+		
+	}
 	
 }

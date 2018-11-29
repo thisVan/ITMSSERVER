@@ -58,7 +58,7 @@
   <hr class="layui-bg-green"/>
   <div class="layui-form-item">
     <div class="layui-input-block">
-      <button class="layui-btn" onclick="updateMaterial()"><i class="layui-icon">&#xe618;</i>保存</button>
+      <button class="layui-btn" onclick="updateMaterial()"><i class="layui-icon">&#xe605;</i>保存</button>
       <button type="button" class="layui-btn layui-btn-primary" onclick="closeWind()">关闭</button>
     </div>
   </div>

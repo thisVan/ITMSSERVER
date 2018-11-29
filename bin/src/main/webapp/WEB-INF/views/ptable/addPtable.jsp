@@ -7,7 +7,7 @@
    <link href="<%=request.getContextPath()%>/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
    <title>添加播放表</title>
    <script type="text/javascript">
-        var pid = '${pid}';
+       var pid = '${pid}';
         
 		$(function(){
 

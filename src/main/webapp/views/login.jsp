@@ -8,7 +8,7 @@
 <!DOCTYPE html><html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>在线排播系统</title>
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/layui/css/login.css" media="all" />
     <script type="text/javascript">
@@ -17,11 +17,19 @@
             top.location.href=location.href;
         }
         function getMedia(){
-        	videoName.push("倒霉熊.mp4");videoName.push("Riverside.mp4");
+        	/* videoName.push("倒霉熊.mp4");videoName.push("Riverside.mp4");
         	videoName.push("Doggy-watch.mp4");videoName.push("Fire-_-Ice.mp4");
         	videoName.push("login.mp4");videoName.push("Magazine.mp4");
         	videoName.push("Perfect_Hour.mp4");videoName.push("Play.mp4");
-        	videoName.push("Tree-Close-Up.mp4");videoName.push("Snowy-Bench.mp4");
+        	videoName.push("Tree-Close-Up.mp4");videoName.push("Snowy-Bench.mp4"); */
+        	videoName.push("1 (1).mp4");
+        	videoName.push("1 (2).mp4");
+        	videoName.push("1 (3).mp4");
+        	videoName.push("1 (4).mp4");
+        	videoName.push("1 (5).mp4");
+        	videoName.push("1 (6).mp4");
+        	videoName.push("1 (7).mp4");
+        	videoName.push("1 (8).mp4");
         	
         	var offset = Math.floor(Math.random()*10);
         	var video = document.getElementById("video");
@@ -36,7 +44,7 @@
 
 <div class="video_mask"></div>
 <div class="login">
-    <h1>智能终端系统登录</h1>
+    <h1>在线排播系统登录</h1>
     <h2 id="tipMsg"  align="center" style="color:red; margin-bottom:5px;"></h2>
         <div class="layui-form-item">
             <input class="layui-input" id="userAccount" name="userAccount" placeholder="用户名" value="" lay-verify="required" type="text" autocomplete="off">

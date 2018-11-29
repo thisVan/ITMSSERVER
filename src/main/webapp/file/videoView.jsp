@@ -26,9 +26,10 @@
 //		window.opener.document.getElementById('adName').value='123123123';
 		var myDate = new Date();
     	var year = myDate.getFullYear();
-		var filename=window.opener.document.getElementById("videoView").value; 
+		 var origanname=window.opener.document.getElementById("videoView").value; 
+		 var filename=origanname.substr(0,origanname.lastIndexOf(".")+1)+'mp4';
 		var video = document.getElementById("video1");
-        video.addEventListener('ended', play);
+         video.addEventListener('ended', play);
         play();
         function play() {
             var video = document.getElementById("video1");

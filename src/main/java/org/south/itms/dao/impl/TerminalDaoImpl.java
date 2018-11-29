@@ -85,10 +85,10 @@ public class TerminalDaoImpl implements TerminalDao {
     	Session session = openSession();
         List<Terminal> Terminals = session.createQuery("from Terminal where deleted = 0 and state = '激活' and serialNumber = :serialNumber and connectPassword = :connectPassword").setParameter("serialNumber", serialNumber).setParameter("connectPassword", connectPassword).getResultList(); 
         closeSession(session);
-        if(Terminals.size() == 0) {
-        	return null;
-        } else {
+        if(Terminals.size() > 0) {
         	return Terminals.get(0);
+        } else {
+        	return null;
         }
     }
     
@@ -239,7 +239,11 @@ public class TerminalDaoImpl implements TerminalDao {
         		.setParameter("mid", mid)
         		.getResultList(); 
         closeSession(session);
-        return list.get(0);
+        if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

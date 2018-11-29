@@ -45,6 +45,8 @@ public class PtableDto {
     private Time startTime;
 	
 	private Time endTime;
+	
+	private String tid;
 
 	public int getInsertFlag() {
 		return insertFlag;
@@ -189,14 +191,23 @@ public class PtableDto {
 	public void setEndTime(Time endTime) {
 		this.endTime = endTime;
 	}
+	
+	public String gettid() {
+		return tid;
+	}
+
+	public void settid(String terminalId) {
+		this.tid = terminalId;
+	}
 
 	public PtableDto() {
 		super();
 	}
 
-	public PtableDto(String pid, String statusId, String playTotalTime, Date playDate, String screenRate,
+	public PtableDto(String TerminalId,String pid, String statusId, String playTotalTime, Date playDate, String screenRate,
 			String allTime, String ptableName, Date createTime, int min, int insertFlag, int state) {
 		super();
+		this.tid=TerminalId;
 		this.pid = pid;
 		this.statusId = statusId;
 		this.playTotalTime = playTotalTime;
@@ -208,14 +219,27 @@ public class PtableDto {
 		this.min = min;
 		this.insertFlag = insertFlag;
 		this.state = state;
+		
 	}
+
+	/*@Override
+	public String toString() {
+		return "PtableDto [pid=" + pid + ", terminalName=" + terminalName + ", statusId=" + statusId
+				+ ", playTotalTime=" + playTotalTime + ", playDate=" + playDate + ", screenRate=" + screenRate
+				+ ", allTime=" + allTime + ", ptableName=" + ptableName + ", createName=" + createName + ", createTime="
+				+ createTime + ", periodName=" + periodName + ", periodTime=" + periodTime + "]";
+	}*/
+
+
 
 	@Override
 	public String toString() {
 		return "PtableDto [pid=" + pid + ", terminalName=" + terminalName + ", statusId=" + statusId
 				+ ", playTotalTime=" + playTotalTime + ", playDate=" + playDate + ", screenRate=" + screenRate
 				+ ", allTime=" + allTime + ", ptableName=" + ptableName + ", createName=" + createName + ", createTime="
-				+ createTime + ", periodName=" + periodName + ", periodTime=" + periodTime + "]";
+				+ createTime + ", periodName=" + periodName + ", periodTime=" + periodTime + ", mark=" + mark
+				+ ", insertFlag=" + insertFlag + ", min=" + min + ", state=" + state + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", tid=" + tid + "]";
 	}
 	
 	

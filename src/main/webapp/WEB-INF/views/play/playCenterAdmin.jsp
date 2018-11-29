@@ -161,32 +161,37 @@
       
       function myTrim(x) {
     	    return x.replace(/^\s+|\s+$/gm,'');
-    	}
-      
-      function changeBg(){
-    	  var trId = document.getElementsByTagName("tr");
-    	  //alert(trId.length);
-    	  //alert(trId[0].cells.length);
-    	  for(var i = 1; i < trId.length; i++){
-    		  var value = trId[i].cells[0].innerText;
-    		  var value1 = trId[i].cells[11].innerText;  //"激活" trId[i].cells[11].innerText
-    		  if(value1.trim() == "激活"){
-    			  if(value.trim() == "在线"){
-    				  trId[i].className += " jan-green-theme";
-        			  //trId[i].style.backgroundColor = "#90EE90";  //#5FB878
-        		  }else if(value.trim() == "离线"){
-        			  trId[i].className += " jan-yellow-theme";
-        			  //trId[i].style.backgroundColor = "#FFD133";  //#FFB800
-        		  }else if(value.trim() == "状态"){
-        			  break;
-        		  }
-    		  }else if(value1.trim() == "禁用"){
-    			  trId[i].className += " jan-red-theme";
-    			  //trId[i].style.backgroundColor = "#FF6347";
-    		  }
-    	  }
-      }
-      
+   	}
+   
+   	function changeBg() {
+   		var trId = document.getElementsByTagName("tr");
+   		//alert(trId.length);
+   		//alert(trId[0].cells.length);
+   		if (trId.length > 1) {
+   			for (var i = 1; i < trId.length; i++) {
+   				if (trId[i].cells.length < 14) {
+   					break;
+   				}
+   				var value = trId[i].cells[0].innerText;
+   				var value1 = trId[i].cells[12].innerText; //"激活" trId[i].cells[11].innerText
+   				if (value1.trim() == "激活") {
+   					if (value.trim() == "在线") {
+   						trId[i].className += " jan-green-theme";
+   					//trId[i].style.backgroundColor = "#90EE90";  //#5FB878
+   					} else if (value.trim() == "离线") {
+   						trId[i].className += " jan-yellow-theme";
+   					//trId[i].style.backgroundColor = "#FFD133";  //#FFB800
+   					} else if (value.trim() == "状态") {
+   						break;
+   					}
+   				} else if (value1.trim() == "禁用") {
+   					trId[i].className += " jan-red-theme";
+   				//trId[i].style.backgroundColor = "#FF6347";
+   				}
+   			}
+   		}
+   
+   	}
    </script>
    
 </head>

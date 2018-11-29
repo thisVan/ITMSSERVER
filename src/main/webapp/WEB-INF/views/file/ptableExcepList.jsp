@@ -38,7 +38,7 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/searchItemByPid2.do'
-    		    ,height: 500
+    		    //,height: 500
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[

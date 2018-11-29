@@ -58,7 +58,7 @@ public class LoginController {
 		  User user = userDao.getUserByAccountAndPassword(userAccount, userPassword);
 	      if(user != null) {
 	    	  Map<String, List<Resource>> map = userDao.getAllResource(user.getRole().getRoleId());
-	    	  String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", "");
+	    	  String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", " ");
 	    	  String path = webPath.substring(0, webPath.indexOf("WEB-INF"));
 	    	  System.out.println(webPath);
 	    	  System.out.println(path);
@@ -137,7 +137,7 @@ public class LoginController {
 		  
 		  User user = userDao.getUserByAccountAndPassword(reqUser.getUserAccount(), reqUser.getUserPassword());
 	      if(user != null) {
-	    	  String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", "");
+	    	  String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", " ");
 	    	  String path = webPath.substring(0, webPath.indexOf("WEB-INF"));
 	    	  System.out.println(webPath);
 	    	  System.out.println(path);

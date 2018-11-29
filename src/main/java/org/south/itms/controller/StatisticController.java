@@ -47,6 +47,7 @@ public class StatisticController {
 	
 	@RequestMapping(value = "/searchPlayNum")
 	public @ResponseBody PageResultData<PlayNumDto> searchPlayNum(String terminalId, String dateTime) {
+		//System.out.println("+asdasdasdasdasdasda+++++");
 		if(StringUtil.isEmpty(terminalId) || StringUtil.isEmpty(dateTime)) {
 		    return null;
 		}

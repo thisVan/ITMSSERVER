@@ -52,7 +52,7 @@ div[carousel-item]>*:nth-child(4n+3){background-color: #FF5722;}
     <ul class="layui-nav layui-layout-right">
       
       <li class="layui-nav-item">
-						<a class="name" href="javascript:;"><i class="layui-icon"></i>主题<span class="layui-nav-more"></span></a>
+					<!-- 	<a class="name" href="javascript:;"><i class="layui-icon"></i>主题<span class="layui-nav-more"></span></a>
 						<dl class="layui-nav-child layui-anim layui-anim-upbit">
 							<dd>
 								<a skin="hp-black-theme" class="hp-theme-skin-switch"  href="javascript:;">低调黑</a>
@@ -63,7 +63,7 @@ div[carousel-item]>*:nth-child(4n+3){background-color: #FF5722;}
 							<dd>
 								<a skin="hp-green-theme" class="hp-theme-skin-switch"  href="javascript:;">原谅绿</a>
 							</dd>
-						</dl>
+						</dl> -->
 					</li>
       
       <li class="layui-nav-item"><a href="javascript:;"  style="text-decoration:none" class="admin-header-user"> 
@@ -71,13 +71,13 @@ div[carousel-item]>*:nth-child(4n+3){background-color: #FF5722;}
 						 <span id="name"><%=session.getAttribute("userName") %></span>
 					</a>
 						<dl class="layui-nav-child">
-							<dd>
+							<!-- <dd>
 								<a href="javascript:;" onClick="personMessage()" style="text-decoration:none"><i class="fa fa-user-circle"
 									aria-hidden="true"></i> 个人信息</a>
-							</dd>
+							</dd> -->
 							<dd>
 								<a href="javascript:;" onClick="set()" style="text-decoration:none"><i class="fa fa-gear"
-									aria-hidden="true"></i> 设置</a>
+									aria-hidden="true"></i> 修改密码</a>
 							</dd>
 							<dd>
 								<a href="javascript:;" onClick="logout()" style="text-decoration:none"><i class="fa fa-sign-out"
@@ -120,14 +120,14 @@ div[carousel-item]>*:nth-child(4n+3){background-color: #FF5722;}
 			<div class="layui-tab-item layui-show" lay-id="1">
 				<br><br>
 				<div style="width:100%; height:100%" align="center">
-				<div style="width:90%; height:90%">
+				<div style="width:90%; height:100%">
 				<div class="layui-carousel" id="test1" lay-filter="test1">
                     <div carousel-item>
-                       <div>欢迎使用智能终端管理系统</div>
-                       <div>欢迎使用智能终端管理系统</div>
-                       <div>欢迎使用智能终端管理系统</div>
-                       <div>欢迎使用智能终端管理系统</div>
-                       <div>欢迎使用智能终端管理系统</div>
+                       <div><img src="../images/1.jpg" /></div>
+                       <div><img src="../images/2.jpg" /></div>
+                       <div><img src="../images/3.jpg" /></div>
+                       <div><img src="../images/4.jpg" /></div>
+                       <div><img src="../images/1.jpg" /></div>
                     </div>
                 </div>
                 </div>
@@ -139,7 +139,7 @@ div[carousel-item]>*:nth-child(4n+3){background-color: #FF5722;}
 
   </div>
 
-  <div class="layui-footer" align="center">
+  <div class="layui-footer" align="center" >
     <!-- 底部固定区域 -->
     <p>
     ©2017  版权归scut-南方新视界所有
@@ -244,7 +244,7 @@ layui.use('element', function(){
 			//新增一个Tab项
 		    element.tabAdd('tabDemo', {
 			    title: title,
-			    content: '<iframe class="zn-iframe" style="width: 100%; height: 517px;"  src="' + href + '" />',
+			    content: '<iframe class="zn-iframe" style="width: 100%; height:517px;"  src="' + href + '" />',
 			    id: id //实际使用一般是规定好的id，这里以时间戳模拟下
 		    })
 		    element.tabChange('tabDemo', id); //切换到：当前tab
@@ -488,6 +488,20 @@ function messageBroad(){
 			    window.location.href="<%=request.getContextPath()%>/views/login.jsp";
 		    }
 	    });
+    }
+    
+    //author 张一鸣
+    //2018.5.8增加修改密码
+    function set(){
+    	 layer.open({
+ 			title:'修改密码',
+ 			type:2,
+ 			area: ['50%', '50%'],
+ 			content:'<%=request.getContextPath()%>/views/ajaxViews/passward-modify.jsp',
+ 			success: function(){
+ 				
+ 			}
+ 		});
     }
 	
 

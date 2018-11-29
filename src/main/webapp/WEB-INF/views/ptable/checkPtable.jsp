@@ -71,8 +71,9 @@
 	  	                  for(var i = 0; i < tdata.length; i++){
 	  	                	var filePath = tdata[i].material.filePath;
 	  	    			    var name = filePath.split("/");
-	  	    			    var realname = name[name.length - 1];
+	  	    			    var origanname = name[name.length - 1];
 	  	    			   // var path = "<%=request.getContextPath()%>/media/" + year + "/" + realname;
+	  	    			    var realname=origanname.substr(0,origanname.lastIndexOf(".")+1)+'mp4';
 	  	    			    var path = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + realname;
 	  	    			    vList.push(path);
 	  	    			    ms.push(tdata[i].material);
@@ -304,7 +305,7 @@
 								</div>
 								<div class="layui-inline">
 									<button class="layui-btn" type="button" onclick="ptableAccess()">
-										<i class="layui-icon">&#xe618;</i>审核通过
+										<i class="layui-icon">&#xe605;</i>审核通过
 									</button>
 								</div>
 								<div class="layui-inline">

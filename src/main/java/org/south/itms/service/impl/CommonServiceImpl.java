@@ -70,6 +70,26 @@ public class CommonServiceImpl implements CommonService {
 		 //获取查询的结果
 		 return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
 	}
+	//7.16
+	@Override
+	public Page pageSearchByTemplateHQL(String[] params, String alreadymid,int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
+		  //组装查询条件
+		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		  if(params != null && (params.length % 3 == 0)) {
+			  for(int i = 0; i < params.length; i+=3) {
+				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			  }
+		  }
+		  
+		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
+			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
+			  return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
+		  }
+		  
+		  
+		 //获取查询的结果
+		 return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, alreadymid,orderBy), whereMap, currentPage, pageSize);
+	}
 	
 	@Override
 	public Page pageSearchByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
@@ -661,4 +681,23 @@ public class CommonServiceImpl implements CommonService {
 	public void saveInsetPlayTable(PlayTable ptable, String mid) {
 		commonDao.saveInsetPlayTable(ptable, mid);
 	}
+
+	
+	//7.14
+	@Override
+	public boolean copyOneToPlayFile(String pid, String mid, int num) {
+		if(commonDao.copyOneToPlayFile(pid, mid, num))
+			return true;
+		return false;
+	}
+	
+	//7.15
+	@Override
+	public boolean delOneFromPlayFile(String pid, String mid, int num) {
+		if(commonDao.delOneFromPlayFile(pid, mid, num))
+			return true;
+		return false;
+	}
+	
+	
 }  

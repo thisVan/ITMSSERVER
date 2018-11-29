@@ -22,7 +22,6 @@ import org.springframework.stereotype.Repository;
  * @author: yezilong
  */
 
-
 @Repository("fileDao")
 public class FileDaoImpl implements FileDao {
 
@@ -32,77 +31,69 @@ public class FileDaoImpl implements FileDao {
 	private Session getCurrentSession() {
 		return this.sessionFactory.getCurrentSession();
 	}
-	
-	
-    private Session openSession() {  
-        return this.sessionFactory.openSession();  
-    }  
-    
-    
-    //关闭Session
-    private void closeSession(Session session){
-        if(null != session){
-            session.close();
-        }
-    }
-	
-	
-    @Override  
-    public File get(String id) {  
-    	//return (File) this.getCurrentSession().load(File.class, id);  
-    	Session session = openSession();
-        try {
-        	return (File) session.get(File.class, id);  
-        } finally {
-            closeSession(session);
-        }
-    }  
-    
-    
-    @Override  
-    public File get2(String id) {  
-    	return (File) this.getCurrentSession().get(File.class, id);  
-    }  
-    
-    
-    @Override  
-    public Material getById(String mid) {  
-    	//return (File) this.getCurrentSession().load(File.class, id);  
-    	Session session = openSession();
-        try {
-        	return (Material) session.get(Material.class, mid);  
-        } finally {
-            closeSession(session);
-        }
-    }  
 
-    
-    @Override  
-    public File load(String id) {  
-    	return (File) this.getCurrentSession().load(File.class, id);  
-    }  
-    
-    
-    @Override  
-    public List<Material> findByPtable(String pid) {  //查找某个播放表的视频文件
-    	System.out.println("pid:" + pid);
-    	Session session = openSession();
-        try {
-        	String sql = "select m.* from ptable_file pf left join material m on pf.mid = m.mid where m.deleted = 0 and pf.deleted = 0 and pf.pid = :pid order by pf.num asc";
-        	return session.createNativeQuery(sql, Material.class).setParameter("pid", pid).getResultList();
-        } finally {
-            closeSession(session);
-        }
-    }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<File> getAllFile(){
-    	String hql = "from File where deleted = ?";
-    	Query query = this.getCurrentSession().createQuery(hql);
-    	query.setParameter(0, 0);
-    	return query.list();
-    }
+	private Session openSession() {
+		return this.sessionFactory.openSession();
+	}
 
+	// 关闭Session
+	private void closeSession(Session session) {
+		if (null != session) {
+			session.close();
+		}
+	}
+
+	@Override
+	public File get(String id) {
+		// return (File) this.getCurrentSession().load(File.class, id);
+		Session session = openSession();
+		try {
+			return (File) session.get(File.class, id);
+		} finally {
+			closeSession(session);
+		}
+	}
+
+	@Override
+	public File get2(String id) {
+		return (File) this.getCurrentSession().get(File.class, id);
+	}
+
+	@Override
+	public Material getById(String mid) {
+		// return (File) this.getCurrentSession().load(File.class, id);
+		Session session = openSession();
+		try {
+			return (Material) session.get(Material.class, mid);
+		} finally {
+			closeSession(session);
+		}
+	}
+
+	@Override
+	public File load(String id) {
+		return (File) this.getCurrentSession().load(File.class, id);
+	}
+
+	@Override
+	public List<Material> findByPtable(String pid) { // 查找某个播放表的视频文件
+		System.out.println("pid:" + pid);
+		Session session = openSession();
+		try {
+			String sql = "select m.* from ptable_file pf left join material m on pf.mid = m.mid where m.deleted = 0 and pf.deleted = 0 and pf.pid = :pid order by pf.num asc";
+			return session.createNativeQuery(sql, Material.class).setParameter("pid", pid).getResultList();
+		} finally {
+			closeSession(session);
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<File> getAllFile() {
+		String hql = "from File where deleted = ?";
+		Query query = this.getCurrentSession().createQuery(hql);
+		query.setParameter(0, 0);
+		return query.list();
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -125,24 +116,24 @@ public class FileDaoImpl implements FileDao {
 		return query.list();
 	}
 
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Period findByPeriod(String periodId) {
-		
+
 		Session session = openSession();
-        List<Period> list = session.createQuery("from Period where deleted = 0 and periodId = :periodId")
-        		.setParameter("periodId", periodId)
-        		.getResultList(); 
-        closeSession(session);
-        return list.get(0);
-        
+		List<Period> list = session.createQuery("from Period where deleted = 0 and periodId = :periodId").setParameter("periodId", periodId).getResultList();
+		closeSession(session);
+		if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
+
 //		String hql = "from Period where periodId = ? and deleted = ?";
 //		Query query = this.getCurrentSession().createQuery(hql);
 //		query.setParameter(0, periodId);
 //		query.setParameter(1, 0);
 //		return (Period) query.list().get(0);
 	}
-    
-    
+
 }

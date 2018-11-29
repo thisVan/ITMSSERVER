@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
 .layui-table-view .layui-table{overflow: visible;}
 .layui-table tr{overflow: visible;}
 .layui-table-cell{overflow: visible;}
-.layui-input{width:160px;height:30px;}
+.layui-input{width:110px;height:30px;}
 </style>
    <title>我的素材列表</title>
    <meta name="renderer" content="webkit">
@@ -48,6 +49,7 @@
       function init(){
     	  layui.use('layer', function(){
     		  var layer = layui.layer;
+    		  //layer.zIndex();
     		});
     	  
     	  layui.use('laydate', function(){
@@ -59,7 +61,8 @@
     		  });
     		});
     	  
-		  var param = "";
+		  
+    	  var param = "";
 		  var whereSuffix = "";
     	  
 		   //名称
@@ -89,11 +92,15 @@
 		   var dateTime = $("#dateTime").val();
 		   if(dateTime != ""){
 			   var datime = dateTime.split(" ");
+			   console.log(datime[0]);
+			   console.log(datime[2]);
 			   var start = datime[0].trim();
 			   var end = datime[2].trim();
 			   whereSuffix += " AND DATE_FORMAT(uploadTime, '%Y-%m-%d') = '" + start + "'";
 			   whereSuffix += " AND DATE_FORMAT(uploadTime, '%Y-%m-%d') <= '" + end + "'";
 		   }
+		   
+		   console.log(param);
     	  
     	  layui.use('table', function(){
     		  var table = layui.table;
@@ -101,34 +108,37 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/searchMyFile.do'
-    		    ,height: 550
+    		    //,height: 550
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名', fixed: true, sort: true}
-    		      ,{field:'terminalName',width:200, event: 'set3', title: '终端名(已智能选择待绑定)', fixed: true, sort: true
+    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名',  sort: true}
+    		      ,{field:'terminalName',width:200, event: 'set3', title: '终端名(已智能选择待绑定)',  sort: true
     		    	  ,templet: function(d){
     		    		  var tis1 = d.tis;
       		    		  var tname = d.terminal;
       		    		  var name = d.terminalName;
       		    		  var mid = d.mid;
+      		    		  console.log(name);
       		    		  if(tis1 == "0"){
-      		    			var content = '<select name="terminal' + mid + '" id="terminal' + mid + '" style="width: 100px; height: 35px;" lay-filter="test"> ';
-     		    			 for(var i = 0; i < terminalVal.length; i++){
-     		    				 if(name == terminalVal[i].terminalName){
+      		    			 var content = '<select lay-ignore name="terminal' + mid + '" id="terminal' + mid + '" style="width: 150px; height: 30px;" lay-filter="test"> ';
+      		    			 for(var i = 0; i < terminalVal.length; i++){
+      		    				 if(name == terminalVal[i].terminalName){
       		    					content = content + ' <option value="' + terminalVal[i].terminalId + '" selected>' + terminalVal[i].terminalName + '</option> ';
       		    				 }else{
       		    					content = content + ' <option value="' + terminalVal[i].terminalId + '">' + terminalVal[i].terminalName + '</option> ';
       		    				 }
-     		    			 }
-     		    			 content = content + ' </select>';
-     		    			  return content;
-      		    	  }else{
-  		    			  return '<span style="color: #1E9FFF;">' + tname.terminalName + '(已选择)</span>';
-  		    		  }  
-    		      }
+      		    			 }
+      		    			 content = content + ' </select>';
+      		    			  return content;
+      		    			         
+      		    			  //return '<span style="color: #FF6347;">' + '未选择' + '</span>';
+      		    		  }else{
+      		    			  return '<span style="color: #1E9FFF;">' + tname.terminalName + '(已选择)</span>';
+      		    		  }
+      		    	  }  
     		      }
     		      ,{field:'statusId',width:100, event: 'set4', title: '审核状态', sort: true
     		    	  ,templet: function(d){
@@ -157,7 +167,8 @@
     		    		  }
     		    	  }
     		      }
-    		      ,{field:'uploadTime',width:160, event: 'set9', title: '上传时间', sort: true
+    		      //,{field:'usedNum',width:130, event: 'set9', title: '使用次数'}
+    		      ,{field:'uploadTime',width:160, event: 'set10', title: '上传时间', sort: true
     		    	  ,templet: function(d){
     		    		  var date = new Date(d.uploadTime);
     		    		  var Y = date.getFullYear() + '-';
@@ -169,8 +180,8 @@
     		    		  return Y+M+D+h+m+s;
     		    	  }
     		      }
-    		      ,{field:'uploadName',width:90, event: 'set10', title: '上传人', sort: true}
-    		      ,{fixed: 'right', width:80, event: 'set11', title: '操作', align:'center', toolbar: '#barDemo'}
+    		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
+    		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
     		    ,where: {"param": param,"dateTime":dateTime}
@@ -185,10 +196,6 @@
     				      ,data = checkStatus.data;
     				      var mids = [];
     				      for(var i = 0; i < data.length; i++){
-    				          if(data[i].statusId == '3') {  //已审核通过的不可删除
-    				            layer.msg('审核通过的素材不可删除',{icon:5,time:2000});
-    				    	    return ;
-    				          }
     					      mids.push(data[i].mid);
     				      }
     				      if(mids.length == 0){
@@ -209,6 +216,8 @@
     									success : function(msg){
     										var value = msg.toString();
     										if(value=="true"){
+    											terminalVal = [];
+    									    	getAllTerminal();
     											init();
     											layer.msg('删除成功!',{icon:6,time:4000});
     										}
@@ -216,16 +225,29 @@
     								});
     			    	  });
     				    }
-    		  ,getTisData: function(){ //获取选中数据
+    		  ,getTisData: function(){ //获取选中数据，2018.7.11 增加判断素材分辨率与终端分辨率是否相同功能 张一鸣
 			      var checkStatus = table.checkStatus('flagTwo')
 			      ,data = checkStatus.data;
 			      var tids = [];
 			      var flaglen = 0;
+			      var flagresolution=0;
 			      for(var i = 0; i < data.length; i++){
 			    	  var mid = data[i].mid;
+			    	  var mresolution=data[i].resolution;
 			    	  var obj = document.getElementById("terminal" + mid);
 			    	  if(obj != null){
-			    		  var tid = obj.value;
+			    		  var tid = obj.value;//获取到终端id
+			    		  for(var j=0;j< terminalVal.length; j++)
+			    			  {
+			    			  	if(tid==terminalVal[j].terminalId)
+			    			  		{
+			    			  			var tledresolution=terminalVal[j].ledLength+'X'+terminalVal[j].ledWidth;
+			    			  			if(tledresolution!=mresolution)
+			    			  				{flagresolution=flagresolution+1;}
+			    			  				
+			    			  		}
+			    			  }
+			    		  
 			    		  tids.push(mid + "-" + tid);
 			    	  }else{
 			    		  flaglen = flaglen + 1;
@@ -239,12 +261,38 @@
 			    	  layer.msg('请选择要保存的素材!',{icon:6,time:1500});
 			    	  return ;
 			      }
-			     
+			      
+			      if(flagresolution!=0){
+			    	  //批量保存
+				      layer.confirm('素材分辨率与所选终端LED分辨率不一致，确定绑定吗', function(index){
+					         //obj.del();
+					         layer.close(index);
+					         console.log(tids.length);
+					         $.ajax({
+									type: "POST",
+									url: "<%=request.getContextPath()%>/material/tidMaterial.do",
+									data: {"tid":tids},
+									traditional: true,
+									dataType : "json",
+									success : function(msg){
+										var value = msg.toString();
+										if(value=="true"){
+											terminalVal = [];
+									    	getAllTerminal();
+											init();
+											layer.msg('保存成功!',{icon:6,time:4000});
+										}
+									}
+								});
+			    	  });
+			    	  return;
+			      }
+			      
 			      //批量保存
-			      layer.confirm('真的保存所选素材确定的终端么', function(index){
+			      layer.confirm('真的要保存所选素材确定的终端么', function(index){
 				         //obj.del();
 				         layer.close(index);
-				         console.log(tids);
+				         console.log(tids.length);
 				         $.ajax({
 								type: "POST",
 								url: "<%=request.getContextPath()%>/material/tidMaterial.do",
@@ -267,12 +315,6 @@
     				      var checkStatus = table.checkStatus('flagTwo')
     				      ,data = checkStatus.data;
     				      if(data.length == 1){
-    				          if(data[0].statusId != "1")  {
-    				             layer.msg('只有未审核的素材才可修改',{icon:6,time:1500});
-    				             return;
-    				          }
-    				          
-
     				    	  var mmid = data[0].mid;
     				    	  var mname = data[0].materialName;
     				    	  layer.open({
@@ -352,11 +394,7 @@
     					});
     			  }
     		  });
-    		 
-    		  
     		});
-     
-   	
       }
       
       function refresh(){
@@ -364,8 +402,6 @@
     	  getAllTerminal();
    	      init();
       }
-      
-      
       
    </script>
    
@@ -389,17 +425,6 @@
 								</div>
 							</div>
 							
-							<div class="layui-inline">
-								<label class="layui-form-mid">终端确定与否：</label>
-								<div class="layui-input-inline">
-									<select id="tis" name="tis" style="width: 140px; height: 35px;">
-										<option value="">请选择</option>
-										<option value="0">否</option>
-										<option value="1">是</option>
-									</select>
-								</div>
-							</div>
-							
 <!-- 							<div class="layui-inline">
 								<label class="layui-form-mid">类型：</label>
 								<div class="layui-input-inline"
@@ -414,11 +439,23 @@
 							</div> -->
 							
 							<div class="layui-inline">
+								<label class="layui-form-mid">终端确定与否：</label>
+								<div class="layui-input-inline"
+									style="width: 90px; height: 35px;">
+									<select id="tis" name="tis" style="width: 90px; height: 35px;">
+										<option value="">--请选择--</option>
+										<option value="0">否</option>
+										<option value="1">是</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="layui-inline">
 								<label class="layui-form-mid">状态：</label>
 								<div class="layui-input-inline"
-									style="width: 140px; height: 35px;">
-									<select id="statusId" name="statusId" style="width: 140px; height: 35px;">
-										<option value="">请选择</option>
+									style="width: 90px; height: 35px;">
+									<select id="statusId" name="statusId" style="width: 150px; height: 35px;">
+										<option value="">--请选择--</option>
 										<option value="1">未审核</option>
 										<option value="3">通过</option>
 										<option value="4">未通过</option>
@@ -429,7 +466,7 @@
 							<div class="layui-inline">
 			                    <label class="layui-form-mid">上传日期范围：</label>
 			                    <div class="layui-inline" style="">
-				                    <input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 170px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=""/>
+				                    <input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 170px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
 			                    </div>
 		                    </div>
 							
@@ -447,9 +484,9 @@
 			
 		<div class="layui-btn-container">
 	        	<button class="layui-btn operatorTable" function="getTisData" data-type="getTisData">
-			      <i class="layui-icon">&#xe618;</i>绑定终端
+			      <i class="layui-icon">&#xe605;</i>绑定终端
 			    </button>
-			    <button class="layui-btn operatorTable" function="getUpdateData" data-type="getUpdateData">
+	        	<button class="layui-btn operatorTable" function="getUpdateData" data-type="getUpdateData">
 			      <i class="layui-icon">&#xe642;</i>修改
 			    </button>
 				<button class="layui-btn layui-btn-danger operatorTable" function="getDeleteData" data-type="getDeleteData">
@@ -461,8 +498,7 @@
 		      </div>
 			
 		 <div class="layui-col-md12">
-            <table class="layui-table" id="table1" lay-filter="tableEvent">
-            </table>
+            <table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 			<!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="top" topUrl="views/datagrid2/one.html" topMode="readonly" topWidth="800px" topHeight="600px" topTitle="查看demo" inputs="id:">查看</a> -->
 			<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-sm" lay-event="mediaView" >预览</a>

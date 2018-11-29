@@ -4,17 +4,21 @@
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
+<%@page import="org.south.itms.util.Constant"%>
 <!DOCTYPE html>
 <html>
 <head>
    <meta charset="UTF-8">
+ 
 <title>Insert title here</title>
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
    <script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
+   <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
 <script type="text/javascript">
 
 function depose(){
 	   var materialId = document.getElementById("mid").value;
+	   console.log(materialId);
 	   $.ajax({
 			type:"POST",
 		    url: '<%=request.getContextPath()%>/material/checkUnAccess.do',
@@ -39,24 +43,33 @@ function depose(){
 	    } 
 	
 	
-	
 //		window.opener.document.getElementById('adName').value='123123123';
 		var myDate = new Date();
 		var year = myDate.getFullYear();
-		var filename=window.opener.document.getElementById("videoView").value; 
-		var video = document.getElementById("video1");
-        video.addEventListener('ended', play);
-        play();
-        function play() {
-            var video = document.getElementById("video1");
-            //video.src = "/ITMS/media/" + year + "/" + filename;
-            video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
-            video.load(); //如果短的话，可以加载完成之后再播放，监听 canplaythrough 事件即可
-            video.play();
-/*             curr++;
-            if (curr >= vLen)
-                curr = 0; // 播放完了，重新播放 */
-        }
+		var origanname=window.opener.document.getElementById("videoView").value; 
+		 var filename=origanname.substr(0,origanname.lastIndexOf(".")+1)+'mp4';
+		
+			var aa=document.getElementById('mp4video');
+			aa.style.display='block';
+			var video = document.getElementById("video1");
+	        video.addEventListener('ended', play);
+	        play();
+	        function play() {
+	            var video = document.getElementById("video1");
+	            //video.src = "/ITMS/media/" + year + "/" + filename;
+	            video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
+	            video.load(); //如果短的话，可以加载完成之后再播放，监听 canplaythrough 事件即可
+	            video.play();
+	/*             curr++;
+	            if (curr >= vLen)
+	                curr = 0; // 播放完了，重新播放 */
+	        }
+		
+		
+		
+		
+		
+		
 /* 		// fileObj.files[0]代表文件选择框选择的第一个文件  
 		var src = '/ITMS/media/' + filename;  
 		var vdo = document.createElement('video');  
@@ -67,7 +80,7 @@ function depose(){
 		vdo.height="450";
 //		vdo.loop = "loop";
 		document.getElementById('media').appendChild(vdo); */
-		
+       
 	}
 </script>
 </head>
@@ -82,8 +95,10 @@ function depose(){
 <input type="hidden" id="vdo">
 
      <h2 id="tipMsg" hidden  align="center" style="color:red; margin-top:20px;">视频已被删除</h2>
+     
      <div id="div2">
-		      <div align="center">
+     <div id="showwmv" align="center"></div>
+     <div id="mp4video" align="center" style="display:none">
 		        <video width="650" height="450" id="video1" class="indexBanner" controls="controls" autoplay>
 		           <source src="" type="video/mp4" />
 		        </video>

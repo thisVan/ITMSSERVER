@@ -31,6 +31,18 @@ public interface PtableService {
 	List<PlayTable> getTableById(String string);
 
 	List<PlayTable> getTableByTwoId(String statusId1, String statusId2);
+	
+	//7.15
+	void modifyPlayTableNumbyDelAll(String ppid, String sortNum);
+	
+	/**
+	 * 根据pid取出播表
+	 * @since 2018年11月28日 17点45分
+	 * @author PC-FAN
+	 * @param pid
+	 * @return
+	 */
+	PlayTable getPlayTableByPid(String pid);
 
  
 }  

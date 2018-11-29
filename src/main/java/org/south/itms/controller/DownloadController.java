@@ -155,8 +155,6 @@ public class DownloadController {
         }
     }
 	
-	
-  
     //下载文件
     public void downloadFile(File file,HttpServletResponse response,boolean isDelete) throws Exception {
             // 以流的形式下载文件。
@@ -179,27 +177,22 @@ public class DownloadController {
 
     } 
     
-    
-    
-    
-    
 	//web展示视频
 	@RequestMapping(value = "/showVedio")
 	public void showVedio(String filename, HttpServletResponse response) {
 
 		try {
-			if(StringUtil.isEmpty(filename)) return;
-			
+			if (StringUtil.isEmpty(filename))
+				return;
+
 			File file = new File(Constant.UploadDirecory + "/" + filename);
-			
-			if(!file.exists()) return;
+
+			if (!file.exists())
+				return;
 			downloadFile(file, response, false);
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
-    
-    
-    
-    
+
 }  

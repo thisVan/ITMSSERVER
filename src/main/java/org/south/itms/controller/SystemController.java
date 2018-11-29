@@ -430,6 +430,32 @@ public class SystemController {
 		
 	  }
 	  
+	  //author 张一鸣
+	  //2018.5.8 增加右上角修改密码 
+	  @RequestMapping(value="/user/editUserPassword")  
+	  public @ResponseBody Result editUserPassword(User user,HttpSession session) {
+		  if(user == null || StringUtil.isEmpty(user.getUserPassword())) {
+			  return new Result("修改错误");
+		  }
+		  
+		  //更新的参数
+		  Map<String, String> paramMap = new HashMap<String, String>();
+		  paramMap.put("userPassword", user.getUserPassword());
+		  //更新的where条件
+		  Map<String, String> whereMap = new HashMap<String, String>();
+		  
+		  whereMap.put("userId", (String)session.getAttribute("userId"));
+		  //开始更新数据
+		  try {
+			  commonService.updateByTemplateHQL(SqlUtil.growUpdateHqlTemplate("User", paramMap, whereMap), paramMap, whereMap);
+			  return new Result(true, "");
+		  } catch(Exception e) {
+			  e.printStackTrace();
+			  return new Result("修改错误");
+		  }
+		
+	  }
+	  
 	  
 	  @RequestMapping(value="/role/addRole")  
 	  public @ResponseBody Result addRole(Role role) {

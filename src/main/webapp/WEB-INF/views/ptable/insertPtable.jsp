@@ -40,6 +40,7 @@
 	var laydate = layui.laydate;
 	laydate.render({
 	    elem: '#dateTime' //指定元素
+	    ,range:true
 	  });
   laydate.render({
 	    elem: '#testDate' //指定元素
@@ -148,7 +149,7 @@
   		    		return '<span style="color: #1E9FFF;">' + d.terminalName + '</span>';
   		    	  }
   		      }
-  		      ,{fixed: 'right', width:100, event: 'set10', title: '操作', align:'center', toolbar: '#barDemo2'}
+  		      ,{fixed: 'right', width:200, event: 'set10', title: '操作', align:'center', toolbar: '#barDemo2'}
       		      //,{fixed: 'right', width:150, event: 'set7', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
@@ -258,7 +259,8 @@
 		var len = 0;
 		
 	    function addFileMaterial(){
-	      
+	    	var odiv=document.getElementById("thediv");
+	    	
 	    	document.getElementById("checkTwice").value = '';
 	    	layer.open({
     			title:'添加素材',
@@ -300,7 +302,10 @@
         					    
        
         					}
+        					odiv.style.display="block";
         					checkTip();  //前台提示该插播安排是否有溢出
+        					
+        					
         				}
     				}
     				
@@ -329,8 +334,8 @@
 	    	//var method = document.getElementById("method").value;
 	    	//if(method == 'on'){
 	    	if($("#shijian").is(":visible") == true){
-	    		var dateTime = document.getElementById("dateTime").value;
-	    		var testDate = document.getElementById("testDate").value;
+	    		var dateTime = document.getElementById("dateTime").value;//插播日期
+	    		var testDate = document.getElementById("testDate").value;//插播时间段
 	    		var stat = document.getElementById("stat").value;
 	    		var terminalId = document.getElementById("terminal").value;
 	    		var intervalTime = document.getElementById("intervalTime").value;
@@ -394,7 +399,7 @@
 				});
 	    		
 	    	}else{
-	    		var dateTime = document.getElementById("dateTime").value;
+	    		var dateTime = document.getElementById("dateTime").value;//插播日期
 	    		var testDate = document.getElementById("testDate").value;
 	    		var stat = document.getElementById("stat").value;
 	    		var terminalId = document.getElementById("terminal").value;
@@ -603,6 +608,9 @@
                                         </c:forEach>
 									</select>
 								</div>
+								<button class="layui-btn layui-bg-green" type="button"  onclick="addFileMaterial()">
+						       <i class="layui-icon">&#xe654;</i>插播
+						        </button>
 							</div>
 						</div>
 					</form>
@@ -610,8 +618,8 @@
 			</div>
 			
 		 <div class="layui-col-md12">
-            <table class="layui-table" id="table1" lay-filter="tableEvent"></table>
-			
+            
+			<div id="thediv" style="display:none">
 							<div class="layui-form-query">
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
@@ -626,14 +634,22 @@
 							<div class="layui-inline">
 			                    <label class="layui-form-mid">插播日期：</label>
 			                    <div class="layui-inline" style="">
-				                    <input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 110px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+				                    <input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 200px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
 			                    </div>
 		                    </div>
+		                    
+		                    <!-- <div class="layui-form-item">
+
+						   <label class="layui-form-label">投放周期：</label>
+						   <div class="layui-input-inline">
+						     <input type="text" id="testDate" name="testDate" placeholder="请选择日期" style="width:250px;" class="layui-input input-text" />
+						   </div>
+						 </div> -->
 		                    
 		                    <div class="layui-inline">
 								<label class="layui-form-mid">插播时段 ：</label>
 								<div class="layui-input-inline"
-									style="width: 140px; height: 35px;">
+									style="width: 160px; height: 35px;">
 									<input type="text" id="testDate" name="testDate" placeholder="请选择时间" class="layui-input input-text" />
 								</div>
 							</div>
@@ -700,14 +716,16 @@
 					<div class="layui-inline">
 					<div class="layui-inline">
 						<button class="layui-btn layui-bg-green" type="button"  onclick="addInsertPtable()">
-						<i class="layui-icon">&#xe618;</i>保存
+						<i class="layui-icon">&#xe605;</i>保存
 						</button>
 					</div>
 				  </div>
 				  </div>
 			   </div>
 			</div>
+			</div>>
 			
+			<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 			<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="mediaInfo">
                 <i class="layui-icon">&#xe640;</i>删除</a>

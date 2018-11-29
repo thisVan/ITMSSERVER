@@ -78,7 +78,11 @@ public class MaterialDaoImpl implements MaterialDao {
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, terminalId);
 		List<Terminal> list = query.list();
-		return list.get(0);
+		if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -147,7 +151,11 @@ public class MaterialDaoImpl implements MaterialDao {
 		query.setParameter(0, mid);
 		query.setParameter(1, 0);
 		List<Material> list = query.list();
-		return list.get(0);
+		if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -251,7 +259,8 @@ public class MaterialDaoImpl implements MaterialDao {
 	public List<Items> findByPtable(String pid) {
 		Session session = openSession();
         try {
-        	String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid)  order by pf.num asc";
+        	//String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid)  order by pf.num asc";
+        	String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
         	return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
         } finally {
             closeSession(session);
@@ -265,12 +274,25 @@ public class MaterialDaoImpl implements MaterialDao {
 		Session session = openSession();
         try {
         	String sql = "select DISTINCT it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) order by pf.num asc";
+        	//String sql = "select DISTINCT it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
         	return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
         } finally {
             closeSession(session);
         }
 	}
 	
+	@Override
+	public List<Items> findalreadyItemByPtable(String pid) {
+		Session session = openSession();
+        try {
+        	//String sql = "select DISTINCT it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) order by pf.num asc";
+        	//String sql = "select DISTINCT it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
+        	String sql = "select DISTINCT it.* from  items it where it.deleted = 0 and  it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by it.mid asc";
+        	return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
+        } finally {
+            closeSession(session);
+        }
+	}
 	
 	@Override
 	public List<Material> findMaterialByPtable(String pid) {
@@ -293,6 +315,9 @@ public class MaterialDaoImpl implements MaterialDao {
 		material.setStatusId("1");
 		this.getCurrentSession().update(material);
 	}
+	
+	//7.14
+	
 
 	
 	

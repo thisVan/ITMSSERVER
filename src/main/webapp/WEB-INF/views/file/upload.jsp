@@ -4,6 +4,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
+<%@  page   import= "org.south.itms.util.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -68,7 +69,8 @@
 			   <div class="layui-inline">
 				<label class="layui-form-mid"><font size="4">&nbsp;&nbsp;&nbsp;当前已选终端：</font></label>
 				<div class="layui-input-inline" style="width: 90px; height: 35px;">
-					<input id="terminalName" type="button" class="layui-btn layui-btn-jan" style="margin: 2px;" value="无" />
+					<!--  <input id="terminalName" type="button" class="layui-btn layui-btn-jan" style="margin: 2px;" value="无" />-->
+				 <input id="terminalName" type="text" class="layui-form-mid" style="border-style:none;height=20px;line-hight=20px;font-size:18px" value="无" />
 				</div>
 			  </div>
 			  
@@ -97,7 +99,7 @@
 			       </table>
 			</div>
 			<div>
-				<button type="button" class="layui-btn" id="testListAction" onclick="uploadFile()">开始上传</button>
+				<button type="button" class="layui-btn" id="testListAction" onclick="uploadFile()" style="display:none;">开始上传</button>
 			</div>
 
 			<hr>
@@ -154,11 +156,23 @@ var currProgress = 0;
 var done = false; 
 var total = 100;
 var tidVal = [];
-
+var pathFile=[];
 function stateChange(){
+	 var currentBtn = document.getElementById("testListAction");
+	 currentBtn.style.display = "block"; 
 	var volumn1 = $("#file")[0].files[0].size/1024;
 	var obj = document.getElementById("file");
+	
+	var patharry=obj.value.split(",");
+	console.log(patharry);
+	for(var i=0;i<patharry.length;i++)
+	{
+		patharry[i]=patharry[i].replace(/\\/g,"/");
+		pathFile.push(patharry[i]);
+	}
 	//objFile.push(obj);
+	console.log(patharry);
+	
 	var length = obj.files.length;
 	var ttid = document.getElementById("treeId").value;
 	for(var i = 0; i < length; i++){
@@ -191,10 +205,22 @@ function stateChange(){
 //预览 
 function preView(offset){
 	//console.log(offset);
-	//console.log(objFile[offset].name);
-	var url = URL.createObjectURL(objFile[offset]);
-	document.getElementById("videoViewPlay").value = url;
-	window.open('<%=request.getContextPath()%>/file/video.html',"_blank","toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes,left=300,top=100, width=800, height=550");
+	console.log(objFile[offset].name);
+	console.log(objFile[offset]);
+	var fileName=objFile[offset].name;
+	var exName=fileName.substr(fileName.lastIndexOf(".")+1).toUpperCase();
+	if(exName=="WMV"){
+		var url=pathFile[offset];
+		document.getElementById("videoViewPlay").value = url;
+		window.open('<%=request.getContextPath()%>/file/wmvplay.html',"_blank","toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes,left=300,top=100, width=800, height=600");
+		}
+	else{
+		var url = URL.createObjectURL(objFile[offset]);
+		document.getElementById("videoViewPlay").value = url;
+		console.log(url);
+		window.open('<%=request.getContextPath()%>/file/video.html',"_blank","toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes,left=300,top=100, width=800, height=550");
+		}
+	
 }
 
 //删除指定行

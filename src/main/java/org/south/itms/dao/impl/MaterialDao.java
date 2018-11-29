@@ -3,6 +3,7 @@ package org.south.itms.dao.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
+
 import org.south.itms.entity.Items;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.Terminal;
@@ -57,5 +58,7 @@ public interface MaterialDao {
 	int delMaterial2(String id);
 
 	int updateItemDelMsg(String id);
-
+	
+	//7.16
+	List<Items> findalreadyItemByPtable(String pid);
 }

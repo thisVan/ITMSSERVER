@@ -21,7 +21,7 @@
 		day2.setTime(day2.getTime());
 		var s2 = day2.getFullYear()+"-" + (day2.getMonth()+1) + "-" + day2.getDate();
 		
-		var timeStr = s1 + " 23:00:00 - " + s2 + " 00:00:00";
+		var timeStr = s1 + " 00:00:00 - " + s2 + " 23:59:59";
 		$("#statisTime").val(timeStr);
 		search();
    });

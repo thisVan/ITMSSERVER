@@ -459,8 +459,7 @@
 				}
 				
 				layui.use(['tree', 'layer'], function(){
-					  var layer = layui.layer
-					  ,$ = layui.jquery; 
+					  var layer = layui.layer , $ = layui.jquery; 
 					  
 					  layui.tree({
 					    elem: '#demo1' //指定元素
@@ -547,7 +546,7 @@
 <body>
   <input type="hidden" id="videoView" value="">
   <div style="width: 14%; height:100%; float: left">
-	    <br><font  size="4"  color="red">双击打开关闭</font><br>
+	    <br><lable style="padding-left:0.8em;color: purple;font-size: 1em;">双击打开关闭</lable>
 	    <ul id="demo1"></ul>
   </div> 
  
@@ -621,7 +620,7 @@
   	 	<div class="layui-row grid-demo">
 	      <div class="layui-btn-container">
 	        	<button class="layui-btn layui-btn-sm" onclick="materialBroad()" >
-			      <i class="layui-icon">&#xe654;</i>排播
+			      <i class="layui-icon">&#xe654;</i>节目编辑
 			    </button>
 	        	<button class="layui-btn layui-btn-sm" onclick="artificialGenerated()" >
 			      <i class="layui-icon">&#xe63c;</i>生成播表

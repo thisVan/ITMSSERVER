@@ -168,7 +168,7 @@ function periodTable(){
 					pids.push(msg[i].periodId);
 					var trObj = document.createElement("tr");
 					var tdStr = "<td>" + msg[i].periodName + "</td>"
-	                   + "<td>" + msg[i].startInterval + "kb</td>"
+	                   + "<td>" + msg[i].startInterval + "</td>"
 	                   + "<td>" + msg[i].endInterval + "</td>"
 	                   //+ "<td>" + "<input id='dataTime" + i + "'  style='width:180px;'/></td>"
 	                   + "<td>"
@@ -183,12 +183,17 @@ function periodTable(){
 	                   + "<td><input type='button' id='generateBtn"+i+"' class='layui-btn layui-btn-mini layui-btn' onclick='generateTb(" + i + ")' style='width:100px;' value='生成播表'></td>";
 	                trObj.innerHTML = tdStr;
 	                document.getElementById("tableList").appendChild(trObj);
+	                
+	                //generatePtable 7-9 187 修改laydate生成，解决生成播表日期不显示bug 张一鸣
+	           		 laydate.render({
+					    elem: '#timeRange'+i
+					    ,range: true
+					 });
 				}
 				
-				 laydate.render({
-				    elem: "input[name='myDate']"
-				    ,range: true
-				 });
+			
+				 
+				 
 			}
 		});
 	
@@ -202,7 +207,7 @@ function generateTb(id){
 	var time = $("#timeRange"  + id).val().split(" ");
 	var startDate = time[0];
 	var endDate = time[2];
-	console.log("startDate " +　startDate + " endDate " + endDate);
+	console.log("startDate " +startDate + " endDate " + endDate);
 	if(startDate == "" || endDate == ""){ 
 		layer.msg('生效日期不能为空!',{icon:5,time:2000});
 		return ;

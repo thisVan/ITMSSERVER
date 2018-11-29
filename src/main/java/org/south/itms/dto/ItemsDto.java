@@ -7,6 +7,12 @@ import org.south.itms.entity.Items;
  * @date 2018年1月22日 上午10:44:25
  * @version V1.0 
  */
+
+/**
+ * @author zym
+ * @date 2018年7月14日 
+ * @version V1.1
+ */
 public class ItemsDto extends Items {
 
 	/** 
@@ -15,7 +21,6 @@ public class ItemsDto extends Items {
 	private static final long serialVersionUID = -8034219217880100805L;
 	private String periodName;
 	private String playDate;
-
 	public String getPeriodName() {
 		return periodName;
 	}
@@ -37,6 +42,9 @@ public class ItemsDto extends Items {
 		this.periodName = periodName;
 		this.playDate = playDate;
 	}
+	
+	
+	
 
 	@Override
 	public String toString() {

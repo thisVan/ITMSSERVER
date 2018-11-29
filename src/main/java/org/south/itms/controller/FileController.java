@@ -118,8 +118,8 @@ public class FileController {
 //		for(Terminal t:listTerminal){
 //			System.out.println(t);
 //		}
-		request.getSession().setAttribute("terminalsOne", listTerminal.get(0).getTerminalId());
-		request.getSession().setAttribute("periodOne", listPeriod.get(2).getPeriodId());
+		request.getSession().setAttribute("terminalsOne", listTerminal.size() == 0 ? "" : listTerminal.get(0).getTerminalId());
+		request.getSession().setAttribute("periodOne", listPeriod.size() == 0 ? "" : listPeriod.get(2).getPeriodId());
 		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("terminals", listTerminal);
 		model.addAttribute("periods", listPeriod);
@@ -136,7 +136,7 @@ public class FileController {
 //		request.getSession().setAttribute("periodOne", listPeriod.get(2).getPeriodId());
 //		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("periodsCheck", listPeriod);
-		request.getSession().setAttribute("terminalsOne", listTerminal.get(0).getTerminalId());
+		request.getSession().setAttribute("terminalsOne", listTerminal.size() == 0 ? "" : listTerminal.get(0).getTerminalId());
 		model.addAttribute("terminals", listTerminal);
 		if(Integer.parseInt((String)request.getSession().getAttribute("rId")) == 5) return "check/checkFinalList";
 		return "check/checkList";
@@ -289,7 +289,7 @@ public class FileController {
 				String path = savePath + "/" + fName;
 				//String rootPath = request.getRealPath("/") + "media/" + fName;
 				//System.out.println(request.getRealPath("/"));
-				String rootPath = this.getClass().getResource("/").getPath().replaceAll("%20", "");
+				String rootPath = this.getClass().getResource("/").getPath().replaceAll("%20", " ");
 				rootPath = rootPath.substring(0, rootPath.indexOf("WEB-INF")) + "media/" + fName;
 				System.out.println(rootPath);
 				File f = new File(path);

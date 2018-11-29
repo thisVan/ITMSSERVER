@@ -127,5 +127,11 @@ public interface CommonDao {
 	void saveInsetPlayTable(PlayTable ptable, String mid);
 
 	void deleteItem(String id);
+	
+	//7.14
+	boolean copyOneToPlayFile(String pid, String mid,int num);
+	
+	//7.15
+    boolean delOneFromPlayFile(String pid, String mid, int num);
 
 }

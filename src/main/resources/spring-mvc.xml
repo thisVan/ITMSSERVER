@@ -62,7 +62,8 @@
     <mvc:interceptors>  
        <!-- 多个拦截器，顺序执行  -->  
        <mvc:interceptor>  
-           <mvc:mapping path="/**"/>  
+           <mvc:mapping path="/**"/>
+           <mvc:exclude-mapping path="/login/loginIn.do"/>  
            <bean class="org.south.itms.interceptor.CoreInterceptor"></bean>  
        </mvc:interceptor>  
     </mvc:interceptors>  

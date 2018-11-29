@@ -114,7 +114,7 @@
     			  var tmpdata = obj.data;
     			  var pid = tmpdata.pid;
     			  if(obj.event === 'mediaInfo'){
-    				  document.location = '<%=request.getContextPath()%>/ptable/goCheckPtableFinal/' + pid + '.do';
+    				  document.location = '<%=request.getContextPath()%>/ptable/goCheckPtableFirst/' + pid + '.do';
     			  }
     		  });
     		});

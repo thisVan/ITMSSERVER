@@ -69,7 +69,7 @@ public class PeriodDaoImpl implements PeriodDao {
 		if(list.size() == 0) {
 			return false;
 		}else {
-			System.out.println(list.get(0));
+//			System.out.println(list.get(0));
 			return true;
 		}
 	}
@@ -109,7 +109,11 @@ public class PeriodDaoImpl implements PeriodDao {
 		query.setParameter(0, periodId);
 		query.setParameter(1, 0);
 		List<Period> list = query.list();
-		return list.get(0);
+		if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -156,10 +160,11 @@ public class PeriodDaoImpl implements PeriodDao {
 		query.setParameter(0, 0);
 		query.setParameter(1, periodId);
 		List<Period> list = query.list();
-		if(list.size() == 0) {
+		if(list.size() > 0) {
+			return list.get(0);
+		} else {
 			return null;
 		}
-		return list.get(0);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
