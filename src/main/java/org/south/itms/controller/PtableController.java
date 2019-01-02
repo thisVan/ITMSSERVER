@@ -1,22 +1,38 @@
 package org.south.itms.controller;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.File;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.Collator;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.south.itms.dao.impl.FileDao;
 import org.south.itms.dao.impl.MaterialDao;
 import org.south.itms.dao.impl.PtableDao;
@@ -26,7 +42,7 @@ import org.south.itms.dto.Page;
 import org.south.itms.dto.PageResultData;
 import org.south.itms.dto.PtableDto;
 import org.south.itms.dto.Result;
-import org.south.itms.entity.File;
+//import org.south.itms.entity.File;
 import org.south.itms.entity.IPTable;
 import org.south.itms.entity.Items;
 import org.south.itms.entity.Material;
@@ -43,7 +59,14 @@ import org.south.itms.util.EntityUtil;
 import org.south.itms.util.SqlUtil;
 import org.south.itms.util.StringUtil;
 import org.south.itms.util.TimeUtil;
+import org.south.netty.NettyChannelMap;
 import org.south.netty.PlayTableTask;
+import org.south.netty.msg.DataKey;
+import org.south.netty.msg.FileDto;
+import org.south.netty.msg.FileInfoDto;
+import org.south.netty.msg.InsertDto;
+import org.south.netty.msg.MsgType;
+import org.south.netty.msg.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +75,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import io.netty.channel.ChannelFuture;
+
 /**
  * @author: yezilong
  */
@@ -59,9 +87,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/ptable")
 public class PtableController {
-
-	@Autowired
-	private UserDao userDao;
 
 	@Autowired
 	private CommonService commonService;
@@ -79,10 +104,16 @@ public class PtableController {
 	private PtableDao ptableDao;
 
 	@Autowired
+	private UserDao userDao;
+
+	@Autowired
 	private FileDao fileDao;
 
 	@Autowired
 	private MaterialDao materialDao;
+	
+	//配置Log4j日志记录
+	private static Logger logger = Logger.getLogger(PtableController.class);
 
 	@RequestMapping("/ptableList")
 	public String ptableList(Model model, HttpServletRequest request) {
@@ -95,21 +126,21 @@ public class PtableController {
 		model.addAttribute("periodL", listPeriod);
 		model.addAttribute("userL", listUser);
 		return "ptable/ptableList";*/
-		
-		//zhenghe
+
+		// zhenghe
 		List<Terminal> listTerminal = commonService.getAllTerminal();
 		model.addAttribute("terminalPtable", listTerminal);
-		//request.getSession().setAttribute("terminalPtable", listTerminal);
+		// request.getSession().setAttribute("terminalPtable", listTerminal);
 		List<Period> listPeriod = commonService.getAllPeriod();
 		List<User> listUser = userService.getAllUser();
 		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("periodL", listPeriod);
 		model.addAttribute("userL", listUser);
-		if((Constant.adminValue).equals((String)request.getSession().getAttribute("rId"))||
-				(Constant.broadValue).equals((String)request.getSession().getAttribute("rId"))) {
+		if ((Constant.adminValue).equals((String) request.getSession().getAttribute("rId"))
+				|| (Constant.broadValue).equals((String) request.getSession().getAttribute("rId"))) {
 			return "ptable/ptableList";
 		}
- 
+
 		return "ptable/ptableListOther";
 	}
 
@@ -120,31 +151,30 @@ public class PtableController {
 		return "instead/insteadPtableList";
 	}
 
-/*	@RequestMapping("/addInsertMaterial")
+	/*	@RequestMapping("/addInsertMaterial")
+		@ResponseBody
+		public String addInsertMaterial(String mid, String terminalId, String intervalTime, String dateTime,
+				String testDate, String stat, HttpServletRequest request) throws ParseException {
+	
+			// commonService.resetPtableState(pid);
+	
+			String[] time = testDate.split("-");
+			java.sql.Time startTime = TimeUtil.translateTime(time[0].trim());
+			java.sql.Time endTime = TimeUtil.translateTime(time[1].trim());
+			if (TimeUtil.timeValidate(startTime, endTime)) {
+				savePtable(terminalId, dateTime, startTime, endTime, stat, mid, request, intervalTime);
+			} else {
+				return "1";
+			}
+			return "true";
+		}*/
+
+	@RequestMapping("/addInsertMaterial")
 	@ResponseBody
-	public String addInsertMaterial(String mid, String terminalId, String intervalTime, String dateTime,
+	public String addInsertMaterial(String ptableName, String mid, String terminalId, String intervalTime, String dateTime,
 			String testDate, String stat, HttpServletRequest request) throws ParseException {
 
 		// commonService.resetPtableState(pid);
-
-		String[] time = testDate.split("-");
-		java.sql.Time startTime = TimeUtil.translateTime(time[0].trim());
-		java.sql.Time endTime = TimeUtil.translateTime(time[1].trim());
-		if (TimeUtil.timeValidate(startTime, endTime)) {
-			savePtable(terminalId, dateTime, startTime, endTime, stat, mid, request, intervalTime);
-		} else {
-			return "1";
-		}
-		return "true";
-	}*/
-	
-	@RequestMapping("/addInsertMaterial")
-	@ResponseBody
-	public String addInsertMaterial(String mid,String terminalId,
-			String intervalTime, String dateTime, 
-			String testDate, String stat, HttpServletRequest request) throws ParseException {
-		
-		//commonService.resetPtableState(pid);
 		String startDate = "";
 		String endDate = "";
 		String[] date = dateTime.split(" ");
@@ -155,24 +185,26 @@ public class PtableController {
 		String[] time = testDate.split("-");
 		java.sql.Time startTime = TimeUtil.translateTime(time[0].trim());
 		java.sql.Time endTime = TimeUtil.translateTime(time[1].trim());
-		
-		int start = 0;//插播开始时间距离生成插播的时间间隔
-		int end = 0;//插播结束时间距离生成插播的时间间隔
-		start =fromListItems(startDate);
+
+		int start = 0;// 插播开始时间距离生成插播的时间间隔
+		int end = 0;// 插播结束时间距离生成插播的时间间隔
+		start = fromListItems(startDate);
 		end = fromListItems(endDate);
-		if(end < 0 ) return "1";
-		if(start<0) start=0;//如果开始日期比当前日期时间小
-		if(TimeUtil.timeValidate(startTime, endTime)&&TimeUtil.dateValidate(d1, d2)) {
-			for(int i = start; i <= end; i++) {
-				java.util.Calendar cal=java.util.Calendar.getInstance();
+		if (end < 0)
+			return "1";
+		if (start < 0)
+			start = 0;// 如果开始日期比当前日期时间小
+		if (TimeUtil.timeValidate(startTime, endTime) && TimeUtil.dateValidate(d1, d2)) {
+			for (int i = start; i <= end; i++) {
+				java.util.Calendar cal = java.util.Calendar.getInstance();
 				cal.setTime(new Date());
-				cal.add(Calendar.DATE,i);
-				Date nextDate=cal.getTime();
+				cal.add(Calendar.DATE, i);
+				Date nextDate = cal.getTime();
 				java.sql.Date sqlDate = new java.sql.Date(nextDate.getTime());
-				savePtable(terminalId, sqlDate, startTime, endTime, stat, mid, request, intervalTime);
+				savePtable(ptableName, terminalId, sqlDate, startTime, endTime, stat, mid, request, intervalTime);
 			}
-			
-		}else {
+
+		} else {
 			return "1";
 		}
 		return "true";
@@ -198,12 +230,11 @@ public class PtableController {
 		ptable.setMin(Integer.parseInt(intervalTime));
 		commonService.saveInsetPlayTable(ptable, mid);
 	}*/
-	private void savePtable(String terminalId, Date dateTime, Time startTime, Time endTime, 
-			String stat, String mid, HttpServletRequest request,
-			String intervalTime) throws ParseException {
+	private void savePtable(String ptableName, String terminalId, Date dateTime, Time startTime, Time endTime, String stat, String mid,
+			HttpServletRequest request, String intervalTime) throws ParseException {
 		Terminal terminal = commonService.getTerminalById(terminalId);
-		//Date d = TimeUtil.translateDate(dateTime);
-		Date d=dateTime;
+		// Date d = TimeUtil.translateDate(dateTime);
+		Date d = dateTime;
 		PlayTable ptable = new PlayTable();
 		ptable.setCreateTime(new Timestamp(new Date().getTime()));
 		String userId = (String) request.getSession().getAttribute("userId");
@@ -216,7 +247,11 @@ public class PtableController {
 		ptable.setState(Integer.parseInt(stat));
 		ptable.setTerminalId(terminalId);
 		ptable.setStatusId(Constant.uncheck);
-		ptable.setPtableName(terminal.getTerminalName() + " 插播  (" + dateTime + ")");
+		if ("".equals(ptableName)) {
+			ptable.setPtableName(terminal.getTerminalName() + " 插播  (" + dateTime + ")");
+		} else {
+			ptable.setPtableName(ptableName);
+		}
 		ptable.setMin(Integer.parseInt(intervalTime));
 		commonService.saveInsetPlayTable(ptable, mid);
 	}
@@ -241,7 +276,7 @@ public class PtableController {
 		}
 		return "ptable/ptableCheckList";
 	}
-
+	
 	@RequestMapping("/ptableCheckSecondList")
 	public String ptableCheckSecondList(Model model, HttpServletRequest request) {
 		List<Period> listPeriod = commonService.getAllPeriod();
@@ -254,7 +289,7 @@ public class PtableController {
 		}
 		return "ptable/ptableCheckFinalList";
 	}*/
-	
+
 	@RequestMapping("/ptableCheckFirstList")
 	public String ptableCheckFirstList(Model model, HttpServletRequest request) {
 		List<Period> listPeriod = commonService.getAllPeriod();
@@ -262,12 +297,12 @@ public class PtableController {
 		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("periodL", listPeriod);
 		model.addAttribute("userL", listUser);
-		if((Constant.adminValue).equals((String)request.getSession().getAttribute("rId"))) {
+		if ((Constant.adminValue).equals((String) request.getSession().getAttribute("rId"))) {
 			return "ptable/ptableCheckFinalListAdmin";
 		}
 		return "ptable/ptableCheckList";
 	}
-	
+
 	@RequestMapping("/ptableCheckSecondList")
 	public String ptableCheckSecondList(Model model, HttpServletRequest request) {
 		List<Period> listPeriod = commonService.getAllPeriod();
@@ -275,7 +310,7 @@ public class PtableController {
 		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("periodL", listPeriod);
 		model.addAttribute("userL", listUser);
-       /* if((Constant.adminValue).equals((String)request.getSession().getAttribute("rId"))) {
+		/* if((Constant.adminValue).equals((String)request.getSession().getAttribute("rId"))) {
 			return "ptable/ptableCheckFinalListAdmin";
 		}*/
 		return "ptable/ptableCheckFinalList";
@@ -285,7 +320,8 @@ public class PtableController {
 	public String goAddPtable(Model model, HttpServletRequest request) {
 		List<Terminal> listTerminal = commonService.getAllTerminal();
 		model.addAttribute("terminals", listTerminal);
-		List<IPTable> listInsert = commonService.getAllIPTable(listTerminal.size() == 0 ? "" : listTerminal.get(0).getTerminalId());
+		List<IPTable> listInsert = commonService
+				.getAllIPTable(listTerminal.size() == 0 ? "" : listTerminal.get(0).getTerminalId());
 		model.addAttribute("insertTables", listInsert);
 		request.getSession().setAttribute("tableNum", listInsert.size());
 		// return "ptable/insertPtableOld";
@@ -310,36 +346,44 @@ public class PtableController {
 	@RequestMapping("/generateTable")
 	public void generateTable(Model model, HttpServletRequest request, String periodId, String startDate,
 			String endDate, HttpServletResponse response) throws IOException {
+		JSONObject jsonObject = new JSONObject();
 		System.out.println(periodId);
+		logger.info("生成播表");
 
 		String uid = (String) request.getSession().getAttribute("userId");
 		if (uid == null || "".equals(uid)) {
 			PrintWriter out = response.getWriter();
-			out.print("1");
+			jsonObject.put("stateCode", "1");
+			out.print(jsonObject);
 			out.flush();
 			out.close();
 		} else {
 			if ("".equals(startDate) || "".equals(endDate)) {
 				PrintWriter out = response.getWriter();
-				out.print("2");
+				jsonObject.put("stateCode", "2");
+				out.print(jsonObject);
 				out.flush();
 				out.close();
 			} else if (TimeUtil.checkTime(startDate, endDate)) {
-				if (commonService.generateTb(periodId, uid, startDate, endDate)) {
+				Map generateRecallMap = commonService.generateTb(periodId, uid, startDate, endDate);
+				if ((boolean) generateRecallMap.get("isSuccess")) {
 					PrintWriter out = response.getWriter();
-					out.print("true");
+					jsonObject.put("stateCode", "true");
+					jsonObject.put("ignorePidsList", generateRecallMap.get("ignorePidsList"));
+					out.print(jsonObject);
 					out.flush();
 					out.close();
 				} else {
-
 					PrintWriter out = response.getWriter();
-					out.print("false");
+					jsonObject.put("stateCode", "false");
+					out.print(jsonObject);
 					out.flush();
 					out.close();
 				}
 			} else {
 				PrintWriter out = response.getWriter();
-				out.print("3");
+				jsonObject.put("stateCode", "3");
+				out.print(jsonObject);
 				out.flush();
 				out.close();
 				// if(commonService.generateTable(periodId, uid)) {
@@ -436,7 +480,7 @@ public class PtableController {
 		}
 		try {
 			Page pageD = commonService.pageSearchPtableByTemplateHQL(startDate, endDate, param, page, limit,
-					"PlayTable", "pid desc", null);
+					"PlayTable", "play_date desc", null);
 			List<PlayTable> listPtable = pageD.getList();
 			List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
 			PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
@@ -678,10 +722,11 @@ public class PtableController {
 		}
 
 	}
-	
-	//7.15
+
+	// 7.15
 	@RequestMapping(value = "/goModifyPtable/{pid}/{periodName}/{tid}")
-	public String goModifyPtable(@PathVariable String pid, @PathVariable String periodName,@PathVariable String tid,ModelMap modelMap) {
+	public String goModifyPtable(@PathVariable String pid, @PathVariable String periodName, @PathVariable String tid,
+			ModelMap modelMap) {
 		boolean playTableIsUnChecked = false;
 		PlayTable playTable = ptableDao.getById(pid);
 		if (playTable.getStatusId() != null && "1".contentEquals(playTable.getStatusId())) {
@@ -689,19 +734,23 @@ public class PtableController {
 		}
 		modelMap.addAttribute("pid", pid);
 		modelMap.addAttribute("periodName", periodName);
+		modelMap.addAttribute("periodID", playTable.getPeriodId());
 		modelMap.addAttribute("tid", tid);
 		modelMap.addAttribute("isUnChecked", playTableIsUnChecked);
+		modelMap.addAttribute("playTableName", playTable.getPtableName());
+		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
+		
 		return "ptable/addPtable";
 	}
-	
+
 	@RequestMapping(value = "/goShowPtable/{pid}")
 	public String showPtable(@PathVariable String pid, ModelMap modelMap, HttpServletRequest request) {
-		
+
 		PlayTable ptb = ptableDao.getById(pid);
 		modelMap.addAttribute("pid", pid);
 		modelMap.addAttribute("periodName", ptb.getPtableName());
 		modelMap.addAttribute("tid", ptb.getTerminalId());
-		
+
 		List<Material> files = fileDao.findByPtable(pid);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -719,6 +768,18 @@ public class PtableController {
 		return "ptable/checkPtable";
 	}
 
+	@RequestMapping(value = "/goCheckPtablesFirst/{pids}")
+	public String goCheckPtables(@PathVariable String pids, ModelMap modelMap, HttpServletRequest request) {
+		modelMap.addAttribute("pids", pids);
+		String[] pidss = pids.split(",");
+		modelMap.addAttribute("pid", pidss[0]);
+		List<Material> files = fileDao.findByPtable(pidss[0]);
+		request.getSession().setAttribute("tableFirst", files);
+		String rid = (String) request.getSession().getAttribute("rId");
+		request.getSession().setAttribute("modifyPid", pids);
+		return "ptable/checkPtable";
+	}
+
 	@RequestMapping(value = "/goCheckPtableFinal/{pid}")
 	public String goCheckPtableFinal(@PathVariable String pid, ModelMap modelMap, HttpServletRequest request) {
 		modelMap.addAttribute("pid", pid);
@@ -726,6 +787,18 @@ public class PtableController {
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
 		request.getSession().setAttribute("modifyPid", pid);
+		return "ptable/checkPtableFinal";
+	}
+
+	@RequestMapping(value = "/goCheckPtablesFinal/{pids}")
+	public String goCheckPtablesFinal(@PathVariable String pids, ModelMap modelMap, HttpServletRequest request) {
+		modelMap.addAttribute("pids", pids);
+		String[] pidss = pids.split(",");
+		modelMap.addAttribute("pid", pidss[0]);
+		List<Material> files = fileDao.findByPtable(pidss[0]);
+		request.getSession().setAttribute("tableFirst", files);
+		String rid = (String) request.getSession().getAttribute("rId");
+		request.getSession().setAttribute("modifyPid", pids);
 		return "ptable/checkPtableFinal";
 	}
 
@@ -806,34 +879,135 @@ public class PtableController {
 		}
 	}
 
+	/**
+	 * 返回去重排序后的播表素材列表，以ajax方式，json类型传回前端
+	 * 
+	 * @param pid
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/getDistinctMaterialsByPidSortByName")
+	public void getDistinctMaterialsByPidSortByName(String pid, HttpServletRequest request,
+			HttpServletResponse response) {
+		JSONArray jsonArray = new JSONArray();
+		if (StringUtil.isEmpty(pid)) {
+			return;
+		}
+		try {
+			System.out.println(pid);
+			PlayTable playTable = ptableDao.getById(pid);
+			System.out.println(playTable.getPtableName());
+			String name = playTable.getPtableName();
+
+			if (playTable.getInsertFlag() == 0) {
+				List<Items> files = materialDao.findByPtable(pid);
+				HashSet<Items> hashSet = new HashSet<Items>();
+				ArrayList<Items> distinctMaterialsList = new ArrayList<Items>();
+				for (Items items : files) {
+					if (hashSet.add(items)) {
+						distinctMaterialsList.add(items);
+					}
+				}
+
+				Collections.sort(distinctMaterialsList, new Comparator<Items>() {
+					@Override
+					public int compare(Items i1, Items i2) {
+						Collator collator = Collator.getInstance(Locale.CHINA);
+						return collator.compare(i1.getMaterialName(), i2.getMaterialName());
+					}
+				});
+
+				for (int i = 0; i < distinctMaterialsList.size(); i++) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("num", i + 1);
+					jsonObject.put("name", distinctMaterialsList.get(i).getMaterialName());
+					jsonObject.put("frequncy", distinctMaterialsList.get(i).getFrequency());
+					jsonObject.put("duration", distinctMaterialsList.get(i).getDuration());
+
+					jsonArray.add(jsonObject);
+				}
+				PrintWriter out = response.getWriter();
+				out.print(jsonArray);
+				out.flush();
+				out.close();
+			} else if (playTable.getInsertFlag() == 1) {
+				List<Material> files = materialDao.findMaterialByPtable(pid);
+				List<Items> filesList = EntityUtil.createNewItems(files);
+
+				Collections.sort(filesList, new Comparator<Items>() {
+					@Override
+					public int compare(Items i1, Items i2) {
+						Collator collator = Collator.getInstance(Locale.CHINA);
+						return collator.compare(i1.getMaterialName(), i2.getMaterialName());
+					}
+				});
+
+				for (int i = 0; i < filesList.size(); i++) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("num", i + 1);
+					jsonObject.put("name", filesList.get(i).getMaterialName());
+					jsonObject.put("frequncy", filesList.get(i).getFrequency());
+					jsonObject.put("duration", filesList.get(i).getDuration());
+
+					jsonArray.add(jsonObject);
+				}
+				PrintWriter out = response.getWriter();
+				out.print(jsonArray);
+				out.flush();
+				out.close();
+			} else {
+				PrintWriter out = response.getWriter();
+				out.print(jsonArray);
+				out.flush();
+				out.close();
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * 播表初级审核
+	 * 
+	 * @param ppid
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param sortNum
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/modifyPlayTableNum")
-	public void modifyPlayTableNum(String ppid, Model model, HttpServletRequest request, HttpServletResponse response,
+	public void modifyPlayTableNum(String[] ppid, Model model, HttpServletRequest request, HttpServletResponse response,
 			String sortNum) throws IOException {
-		System.out.println(ppid + "=" + sortNum);
+		// System.out.println(ppid + "=" + sortNum);
 		// System.out.println("pid=" + (String)
 		// request.getSession().getAttribute("modifyPid"));
+		logger.info("播表初级审核");
 		if ("".equals(sortNum)) {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
-			ptableService.updateTableStatus(ppid);
-			PrintWriter out = response.getWriter();
-			out.print("true");
-			out.flush();
-			out.close();
+			for (int i = 0; i < ppid.length; i++) {
+				ptableService.updateTableStatus(ppid[i]);
+				PrintWriter out = response.getWriter();
+				out.print("true");
+				out.flush();
+				out.close();
+			}
 		} else {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 			// System.out.println(pid);
-			ptableService.modifyPlayTableNum(ppid, sortNum);
-			ptableService.updateTableStatus(ppid);
-			// int num = Integer.parseInt((String)
-			// request.getSession().getAttribute("playNum"));
-			// request.getSession().setAttribute("playNum", num - 1);
-			int num = userDao.getAccountTable(1);
-			String n = "" + num;
-			request.getSession().setAttribute("playNum", n);
-			PrintWriter out = response.getWriter();
-			out.print("true");
-			out.flush();
-			out.close();
+			for (int i = 0; i < ppid.length; i++) {
+				ptableService.modifyPlayTableNum(ppid[i], sortNum);
+				ptableService.updateTableStatus(ppid[i]);
+				// int num = Integer.parseInt((String)
+				// request.getSession().getAttribute("playNum"));
+				// request.getSession().setAttribute("playNum", num - 1);
+				int num = userDao.getAccountTable(1);
+				String n = "" + num;
+				request.getSession().setAttribute("playNum", n);
+				PrintWriter out = response.getWriter();
+				out.print("true");
+				out.flush();
+				out.close();
+			}
 		}
 	}
 
@@ -844,6 +1018,7 @@ public class PtableController {
 		System.out.println(ppid + "=" + sortNum);
 		// System.out.println("pid=" + (String)
 		// request.getSession().getAttribute("modifyPid"));
+		logger.info("修改播表顺序");
 		if ("".equals(sortNum)) {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 
@@ -869,30 +1044,209 @@ public class PtableController {
 		}
 	}
 
+	/**
+	 * 播表终级审核，审核通过后重启终端，更新播表
+	 * 
+	 * @param ppid
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param sortNum
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/modifyPlayTableFinalNum")
-	public void modifyPlayTableFinalNum(String ppid, Model model, HttpServletRequest request,
+	public void modifyPlayTableFinalNum(String[] ppid, Model model, HttpServletRequest request,
 			HttpServletResponse response, String sortNum) throws IOException {
-		System.out.println(ppid + "=" + sortNum);
+		System.out.println("print by PtableControll.modifyPlayTableFinalNum():" + ppid + "=" + sortNum);
+		logger.info("播表终审");
+		logger.info("print by PtableControll.modifyPlayTableFinalNum():" + ppid + "=" + sortNum);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String todayStr = sdf.format(new Date());
+		Timer timer = new Timer();
 		if ("".equals(sortNum)) {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
-			ptableService.updateTableStatusFinal(ppid);
-			PrintWriter out = response.getWriter();
-			out.print("true");
-			out.flush();
-			out.close();
+			for (int i = 0; i < ppid.length; i++) {
+				ptableService.updateTableStatusFinal(ppid[i]);
+				PlayTable pt = ptableDao.get(ppid[i]);
+				// 判断播表是否在播，如果在播，需要更新播表
+				if (todayStr.equals(sdf.format(pt.getPlayDate()))) {
+					timer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							if (restartTerminalAfterAudit(pt.getTerminalId())) {
+								timer.cancel();
+							}
+						}
+					}, 3000, 60000); // 指定启动定时器3s之后运行定时器任务run方法，并且若未终止，间隔10s一直执行
+
+				}
+				PrintWriter out = response.getWriter();
+				out.print("true");
+				out.flush();
+				out.close();
+			}
 		} else {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 			// List<File> list = (List<File>)
 			// request.getSession().getAttribute("tableFirst");
 			// System.out.println(list);
 			// System.out.println(pid);
-			ptableService.modifyPlayTableNum(ppid, sortNum);
-			ptableService.updateTableStatusFinal(ppid);
-			// int num = Integer.parseInt((String)
-			// request.getSession().getAttribute("playNum"));
-			// request.getSession().setAttribute("playNum", num - 1);
-			int num = userDao.getAccountTable(2);
-			request.getSession().setAttribute("playNum", "" + num);
+			for (int i = 0; i < ppid.length; i++) {
+				ptableService.modifyPlayTableNum(ppid[i], sortNum);
+				ptableService.updateTableStatusFinal(ppid[i]);
+				PlayTable pt = ptableDao.get(ppid[i]);
+				// 判断播表是否在播，如果在播，需要更新播表
+				if (todayStr.equals(sdf.format(pt.getPlayDate()))) {
+					timer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							if (restartTerminalAfterAudit(pt.getTerminalId())) {
+								timer.cancel();
+							}
+						}
+					}, 30000, 120000); // 指定启动定时器3s之后运行定时器任务run方法，并且若未终止，间隔10s一直执行
+				}
+				// int num = Integer.parseInt((String)
+				// request.getSession().getAttribute("playNum"));
+				// request.getSession().setAttribute("playNum", num - 1);
+				int num = userDao.getAccountTable(2);
+				request.getSession().setAttribute("playNum", "" + num);
+				PrintWriter out = response.getWriter();
+				out.print("true");
+				out.flush();
+				out.close();
+			}
+		}
+	}
+
+	/**
+	 * 播表审核通过后，更新播放器端播表，并重启播放器，应用新播表
+	 * 
+	 * @param terminalId
+	 * @throws InterruptedException 
+	 */
+	public boolean restartTerminalAfterAudit(String terminalId) {
+		if (NettyChannelMap.get(terminalId) != null) {
+			Terminal termianlRs = terminalService.get(terminalId);
+			// 重启终端
+			SimpleDateFormat format1 = new SimpleDateFormat("HH:mm:ss");
+			System.out.println("channel server Rs=" + NettyChannelMap.get(termianlRs.getTerminalId()));
+			System.out.println("channel length Rs= " + NettyChannelMap.getMap().size());
+			// 重启客户端
+			ResultMsg resultMsgRs = new ResultMsg(true, MsgType.restartTerminal);
+			// 返回播放端的主键
+			Map<String, Object> dataRs = new HashMap<String, Object>();
+			dataRs.put(DataKey.TerminalId, termianlRs.getTerminalId());
+			dataRs.put(DataKey.TerminalName, termianlRs.getTerminalName());
+			dataRs.put(DataKey.startSpotTop, termianlRs.getStartSpotTop());
+			dataRs.put(DataKey.startSpotLeft, termianlRs.getStartSpotLeft());
+			dataRs.put(DataKey.ledWidth, termianlRs.getLedWidth());
+			dataRs.put(DataKey.ledLength, termianlRs.getLedLength());
+			// 返回播放端的播放表有哪些视频列表
+			List<FileInfoDto> vediofilesRs = new ArrayList<FileInfoDto>();
+			System.out.println(dataRs);
+			List<PlayTable> playsRs = ptableService.findPlayTablesByTerminalId(termianlRs.getTerminalId());
+
+			if (playsRs.size() != 0) {
+				for (PlayTable pt : playsRs) {
+					if (pt.getInsertFlag() == 1)
+						continue; // 是插播的话直接跳过
+					List<Material> fs = fileDao.findByPtable(pt.getPid());
+					for (Material f : fs) {
+						System.out.println(f);
+					}
+					Period period = fileDao.findByPeriod(pt.getPeriodId());
+					FileInfoDto fileInfo = new FileInfoDto();
+					fileInfo.setFlag(0);
+					fileInfo.setPeriodId(pt.getPeriodId());
+					fileInfo.setPname(pt.getPtableName());
+					fileInfo.setPid(pt.getPid());
+					fileInfo.setStart(format1.format(period.getStartInterval()));
+					fileInfo.setEnd(format1.format(period.getEndInterval()));
+					ArrayList<FileDto> fileDto = new ArrayList<FileDto>();
+					for (Material file : fs) {
+						fileDto.add(new FileDto(file.getMid(), StringUtil.getFileName(file.getFilePath()),
+								file.getFileName(), file.getMd5()));
+					}
+					fileInfo.setListFile(fileDto);
+					vediofilesRs.add(fileInfo);
+				}
+				System.out.println("Rs=" + vediofilesRs.size());
+				System.out.println("Rs=" + vediofilesRs);
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+
+				// 插播
+				List<InsertDto> insertDtoRs = new ArrayList<InsertDto>();
+				List<PlayTable> ipTableRs = ptableService.findInsertPlayTablesByTerminalId(termianlRs.getTerminalId());
+				if (ipTableRs.size() == 0 || ipTableRs == null) {
+					System.out.println("插播为空");
+				} else {
+					for (PlayTable ip : ipTableRs) {
+						List<Material> listMaterial = ptableService.findAllMaterialsByPlayTableId(ip.getPid());
+						InsertDto dto = new InsertDto();
+						int sum = 0;
+						List<String> mid = new ArrayList<String>();
+						List<String> fileName = new ArrayList<String>();
+						List<String> logicName = new ArrayList<String>();
+						List<String> md5 = new ArrayList<String>();
+						for (Material m : listMaterial) {
+							mid.add(m.getMid());
+							String[] insertFileName = m.getFilePath().split("/");
+							fileName.add(insertFileName[insertFileName.length - 1]);
+							logicName.add(m.getMaterialName());
+							md5.add(m.getMd5());
+							sum = sum + m.getDuration();
+						}
+						dto.setEnd(format.format(ip.getEndTime()));
+						dto.setStart(format.format(ip.getStartTime()));
+						dto.setStatus("" + ip.getState());
+						dto.setMin("" + ip.getMin());
+						dto.setDuration("" + sum);
+						dto.setMid(mid);
+						dto.setFileName(fileName);
+						dto.setLogicName(logicName);
+						dto.setMd5(md5);
+						insertDtoRs.add(dto);
+					}
+					System.out.println("insertDataRs=" + insertDtoRs);
+				}
+
+				dataRs.put(DataKey.vediofiles, vediofilesRs);
+				dataRs.put(DataKey.insertfiles, insertDtoRs);
+				resultMsgRs.setData(dataRs);
+				ChannelFuture cf = NettyChannelMap.get(terminalId).writeAndFlush(resultMsgRs);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (cf.isSuccess()) {
+					System.out.println("在播播表更新成功，成功更新客户端播表！");
+					logger.info("在播播表更新成功，成功更新客户端播表！");
+					return true;
+				} else {
+					System.out.println("在播播表更新失败，错误原因，服务器未能成功发送指令到终端，系统将在稍后重试！");
+					logger.info("在播播表更新失败，错误原因，服务器未能成功发送指令到终端，系统将在稍后重试！");
+					return false;
+				}
+			}
+			System.out.println("在播播表没有更新，未查询到播表！");
+			logger.info("在播播表没有更新，未查询到播表！");
+			return true;
+		} else {
+			System.out.println("在播播表更新失败，错误原因：未检测到设备！");
+			logger.info("在播播表更新失败，错误原因：未检测到设备！系统将在自动稍后重试！");
+			return false;
+		}
+	}
+
+	@RequestMapping(value = "/modifyPlayTableFinalNumUn")
+	public void modifyPlayTableFinalNumUn(String[] ppid, Model model, String mark, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		System.out.println(ppid + "=");
+		// String pid = (String) request.getSession().getAttribute("modifyPid");
+		for (int i = 0; i < ppid.length; i++) {
+			ptableService.updateTableStatusFinalUn(ppid[i], mark);
 			PrintWriter out = response.getWriter();
 			out.print("true");
 			out.flush();
@@ -900,20 +1254,8 @@ public class PtableController {
 		}
 	}
 
-	@RequestMapping(value = "/modifyPlayTableFinalNumUn")
-	public void modifyPlayTableFinalNumUn(String ppid, Model model, String mark, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		System.out.println(ppid + "=");
-		// String pid = (String) request.getSession().getAttribute("modifyPid");
-		ptableService.updateTableStatusFinalUn(ppid, mark);
-		PrintWriter out = response.getWriter();
-		out.print("true");
-		out.flush();
-		out.close();
-	}
-
 	@RequestMapping(value = "/playTableUnAccess")
-	public void playTableUnAccess(String ppid, Model model, String[] checkArray, HttpServletRequest request,
+	public void playTableUnAccess(String[] ppid, Model model, String[] checkArray, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		System.out.println(ppid + "=");
 		// String pid = (String) request.getSession().getAttribute("modifyPid");
@@ -925,11 +1267,17 @@ public class PtableController {
 			out.close();
 		} else {
 			if (checkArray.length == 2) {
-				ptableService.playTableUnAccess(ppid, "7");
+				for (int i = 0; i < ppid.length; i++) {
+					ptableService.playTableUnAccess(ppid[i], "7");
+				}
 			} else if (checkArray.length == 1 && "1".equals(checkArray[0])) {
-				ptableService.playTableUnAccess(ppid, "5");
+				for (int i = 0; i < ppid.length; i++) {
+					ptableService.playTableUnAccess(ppid[i], "5");
+				}
 			} else if (checkArray.length == 1 && "2".equals(checkArray[0])) {
-				ptableService.playTableUnAccess(ppid, "6");
+				for (int i = 0; i < ppid.length; i++) {
+					ptableService.playTableUnAccess(ppid[i], "6");
+				}
 			}
 			PrintWriter out = response.getWriter();
 			out.print("true");
@@ -995,7 +1343,7 @@ public class PtableController {
 	}
 
 	// 7.14
-
+	
 	@RequestMapping(value = "/copyOneToPlayFile")
 	public void copyOneToPlayFile(String ppid, HttpServletRequest request, HttpServletResponse response, String mmid,
 			String num) throws IOException {
@@ -1020,13 +1368,26 @@ public class PtableController {
 		} else {
 			int insertnum = Integer.parseInt(num) + 1;
 			if (commonService.copyOneToPlayFile(ppid, mmid, insertnum)) {
+				// 更新播表时间
+				List<Items> itmsList = materialDao.findByPtable(ppid);
+				int allTime = 0;
+				String terminalId = "";
+				for (Items items : itmsList) {
+					allTime += items.getDuration() * items.getFrequency();
+					if ("".equals(terminalId)) {
+						terminalId = items.getTerminalId();
+					}
+				}
+				String allTimeStr = allTime / 60 + "分" + allTime % 60 + "秒";
+				Terminal terminal = terminalService.get(terminalId);
+				double fullScreenRate = (double) allTime * 1000 / (terminal.getRunEndTime().getTime() - terminal.getRunStartTime().getTime());
+				ptableService.updatePlayTableAllTime(ppid, allTimeStr, new DecimalFormat("#.##%").format(fullScreenRate));
 				PrintWriter out = response.getWriter();
 				out.print("true");
 				out.flush();
 				out.close();
 			}
 		}
-
 	}
 
 	// 7.15
@@ -1054,24 +1415,39 @@ public class PtableController {
 		} else {
 			int deltnum = Integer.parseInt(num) + 1;
 			if (commonService.delOneFromPlayFile(ppid, mmid, deltnum)) {
-				
 				// 删除成功后，更新file表的序号
 				List<Items> files = materialDao.findByPtable(ppid);// 获取播表id对应剩余的所有素材item
 				String sortNum = "";// 当前ppid所存在的所有素材mid
 				for (int i = 0; i < files.size(); i++) {
 					sortNum += "," + files.get(i).getMaterial().getMid();
 				}
-				sortNum=sortNum.substring(1);
-				ptableService.modifyPlayTableNumbyDelAll(ppid, sortNum);
+				//判断sortNum是否为空
+				if (!"".equals(sortNum)) {
+					sortNum = sortNum.substring(1);
+					ptableService.modifyPlayTableNumbyDelAll(ppid, sortNum);
+				}
+				//更新播表时间
+				List<Items> itmsList = materialDao.findByPtable(ppid);
+				int allTime = 0;
+				String terminalId = "";
+				for (Items items : itmsList) {
+					allTime += items.getDuration() * items.getFrequency();
+					if ("".equals(terminalId)) {
+						terminalId = items.getTerminalId();
+					}
+				}
+				String allTimeStr = allTime/60 + "分" + allTime%60 +"秒";
+				Terminal terminal = terminalService.get(terminalId);
+				double fullScreenRate = (double)allTime * 1000 / (terminal.getRunEndTime().getTime() - terminal.getRunStartTime().getTime());
+				ptableService.updatePlayTableAllTime(ppid, allTimeStr, new DecimalFormat("#.##%").format(fullScreenRate));
 				PrintWriter out = response.getWriter();
 				out.print("true");
 				out.flush();
 				out.close();
 			}
 		}
-
 	}
-	
+
 	private int fromListItems(String dateTime) {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
@@ -1086,9 +1462,134 @@ public class PtableController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		int width = (int)(((d.getTime() - date.getTime())) / 1000 / 60 / 60 / 24);
+		int width = (int) (((d.getTime() - date.getTime())) / 1000 / 60 / 60 / 24);
 		return width;
 	}
 
+	@RequestMapping(value = "generateExcel")
+	public void generateExcel(String terminalId, String startTime, String endTime, String statusId,
+			HttpServletResponse response) throws ParseException {
+		List<Terminal> list1 = commonService.getAllTerminal();
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = commonService.getAllUser();
+
+		if (!"".equals(startTime) && !"".equals(endTime)) {
+			Date d1 = TimeUtil.translateDate(startTime);
+			Date d2 = TimeUtil.translateDate(endTime);
+			if (!TimeUtil.dateValidate(d1, d2)) {
+				PageResultData<PtableDto> pageResult1 = new PageResultData<PtableDto>();
+				pageResult1.setCount(0);
+				pageResult1.setFail(1);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("时间前后有误!!");
+			}
+		}
+
+		try {
+			// 第一步，创建一个webbook，对应一个Excel文件
+			HSSFWorkbook wb = new HSSFWorkbook();
+			// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+			HSSFSheet sheet = wb.createSheet("表一");
+			// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+			HSSFRow row = sheet.createRow((int) 0);
+			// 第四步，设置各列表头
+			HSSFCell cell = row.createCell((short) 0);
+			cell.setCellValue("播表名");
+
+			cell = row.createCell((short) 1);
+			cell.setCellValue("播放日期");
+
+			cell = row.createCell((short) 2);
+			cell.setCellValue("时段范围");
+
+			cell = row.createCell((short) 3);
+			cell.setCellValue("播表类型");
+
+			cell = row.createCell((short) 4);
+			cell.setCellValue("审核状态");
+
+			cell = row.createCell((short) 5);
+			cell.setCellValue("播表时长");
+
+			cell = row.createCell((short) 6);
+			cell.setCellValue("可播时长");
+
+			cell = row.createCell((short) 7);
+			cell.setCellValue("占屏比");
+
+			cell = row.createCell((short) 8);
+			cell.setCellValue("终端名");
+
+			cell = row.createCell((short) 9);
+			cell.setCellValue("创建人");
+
+			cell = row.createCell((short) 10);
+			cell.setCellValue("创建时间");
+
+			// 第五步，写入实体数据 实际应用中这些数据从数据库得到，
+			List<PlayTable> list2 = ptableService.findPlayTable(terminalId, startTime, endTime, statusId);
+			List<PtableDto> list = EntityUtil.ptableDto(list1, listPeriod, listUser, list2);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			for (int i = 0; i < list.size(); i++) {
+				row = sheet.createRow((int) i + 1);
+				PtableDto pt = list.get(i);
+				String getplaydate = sdf.format(pt.getPlayDate());
+				String getcreatetime = sdf.format(pt.getCreateTime());
+
+				row.createCell((short) 0).setCellValue(pt.getPtableName());
+
+				row.createCell((short) 1).setCellValue(getplaydate);
+
+				row.createCell((short) 2).setCellValue(pt.getPeriodTime());
+
+				if (pt.getState() == 0) {
+					row.createCell((short) 3).setCellValue("周期轮播");
+				} else if (pt.getState() == 1) {
+					row.createCell((short) 3).setCellValue("紧急插播");
+				} else {
+					row.createCell((short) 3).setCellValue("插播");
+				}
+
+				if (pt.getStatusId().equals("1")) {
+					row.createCell((short) 4).setCellValue("未审核");
+				} else if (pt.getStatusId().equals("2")) {
+					row.createCell((short) 4).setCellValue("已初审");
+				} else if (pt.getStatusId().equals("3")) {
+					row.createCell((short) 4).setCellValue("已通过");
+				} else {
+					row.createCell((short) 4).setCellValue("未通过");
+				}
+
+				row.createCell((short) 5).setCellValue(pt.getPlayTotalTime());
+
+				row.createCell((short) 6).setCellValue(pt.getAllTime());
+
+				row.createCell((short) 7).setCellValue(pt.getScreenRate());
+
+				row.createCell((short) 8).setCellValue(pt.getTerminalName());
+
+				row.createCell((short) 9).setCellValue(pt.getCreateName());
+
+				row.createCell((short) 10).setCellValue(getcreatetime);
+			}
+
+			// 第六步，将文件存到指定位置
+			File file = new File(Constant.ExcelPath);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			String excelFileName = Constant.ExcelPath + "/" + UUID.randomUUID().toString() + ".xls";
+			FileOutputStream fout = new FileOutputStream(excelFileName);
+			wb.write(fout);
+			fout.close();
+
+			new DownloadController().downloadFile(new File(excelFileName), response, true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 }

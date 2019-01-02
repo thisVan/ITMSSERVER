@@ -52,7 +52,7 @@
       		    ,url:'<%=request.getContextPath()%>/ptable/searchPtable.do'
       		    //,height: 550
       		    //,cellMinWidth: 120
-      		    ,limits:[10,25,50,75,100]
+      		    ,limits:[10,25,50,75,100,500]
       		    ,cols: [[
       		      //{field:'id', width:'1%'}
       		      {checkbox: true, event: 'set1', fixed: true}
@@ -88,11 +88,11 @@
         		    	  ,templet: function(d){
         		    		  var state = d.statusId;
         		    		if(state == 1){
-    		    			  return '<span style="color: #FF6347;">' + '未审核' + '</span>';
+    		    			  return '<span style="color: #FF5722;">' + '未审核' + '</span>';
     		    		  }else if(state == 2){
     		    			  return '<span style="color: #90EE90;">' + '已初审' + '</span>';
     		    		  }else if(state == 3){
-    		    			  return '<span style="color: #90EE90;">' + '已通过' + '</span>';
+    		    			  return '<span style="color: #5FB878;">' + '已通过' + '</span>';
     		    		  }else if(state == 4){
     		    			  return '<span style="color: #FF6347;">' + '未通过' + '</span>';
     		    		  }else if(state == 5){
@@ -100,7 +100,7 @@
     		    		  }else if(state == 6){
     		    			  return '<span style="color: #FF6347;">' + '未通过(素材敏感)' + '</span>';
     		    		  }else if(state == 7){
-    		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误、素材敏感)' + '</span>';
+    		    			  return '<span style="color: #FFB800;">' + '未通过(排播有误、素材敏感)' + '</span>';
     		    		  }
         		    	  }
         		      }
@@ -125,7 +125,22 @@
     		    		  return Y+M+D+h+m+s;
     		    	  }
         		      }
-        		      ,{fixed: 'right', width:200, event: 'set13', title: '操作', align:'center', toolbar: '#barDemo'}
+        		      ,{field:'modifyTime',width:180, event: 'set13', title: '修改时间', sort: true
+        		    	,templet: function(d){
+    		    		  if (d.modifyTime == null) {
+    		    		  	return "";
+    		    		  }
+    		    		  var date = new Date(d.modifyTime);
+    		    		  var Y = date.getFullYear() + '-';
+    		    		  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    		    		  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+    		    		  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    		    		  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    		    		  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+    		    		  return Y+M+D+h+m+s;
+    		    	  }
+        		      }
+        		      ,{fixed: 'right', width:200, event: 'set14', title: '操作', align:'center', toolbar: '#barDemo'}
         		    ]]
       		    ,page: true
       		    ,where: {"terminalId": terminalId, "statusId":statusId, "startDate":startTime, "endDate":endTime}
@@ -152,7 +167,7 @@
     				    	  return ;
     				      }
     				      //批量删除
-    				      layer.confirm('确定删除选中的节目吗', function(index){
+    				      layer.confirm('确定删除选中的播表吗', function(index){
     					         //obj.del();
     					         layer.close(index);
     					       
@@ -183,6 +198,35 @@
     						  active.getDeleteData();
     					  }
     				  });
+					  
+					   getExcel = function() {
+    	    			  var url = '<%=request.getContextPath()%>/ptable/generateExcel.do?terminalId=' + $("#terminal").val() + '&startTime=' + $("#startTime").val() +'&endTime=' + $("#endTime").val() + '&statusId=' + $("#statusId").val();
+    	    			  console.log(url);
+    	              	  var xhr = new XMLHttpRequest(); 
+    	    			  xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
+    	    			  xhr.responseType = "blob";  // 返回类型blob
+    	    			  // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
+    	    			  xhr.onload = function () {
+    	    			    // 请求完成
+    	    			    if (this.status === 200) {
+    	    			      // 返回200
+    	    			      var blob = this.response;
+    	    			      var reader = new FileReader();
+    	    			      reader.readAsDataURL(blob);  // 转换为base64，可以直接放入a表情href
+    	    			      reader.onload = function (e) {
+    	    			        // 转换完成，创建一个a标签用于下载
+    	    			        var a = document.createElement('a');
+    	    			        a.download = 'data.xls';
+    	    			        a.href = e.target.result;
+    	    			        $("body").append(a);  // 修复firefox中无法触发click
+    	    			        a.click();
+    	    			        $(a).remove();
+    	    			      }
+    	    			    }
+    	    			  };
+    	    			  // 发送ajax请求
+    	    			  xhr.send()
+    	          }
     	    		  
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
@@ -194,6 +238,14 @@
     				  document.location = '<%=request.getContextPath()%>/ptable/goModifyPtable/' + pid + '/' + periodName + '/' + tid + '.do';
     			  } 
     		  });
+    		  
+    		  table.on('sort(flagOne)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+		        console.log(obj.field); //当前排序的字段名
+		        console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+		        console.log(this) //当前排序的 th 对象*/
+       
+		    });
+		    
     		});
       }
       
@@ -269,6 +321,11 @@
 		<button class="layui-btn" onclick="refresh()">
 		  <i class="layui-icon">&#x1002;</i>刷新
 		</button>
+		</button>
+		
+			        	<button class="layui-btn operatorTable"  onclick = "getExcel()">
+					      <i class="layui-icon">&#xe642;</i>导出为EXCEL
+					    </button>
       </div>
 		 <div class="layui-col-md12">
             <table class="layui-table" id="table1" lay-filter="tableEvent"></table>

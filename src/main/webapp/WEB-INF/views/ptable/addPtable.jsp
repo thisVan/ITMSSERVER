@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <%@ include file="/layui/header.jsp"%>
-<script src="../../layui/DataTableExtend.js"></script>
+<script src="../../../../layui/DataTableExtend.js"></script>
 <title>播表详情</title>
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -15,9 +15,10 @@
 	var pid = '${pid}'; //播表ID
 	var periodName = '${periodName}'; //时段名
 	var tid = '${tid}'; //终端ID
-	var isUnChecked = ${isUnChecked};
-	var ptdate; //播表的播放日期
-	var periodID; //时段ID
+	var playTableName = '${playTableName}';//当前播表名
+	var isUnChecked = ${isUnChecked};//不加引号，因为下面用到判断条件为isUnchecked = false,而不是字符串比较
+	var ptdate = '${playTablePlayDate}'; //播表的播放日期
+	var periodID = '${periodID}'; //时段ID
 	var itemnum; //该播表素材的总数
 	$(function() {
 		initTable();
@@ -35,6 +36,9 @@
 				id : 'flagOne',
 				url : '<%=request.getContextPath()%>/ptable/getPtableById.do', //,height: 320
 				skin : 'row', //,cellMinWidth: 120
+				title: playTableName,
+				even : true,
+				toolbar: '#toolbarDemo',
 				limits : [ 10, 25, 50, 75, 100 ],
 				cols : [ [
 					//{field:'id', width:'1%'}
@@ -100,9 +104,9 @@
 						});
 					} else if (res.fail == 0) {
 						document.getElementById("ptableNameOnce").innerHTML = '<font  size="4"  color="red"> 当前播表名：' + res.msg + '</font>';
-						var tempstr = res.msg;
-						var date = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(tempstr);
-						ptdate = date[2];
+						//var tempstr = res.msg;
+						//var date = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(tempstr);
+						//ptdate = date[2];
 
 					}
 
@@ -115,7 +119,7 @@
 					var tdata = res.data;
 
 					itemnum = tdata.length;
-					periodID = tdata[0].periodId;
+					//periodID = tdata[0].periodId;
 
 					for (var i = 0, l = tdata.length; i < l; i++) {
 						for (var j = i + 1; j < l; j++)
@@ -124,7 +128,7 @@
 						arr.push(tdata[i].material.mid);
 					}
 					if (arr.length != 0) {
-						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;">总共有' + arr.length + '条不同素材</span>';
+						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;" onclick="showMaterialsSortByName()">总共有' + arr.length + '条不同素材</span>';
 					//document.getElementById("totalMaterial").innerText = "" +  + "";
 					}
 
@@ -139,27 +143,30 @@
 						vList.push(path);
 						ms.push(tdata[i].material);
 					}
-
-					var curr = 0; // 当前播放的视频 
-					var video = document.getElementById("video1");
-					video.addEventListener('ended', play);
-					vLen = vList.length; // 播放列表的长度
-					play();
-					function play() {
-						document.getElementById("mName").innerText = "当前播放素材名:  " + ms[curr].materialName;
-						document.getElementById("mResolution").innerText = "分辨率:  " + ms[curr].resolution;
-						document.getElementById("mSize").innerText = "大小:  " + ms[curr].size;
-						document.getElementById("mDuration").innerText = "时长:  " + ms[curr].duration;
-						document.getElementById("mTerminalName").innerText = "所属终端:  " + ms[curr].terminal.terminalName;
-
+					
+					if (ms.length > 0) {
+						var curr = 0; // 当前播放的视频 
 						var video = document.getElementById("video1");
-						video.src = vList[curr];
-						video.load(); //如果短的话，可以加载完成之后再播放，监听 canplaythrough 事件即可
-						video.play();
-						curr++;
-						if (curr >= vLen)
-							curr = 0; // 播放完了，重新播放
+						video.addEventListener('ended', play);
+						vLen = vList.length; // 播放列表的长度
+						play();
+						function play() {
+							document.getElementById("mName").innerText = "当前播放素材名:  " + ms[curr].materialName;
+							document.getElementById("mResolution").innerText = "分辨率:  " + ms[curr].resolution;
+							document.getElementById("mSize").innerText = "大小:  " + ms[curr].size;
+							document.getElementById("mDuration").innerText = "时长:  " + ms[curr].duration;
+							document.getElementById("mTerminalName").innerText = "所属终端:  " + ms[curr].terminal.terminalName;
+	
+							var video = document.getElementById("video1");
+							video.src = vList[curr];
+							video.load(); //如果短的话，可以加载完成之后再播放，监听 canplaythrough 事件即可
+							video.play();
+							curr++;
+							if (curr >= vLen)
+								curr = 0; // 播放完了，重新播放
+						}
 					}
+					
 				//console.log(res.msg);
 				if(isUnChecked == false){
 					$("#modifyMaterialSort").hide();
@@ -267,6 +274,60 @@
 	function goBack() {
 		document.location = "<%=request.getContextPath()%>/ptable/ptableList.do";
 	}
+	
+	function showMaterialsSortByName(){
+ 		var url = '<%=request.getContextPath()%>/ptable/getDistinctMaterialsByPidSortByName.do?pid='+pid;
+		$.post(url, {}, function(str){
+			var contentStr = "";
+			contentStr += "<div style='padding: 1% 5%;'><table class='layui-table'>";
+			for(var i =0; i<str.length;i++){
+ 				contentStr += "<tr>";
+				contentStr += "<td>"+str[i].num+"</td>";
+				contentStr += "<td>"+str[i].name+"</td>";
+				contentStr += "<td>"+str[i].frequncy+"</td>";
+				contentStr += "<td>"+str[i].duration+"</td>";
+				contentStr += "</tr>";
+			}
+			contentStr += "</table></div>";
+			console.log(str.length);
+  			layer.open({
+    		type: 1,
+    		title: "素材列表",
+    		area : [ '50%', '80%' ],
+    		content: contentStr //注意，如果str是object，那么需要字符拼接。
+  			});
+		});
+<%-- 		console.log($("#table1")); 
+		var materialsTable = "";
+		layer.open({
+			title : '素材列表',
+			type : 2,
+			area : [ '48%', '100%' ],
+			content : $("#show-distinct-material").html(),
+			success: function(layero, index){
+                layui.use('table', function(){
+                    var table = layui.table;
+                    var cols =  [[ //标题栏
+                        {field:'num', title: '序号',align: 'center'},
+                        {field:'name', title: '素材名',align: 'center'},
+                        {field:'frequncy', title: '频次',align: 'center'},
+                        {field:'duration', title: '时长',align: 'center'}
+                    ]]
+                    //展示已知数据
+                    table.render({
+                        elem: '#view-meterials-table',
+                        url: '<%=request.getContextPath()%>/ptable/getDistinctMaterialsByPidSortByName.do?pid='+pid,
+                        size:'sm',
+                        cols:cols,
+                        even: true,
+                        height: '300',
+                        page: true //是否显示分页
+                    });
+
+                });
+            }
+		}); --%>
+	}
 
 	function updateSort() {
 		$.ajax({
@@ -335,6 +396,37 @@
 		});
 	}
 	
+	function exportImage(){
+		document.getElementsByClassName("layui-table-tool")[0].style.display="none";
+		html2canvas(document.querySelector("#playTableMaterialsDiv")).then(canvas => {
+			document.getElementById("showScreenShot").innerHTML = "";
+			document.getElementById("showScreenShot").appendChild(canvas);
+		});
+	
+		/* 	
+		html2canvas(document.querySelector("#playTableMaterialsDiv"), {
+	        onrendered: function(canvas) {
+	            //document.getElementById("showScreenShot").innerHTML = "";
+	    		document.getElementById("showScreenShot").appendChild(canvas);
+	        },
+	        // height: 300
+	        ignoreElements: function() {
+	        	document.querySelector(".ayui-table-tool-temp") => false
+	        } 
+	    });*/
+
+		layer.open({
+	   		type : 1,
+	   		title : "播表详情-右键可复制或保存截图",
+	   		area : [ '70%', '80%' ],
+	   		content : $("#showScreenShot"), //注意，如果str是object，那么需要字符拼接
+	   		cancel : function () {
+	   			document.getElementsByClassName("layui-table-tool")[0].style.display="block";
+	   			//document.getElementsByClassName("layui-table-tool")[0].removeAttribute("style");
+	   		}
+	   	});
+	}
+	
 	$(document).ready(function (){
 /* 		if(isUnChecked == false){
 			$("#modifyMaterialSort").hide();
@@ -345,8 +437,7 @@
 			}, 1000);
 
 		} */
-	
-	});
+	});	
 </script>
 <body>
 	<input type="hidden" id="videoView" value="">
@@ -392,41 +483,46 @@
 						<i class="layui-icon">&#xe6ed;</i>播表素材顺序列表
 					</legend>
 					<div class="layui-field-box">
-						<div class="layui-inline">
+						<div class="layui-col-md12 layui-col-space1" id="playTableMaterialsDiv">
 							<label class="layui-form-mid" id="ptableNameOnce"> </label>
-						</div>
-						<div class="layui-col-md12 layui-col-space1">
 							<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
-							<br>
-							<div>
-								<button class="layui-btn" type="button" onclick="goBack()">
-									<i class="layui-icon">&#xe65c;</i>返回
-								</button>
-
-								<button class="layui-btn layui-btn-norma" type="button"
-									onclick="updateSort()" id="modifyMaterialSort">
-									<i class="layui-icon">&#xe642;</i>修改顺序
-								</button>
-
-								<button class="layui-btn layui-btn-norma" type="button"
-									onclick="broadlistmaterialadd()" id="addMaterial">
-									<i class="layui-icon">&#xe642;</i>添加素材
-								</button>
-
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label id="totalMaterial"></label>
-							</div>
-							<br>
+							<script type="text/html" id="toolbarDemo">
+  								<div class="layui-btn-container">
+    								<button class="layui-btn layui-btn-sm" onclick="exportImage()"><i class="layui-icon">&#xe65d;</i> 截图</button>
+								</div>
+							</script>
 							<script type="text/html" id="barDemo">
   						 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="mediaView">预览</a>
                          		<a class="layui-btn layui-btn-xs"  lay-event="copy" name="materialCopy">复制</a>
 	                     		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" name="materialDelete">删除</a>
 							</script>
+							<br>
 						</div>
+						<div class="layui-col-md12 layui-col-space1">
+							<button class="layui-btn" type="button" onclick="goBack()">
+								<i class="layui-icon">&#xe65c;</i>返回
+							</button>
+							<button class="layui-btn layui-btn-norma" type="button"
+								onclick="updateSort()" id="modifyMaterialSort">
+								<i class="layui-icon">&#xe642;</i>修改顺序
+							</button>
+							<button class="layui-btn layui-btn-norma" type="button"
+								onclick="broadlistmaterialadd()" id="addMaterial">
+								<i class="layui-icon">&#xe642;</i>添加素材
+							</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label id="totalMaterial"></label>
+						</div>
+						<br>
 					</div>
 					<br>
 				</fieldset>
 			</div>
+			
+			<div id="show-distinct-material" style="display: none;">
+				<table class="ayui-table" id="view-meterials-table"></table>
+			</div>
 		</div>
 	</div>
 </body>
+<div id="showScreenShot" style="display: none;"></div>
 </html>

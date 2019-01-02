@@ -103,9 +103,7 @@ function depose(){
 		           <source src="" type="video/mp4" />
 		        </video>
 		      </div>
-		      <div align="center">
-		         <button type="button" class="layui-btn" onclick="depose()">作废</button>
-		      </div>
+		      
 		      <br>
 		      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
 		        <legend>素材信息</legend>

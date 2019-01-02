@@ -267,7 +267,16 @@ public class MaterialDaoImpl implements MaterialDao {
         }
 	}
 
-	
+	public List<Items> findItemsByMidBetweenDates(String mid, String startDate, String endDate) {
+		Session session = openSession();
+        try {
+        	//String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid)  order by pf.num asc";
+        	String sql = "select it.* from items it where it.deleted = 0 and it.mid = :mid and it.start_date <= :startDate and it.end_date >= :endDate";
+        	return session.createNativeQuery(sql, Items.class).setParameter("mid", mid).setParameter("startDate", startDate).setParameter("endDate", endDate).getResultList();
+        } finally {
+            closeSession(session);
+        }
+	}
 	
 	@Override
 	public List<Items> findItemByPtable(String pid) {
@@ -318,9 +327,17 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	//7.14
 	
-
 	
-	
-	
+	@Override
+	public List<Material> findAllMaterial(String pid) {
+		Session session = openSession();
+		try {
+        	String sql = "select m.* from material m left join ptable_file pf on m.mid = pf.mid where pf.pid = :pid and pf.deleted = 0 and m.deleted = 0";
+        	List<Material> listMaterial = session.createNativeQuery(sql, Material.class).setParameter("pid", pid).list();
+        	return listMaterial;
+		} finally {
+            closeSession(session);
+        }
+	}	
 	
 }

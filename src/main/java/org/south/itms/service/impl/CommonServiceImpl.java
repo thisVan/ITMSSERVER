@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.south.itms.dao.impl.CommonDao;
 import org.south.itms.dto.Page;
 import org.south.itms.dto.ValueParam;
@@ -29,14 +30,15 @@ import org.south.itms.util.StringUtil;
 import org.south.netty.PlayTableTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;  
+import org.springframework.transaction.annotation.Transactional;
 
-@Service("commonService")  
-public class CommonServiceImpl implements CommonService {  
-   
+@Service("commonService")
+public class CommonServiceImpl implements CommonService {
+	
+	private static Logger logger = Logger.getLogger(CommonServiceImpl.class);
+
 	@Autowired
 	private CommonDao commonDao;
-	
 
 	@Transactional
 	@Override
@@ -49,135 +51,154 @@ public class CommonServiceImpl implements CommonService {
 	public void updateByTemplateHQL(String hql, Map<String, String> paramMap, Map<String, String> whereMap) {
 		commonDao.updateByTemplateHQL(hql, paramMap, whereMap);
 	}
-	
-	
+
 	@Override
-	public Page pageSearchByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap,
+				currentPage, pageSize);
 	}
-	//7.16
+
+	// 7.16
 	@Override
-	public Page pageSearchByTemplateHQL(String[] params, String alreadymid,int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, alreadymid,orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchByTemplateHQL(String[] params, String alreadymid, int currentPage, int pageSize,
+			String className, String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchByTemplateHQL(
+				SqlUtil.growSearchHqlTemplate(className, whereMap, alreadymid, orderBy), whereMap, currentPage,
+				pageSize);
 	}
-	
+
 	@Override
-	public Page pageSearchByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchByTemplateHQL(start, end, SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchByTemplateHQL(start, end, SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize,
+			String className, String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchByTemplateHQL(start, end,
+					SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap,
+					currentPage, pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchByTemplateHQL(start, end,
+				SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy), whereMap, currentPage,
+				pageSize);
 	}
-	
-	//播表查询
+
+	// 播表查询
 	@Override
-	public Page pageSearchPtableByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchPtableByTemplateHQL(start, end, SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchPtableByTemplateHQL(start, end, SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchPtableByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize,
+			String className, String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchPtableByTemplateHQL(start, end,
+					SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap,
+					currentPage, pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchPtableByTemplateHQL(start, end,
+				SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy), whereMap, currentPage,
+				pageSize);
 	}
-	
+
 	@Override
-	public Page pageSearchByTemplateHQLTree(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchByTemplateHQLTree(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap,
+				currentPage, pageSize);
 	}
 
 	@Override
 	public void saveVideoFile(File upload) {
 		commonDao.saveVideoFile(upload);
-		
+
 	}
 
 	@Override
 	public void delFile(String[] fileId) {
-		for(String s:fileId){
+		for (String s : fileId) {
 			commonDao.delFile(s);
 		}
-		
-	}
 
-	
+	}
 
 	@Transactional
 	@Override
 	public void deleteItems(String[] itemIds) {
 		// TODO Auto-generated method stub
-		for(String id : itemIds) {
+		for (String id : itemIds) {
 			commonDao.deleteItem(id);
 		}
-	}  
-	
-	
+	}
 
 	@Override
 	public void editFile(String fId, String newFilePath, String name) {
@@ -203,69 +224,81 @@ public class CommonServiceImpl implements CommonService {
 	 * @see org.south.itms.service.impl.CommonService#pageSearchCheckByTemplateHQL(java.lang.String[], int, int, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Page pageSearchCheckByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  //whereMap.put("statusId", new ValueParam("=", "1"));
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchCheckByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchCheckByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchCheckByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		// whereMap.put("statusId", new ValueParam("=", "1"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchCheckByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchCheckByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
 	}
-	
+
 	@Override
-	public Page pageSearchFirstByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  //whereMap.put("statusId", new ValueParam("=", "1"));
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchCheckByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchCheckByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchFirstByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		// whereMap.put("statusId", new ValueParam("=", "1"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchCheckByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchCheckByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
 	}
-	
+
 	@Override
-	public Page pageSearchInsertByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  //whereMap.put("statusId", new ValueParam("=", "1"));
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchInsertByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchInsertByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchInsertByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		// whereMap.put("statusId", new ValueParam("=", "1"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchInsertByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchInsertByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
 	}
 
 	/* (non-Javadoc)
@@ -275,7 +308,7 @@ public class CommonServiceImpl implements CommonService {
 	public void firstCheckFile(String fileId, String name, Timestamp timestamp) {
 		commonDao.firstCheckFile(fileId, name, timestamp);
 	}
-	
+
 	@Override
 	public void secondCheckFile(String fileId, String name, Timestamp timestamp) {
 		commonDao.secondCheckFile(fileId, name, timestamp);
@@ -288,72 +321,84 @@ public class CommonServiceImpl implements CommonService {
 	public void firstUncheckFile(String fileId, String name, Timestamp timestamp) {
 		commonDao.firstUncheckFile(fileId, name, timestamp);
 	}
-	
+
 	@Override
-	public Page pageSearchCheckFinalByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  whereMap.put("statusId", new ValueParam("=", "2"));
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchCheckFinalByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchCheckFinalByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchCheckFinalByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		whereMap.put("statusId", new ValueParam("=", "2"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchCheckFinalByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchCheckFinalByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
 	}
-	
+
 	@Override
-	public Page pageSearchMaterialByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		 
-		  //whereMap.put("info", new ValueParam("=", "0"));
-		  whereMap.put("statusId", new ValueParam("=", "3"));
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchMaterialByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchMaterialByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchMaterialByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		// whereMap.put("info", new ValueParam("=", "0"));
+		whereMap.put("statusId", new ValueParam("=", "3"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchMaterialByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchMaterialByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
 	}
-	
+
 	@Override
-	public Page pageSearchSecondByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix) {
-		  //组装查询条件
-		  Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
-		  if(params != null && (params.length % 3 == 0)) {
-			  for(int i = 0; i < params.length; i+=3) {
-				  whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
-			  }
-		  }
-		  
-		  whereMap.put("statusId", new ValueParam("=", "2"));
-		  
-		  if(!StringUtil.isEmpty(whereSuffix)) {  //whereSuffix不为空，表示需要额外增加where的条件筛选
-			  if(!StringUtil.isEmpty(orderBy)) whereSuffix += " order by " + orderBy;
-			  return commonDao.pageSearchCheckFinalByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage, pageSize);
-		  }
-		  
-		  
-		 //获取查询的结果
-		 return commonDao.pageSearchCheckFinalByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy), whereMap, currentPage, pageSize);
+	public Page pageSearchSecondByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
+			String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		whereMap.put("statusId", new ValueParam("=", "2"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchCheckFinalByTemplateHQL(
+					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchCheckFinalByTemplateHQL(SqlUtil.growSearchHqlTemplate(className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
 	}
 
 	/* (non-Javadoc)
@@ -408,13 +453,13 @@ public class CommonServiceImpl implements CommonService {
 		List<Material> list = commonDao.getAllMaterialByTid(tid);
 		List<Period> listPeriod = new ArrayList<Period>();
 		Set<String> set = new HashSet<String>();
-		for(Material m : list) {
-			//set.add(m.getPeriod);
+		for (Material m : list) {
+			// set.add(m.getPeriod);
 		}
-		for(String s : set) {
-			if(s == null) {
-				
-			}else {
+		for (String s : set) {
+			if (s == null) {
+
+			} else {
 				Period period = commonDao.getPeriodById(s);
 				listPeriod.add(period);
 			}
@@ -424,50 +469,72 @@ public class CommonServiceImpl implements CommonService {
 
 	@Override
 	public boolean generateTable(String periodId, String uid) {
-		if("".equals(periodId) || periodId == null) {
+		if ("".equals(periodId) || periodId == null) {
 			return false;
-		}else {
+		} else {
 			List<Material> list = commonDao.getTerminalByPid(periodId);
 			int length = 0;
-			if(list == null || list.size() == 0) {
+			if (list == null || list.size() == 0) {
 				return false;
-			}else {
-				//length = fromListMaterial(list);
+			} else {
+				// length = fromListMaterial(list);
 				PlayTableTask task = new PlayTableTask();
 				try {
-					if(length <= 0) {
+					if (length <= 0) {
 						return false;
-					}else {
-						//task.generateManyTable(list.get(0).getTerminalId(), periodId, uid, length);
+					} else {
+						// task.generateManyTable(list.get(0).getTerminalId(), periodId, uid, length);
 						commonDao.updatePeriodById(periodId);
 						return true;
 					}
-				}catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 					return false;
 				}
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean generateTb(String periodId, String uid, String startDate, String endDate) {
-		if("".equals(periodId) || periodId == null) {
-			return false;
-		}else {
+	public Map<String, Object> generateTb(String periodId, String uid, String startDate, String endDate) {
+		Map<String, Object> recallMap = new HashMap<String, Object>();
+		recallMap.put("isSuccess", false);
+		logger.info("生成播表，参数为uid=" + uid + ",periodId=" + periodId + ",startDate=" + startDate + ",endDate=" + endDate);
+		if ("".equals(periodId) || periodId == null) {
+			return recallMap;
+		} else {
 			List<Items> list = commonDao.getItemsByPid(periodId);
 			int length = 0;
 			int start = 0;
 			int end = 0;
-			if(list == null || list.size() == 0) {
-				return false;
-			}else {
+			if (list == null || list.size() == 0) {
+				return recallMap;
+			} else {
 				length = fromListMaterial(list);
 				start = fromListItems(startDate);
 				end = fromListItems(endDate);
 				PlayTableTask task = new PlayTableTask();
 				System.out.println("length " + length + " start " + start + " end " + end);
-				if(end < 0) return false;
+				if (end < 0 || length <= 0 || start > length) {
+					return recallMap;
+				}
+				if (start < 0) {
+					start = 0;
+				}
+				if (end > length) {
+					end = length;
+				}
+				try {
+					List ignorePidsList = new ArrayList();
+					ignorePidsList = task.generateTb(list.get(0).getTerminalId(), periodId, uid, start, end);
+					recallMap.put("isSuccess", true);
+					recallMap.put("ignorePidsList", ignorePidsList);
+				} catch (ParseException e) {
+					e.printStackTrace();
+					logger.error("生成播表失败！", e);
+					return recallMap;
+				}
+				/*	if(end < 0) return false;
 				if(start > length) return false;
 				if(length <= 0) return false;
 				if(start <= 0 && end < length) {
@@ -498,7 +565,7 @@ public class CommonServiceImpl implements CommonService {
 						e.printStackTrace();
 						return false;
 					}
-				}
+				}*/
 //				try {
 //					if(length <= 0) {
 //						return false;
@@ -510,11 +577,11 @@ public class CommonServiceImpl implements CommonService {
 //					e.printStackTrace();
 //					return false;
 //				}
-				return true;
+				return recallMap;
 			}
 		}
 	}
-	
+
 	private int fromListItems(String dateTime) {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
@@ -529,11 +596,11 @@ public class CommonServiceImpl implements CommonService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		int width = (int)(((d.getTime() - date.getTime())) / 1000 / 60 / 60 / 24);
+		int width = (int) (((d.getTime() - date.getTime())) / 1000 / 60 / 60 / 24);
 		return width;
 	}
 
-	//获取素材最晚日期离现在天数
+	// 获取素材最晚日期离现在天数
 	public int fromListMaterial(List<Items> list) {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
@@ -543,15 +610,15 @@ public class CommonServiceImpl implements CommonService {
 			e.printStackTrace();
 		}
 		int len = 0;
-		for(Items m : list) {
-			int width = (int)(((m.getEndDate().getTime() - date.getTime())) / 1000 / 60 / 60 / 24);
-			if(width > len) {
+		for (Items m : list) {
+			int width = (int) (((m.getEndDate().getTime() - date.getTime())) / 1000 / 60 / 60 / 24);
+			if (width > len) {
 				len = width;
 			}
 		}
 		return len;
 	}
-	
+
 	public static int getDate() {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date date1 = null;
@@ -562,9 +629,9 @@ public class CommonServiceImpl implements CommonService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return (int)(((date2.getTime() - date1.getTime())) / 1000 / 60 / 60 / 24);
+		return (int) (((date2.getTime() - date1.getTime())) / 1000 / 60 / 60 / 24);
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(getDate());
 	}
@@ -573,40 +640,42 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public Page searchMaterialByPid(String pid, int currentPage, int pageSize) {
 		SqlUpdate sql = new SqlUpdate();
-		Set<String> set = sql.getMidById(pid);		
+		Set<String> set = sql.getMidById(pid);
 		List<Material> list = new ArrayList<Material>();
-		if(set.size() != 0) {
+		if (set.size() != 0) {
 			String[] num = new String[set.size()];
-		    Iterator it = set.iterator();
-		    int len = 0;
-			 while(it.hasNext()){
-				 num[len] = (String) it.next();
-				 len++;
+			Iterator it = set.iterator();
+			int len = 0;
+			while (it.hasNext()) {
+				num[len] = (String) it.next();
+				len++;
 			}
-			 List<Material> listM = new ArrayList<Material>();
-			 for(int i = 0; i < num.length; i++) {
-				 Material material = commonDao.getMaterialByMid(num[i]);
-				 if(material != null) {
-						listM.add(material);
-					}
-			 }
-			int totalRecord = listM.size(); 
-			int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize :  totalRecord / pageSize + 1;
-			if(currentPage > totalPage) currentPage = totalPage;
-			if(currentPage < 1) currentPage = 1;
-			int total = pageSize*(currentPage - 1) + pageSize;
-			if(total < listM.size()) {
-				for(int i = pageSize*(currentPage - 1); i < total; i++) {
+			List<Material> listM = new ArrayList<Material>();
+			for (int i = 0; i < num.length; i++) {
+				Material material = commonDao.getMaterialByMid(num[i]);
+				if (material != null) {
+					listM.add(material);
+				}
+			}
+			int totalRecord = listM.size();
+			int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+			if (currentPage > totalPage)
+				currentPage = totalPage;
+			if (currentPage < 1)
+				currentPage = 1;
+			int total = pageSize * (currentPage - 1) + pageSize;
+			if (total < listM.size()) {
+				for (int i = pageSize * (currentPage - 1); i < total; i++) {
 //					Material material = commonDao.getMaterialByMid(num[i]);
 //					if(material != null) {
 //						list.add(material);
 //					}
 					list.add(listM.get(i));
-					//System.out.println(1 + "=" + num[i]);
-					//System.out.println(1 + "=" + material);
+					// System.out.println(1 + "=" + num[i]);
+					// System.out.println(1 + "=" + material);
 				}
-			}else {
-				for(int i = pageSize*(currentPage - 1); i < totalRecord; i++) {
+			} else {
+				for (int i = pageSize * (currentPage - 1); i < totalRecord; i++) {
 //					Material material = commonDao.getMaterialByMid(num[i]);
 //					//System.out.println(2 + "=" + num[i]);
 //					//System.out.println(2 + "=" + material);
@@ -615,10 +684,10 @@ public class CommonServiceImpl implements CommonService {
 //					}
 					list.add(listM.get(i));
 				}
-			}			
-			
+			}
+
 			return new Page(currentPage, totalPage, pageSize, list.size(), list);
-		}else {
+		} else {
 			return new Page(currentPage, 0, pageSize, 0, list);
 		}
 	}
@@ -658,13 +727,13 @@ public class CommonServiceImpl implements CommonService {
 		List<Items> list = commonDao.getAllItemsPeriod(tid);
 		Set<String> set = new HashSet<String>();
 		List<Period> listP = new ArrayList<Period>();
-		if(list == null || list.size() == 0) {
+		if (list == null || list.size() == 0) {
 			return listP;
-		}else {
-			for(Items m : list) {
+		} else {
+			for (Items m : list) {
 				set.add(m.getPeriodId());
 			}
-			for(String s : set) {
+			for (String s : set) {
 				Period period = commonDao.getPeriodById(s);
 				listP.add(period);
 			}
@@ -682,22 +751,20 @@ public class CommonServiceImpl implements CommonService {
 		commonDao.saveInsetPlayTable(ptable, mid);
 	}
 
-	
-	//7.14
+	// 7.14
 	@Override
 	public boolean copyOneToPlayFile(String pid, String mid, int num) {
-		if(commonDao.copyOneToPlayFile(pid, mid, num))
+		if (commonDao.copyOneToPlayFile(pid, mid, num))
 			return true;
 		return false;
 	}
-	
-	//7.15
+
+	// 7.15
 	@Override
 	public boolean delOneFromPlayFile(String pid, String mid, int num) {
-		if(commonDao.delOneFromPlayFile(pid, mid, num))
+		if (commonDao.delOneFromPlayFile(pid, mid, num))
 			return true;
 		return false;
 	}
-	
-	
-}  
+
+}

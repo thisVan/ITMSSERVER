@@ -61,4 +61,8 @@ public interface MaterialDao {
 	
 	//7.16
 	List<Items> findalreadyItemByPtable(String pid);
+	
+	List<Material> findAllMaterial(String pid);
+	
+	List<Items> findItemsByMidBetweenDates(String mid, String startDate, String endDate);
 }

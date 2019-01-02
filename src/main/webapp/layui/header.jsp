@@ -10,12 +10,14 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/layui/pace/pace.min.js"></script>
 	<link href="<%=request.getContextPath()%>/layui/pace/pace-theme-flash.css" rel="stylesheet">
 	<link href="<%=request.getContextPath()%>/layui/pace/font-awesome.min.css" rel="stylesheet">
-	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.12.3.min.js"></script>
 	<link href="<%=request.getContextPath()%>/layui/plugins/contextMenu/jquery.contextMenu.min.css" rel="stylesheet">
 	<script src="<%=request.getContextPath()%>/layui/plugins/contextMenu/jquery.contextMenu.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/layui/css/fs.css?v=1.6.3" media="all"/>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/plugins/frame/js/fsDict.js?v=1.6.3"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/plugins/frame/js/fs.js?v=1.6.3"></script>
+	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/layui/saveSvgAsPng.js"></script> --%>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/html2canvas.min.js"></script>
 	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/layui/plugins/frame/js/main.js?v=1.6.3"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/frame/js/fsMenu.js?v=1.6.3"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/frame/js/fsConfig.js?v=1.6.3"></script> --%>

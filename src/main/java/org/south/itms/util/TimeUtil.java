@@ -80,6 +80,12 @@ public class TimeUtil {
 		return false;
 	}
 	
+	/**
+	 * 检查日期是否合理，开始日期必须在结束日期之前
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public static boolean checkTime(String startDate, String endDate) {
 		if(startDate.equals(endDate)) {
 			return true;

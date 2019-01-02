@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.sound.midi.Soundbank;
+
 import com.mysql.jdbc.PreparedStatement;
 
 /**
@@ -263,7 +265,15 @@ public class TableAutoGenerate {
 	}
 
 	// 逻辑删除旧播表
-	public void deleteNewPlayTb(int periodId, int start, int end) {
+	/**
+	 * 逻辑删除旧播表，跳过已经审核通过播表
+	 * 2018年12月17日 16点57分
+	 * @param periodId
+	 * @param start
+	 * @param end
+	 */
+	public ArrayList<String> deleteNewPlayTb(int periodId, int start, int end) {
+		ArrayList<String> ignorePids = new ArrayList<String>();
 		try {
 			Class.forName(driver);
 			Connection conn = DriverManager.getConnection(url, user, password);
@@ -275,21 +285,31 @@ public class TableAutoGenerate {
 					cal.add(Calendar.DATE, i);
 					Date nextDate = cal.getTime();
 					java.sql.Date sqlDate = new java.sql.Date(nextDate.getTime());
-					String sql = "select pid from play_table where period_id = " + periodId
+					System.out.println(sqlDate);
+					String sql = "select pid,status_id from play_table where period_id = " + periodId
 							+ " and date_format(play_date, '%Y-%m-%d')='" + sqlDate + "' and deleted = 0";
 					Statement statement = conn.createStatement();
 					ResultSet rs = statement.executeQuery(sql);
-					if (rs.next()) {// 判空
+					while (rs.next()) {// 判空
 						String id = rs.getString(1);
-						PreparedStatement stmt = (PreparedStatement) conn
-								.prepareStatement("update ptable_file set deleted = 1 where pid = ?");
-						stmt.setInt(1, Integer.parseInt(id));
-						stmt.executeUpdate();
+						String statusId = rs.getString(2);
+						System.out.println("deleteNewPlayTb -> pid=" + id + ",statusId=" + statusId);
+						//如果已经审核，跳过该播表
+						if ("2".equals(statusId) || "3".equals(statusId)) {
+							ignorePids.add(id);
+						} else {
+							PreparedStatement stmt = (PreparedStatement) conn
+									.prepareStatement("update ptable_file set deleted = 1 where pid = ?");
+							stmt.setInt(1, Integer.parseInt(id));
+							stmt.executeUpdate();
 
-						String delSqlp = "update play_table set deleted = 1 where pid = ?";
-						PreparedStatement pst1 = (PreparedStatement) conn.prepareStatement(delSqlp);
-						pst1.setInt(1, Integer.parseInt(id));
-						pst1.executeUpdate();
+							String delSqlp = "update play_table set deleted = 1 where pid = ?";
+							PreparedStatement pst1 = (PreparedStatement) conn.prepareStatement(delSqlp);
+							pst1.setInt(1, Integer.parseInt(id));
+							pst1.executeUpdate();
+							System.out.println("deleteNewPlayTb -> 生成新播表前，删除播表pid=" + id + ",statusId=" + statusId);
+						}
+						
 					}
 				}
 			}
@@ -301,6 +321,7 @@ public class TableAutoGenerate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return ignorePids;
 	}
 
 	// 生成一个播表

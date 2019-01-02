@@ -19,6 +19,7 @@ import org.south.itms.entity.IPTable;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.PlayTable;
 import org.south.itms.util.SqlUpdate;
+import org.south.itms.util.StringUtil;
 import org.south.netty.NettyChannelMap;
 import org.south.netty.TableAutoGenerate;
 import org.south.netty.msg.DataKey;
@@ -81,10 +82,15 @@ public class PtableDaoImpl implements PtableDao {
     
 	@Override
 	public void delete(String id) {
-		// TODO Auto-generated method stub
 		String hql = "update PlayTable set deleted = 1 where pid=:pid";
 		this.getCurrentSession().createQuery(hql).setParameter("pid", id).executeUpdate();
-	}  
+	} 
+	
+	@Override
+	public void updateAllTime(String pid, String allTime, String screenRate) {
+		String hql = "update PlayTable set playTotalTime = :allTime, screenRate = :screenRate where pid = :pid";
+		this.getCurrentSession().createQuery(hql).setParameter("allTime", allTime).setParameter("screenRate", screenRate).setParameter("pid", pid).executeUpdate();
+	}
 	
     
 	@Override  
@@ -101,7 +107,6 @@ public class PtableDaoImpl implements PtableDao {
     
 	@Override
 	public void savePtableFileRelation(String pid, String[] fileIds) {  
-		// TODO Auto-generated method stub
 		String sql = "insert into ptable_file(pid, file_id, num, deleted) values (:pid, :fileId, :num, 0)";
 		Query query = this.getCurrentSession().createNativeQuery(sql);
 		query.setParameter("pid", pid);
@@ -114,7 +119,6 @@ public class PtableDaoImpl implements PtableDao {
     
 	@Override
 	public void delPtableFileRelation(String pid) {
-		// TODO Auto-generated method stub
 		String sql = "delete from ptable_file where pid = :pid";
 		this.getCurrentSession().createNativeQuery(sql).setParameter("pid", pid).executeUpdate();
 	}
@@ -325,7 +329,79 @@ public class PtableDaoImpl implements PtableDao {
 		
 	}
 	
-	
-	
+	//2018.11.27
+	@Override
+	public List<PlayTable> findPlayTable(String terminalId, String startTime, String endTime, String statusId){
+		String hql = "from PlayTable where deleted = 0";
+		if (!StringUtil.isEmpty(terminalId)) {
+		 	hql += " and terminalId = " + terminalId;
+		}
+		if (!StringUtil.isEmpty(startTime)) {
+		 	hql += " and playDate >= '" + startTime + "'";
+		}
+		if (!StringUtil.isEmpty(endTime)) {
+		 	hql += " and playDate <= '" + endTime + "'";
+		}
+		if (!StringUtil.isEmpty(statusId)) {
+		 	hql += " and statusId = " + statusId;
+		}	
+		
+		Query query = this.getCurrentSession().createQuery(hql);
+		List<PlayTable> list = query.list();
+		return list;
 
+	}
+	
+	@Override
+	public List<PlayTable> findInsertByTerminalId(String terminalId) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date d = null;
+		try {
+			d = df.parse(df.format(new Date()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Session session = openSession();
+        List<PlayTable> list = session.createQuery("from PlayTable where deleted = 0 and terminalId = :terminalId and playDate = :playDate and insertFlag = :insertFlag and statusId = :statusId")
+        		.setParameter("terminalId", terminalId)
+        		.setParameter("playDate", d)
+        		.setParameter("insertFlag", 1)
+        		.setParameter("statusId", "3")
+        		.getResultList(); 
+        closeSession(session);
+        return list;
+	}
+
+	@Override
+	public List<PlayTable> findByTerminalId(String terminalId) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date d = null;
+		try {
+			d = df.parse(df.format(new Date()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		Session session = openSession();
+        List<PlayTable> list = session.createQuery("from PlayTable where deleted = 0 and terminalId = :terminalId and playDate = :playDate and statusId = :statusId")
+        		.setParameter("terminalId", terminalId)
+        		.setParameter("playDate", d)
+        		.setParameter("statusId", "3")
+        		.getResultList(); 
+        closeSession(session);
+        return list;
+	}
+	
+	@Override
+	public List<Material> findAllMaterialByPlayTableId(String pid) {
+		Session session = openSession();
+		try {
+        	String sql = "select m.* from material m left join ptable_file pf on m.mid = pf.mid where pf.pid = :pid and pf.deleted = 0 and m.deleted = 0";
+        	List<Material> listMaterial = session.createNativeQuery(sql, Material.class).setParameter("pid", pid).list();
+        	return listMaterial;
+		} finally {
+            closeSession(session);
+        }
+	}
+	
 }

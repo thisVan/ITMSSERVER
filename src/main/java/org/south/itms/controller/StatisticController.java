@@ -12,6 +12,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.south.itms.dto.Page;
 import org.south.itms.dto.PageResultData;
 import org.south.itms.dto.PlayNumDto;
 import org.south.itms.entity.PlayLog;
@@ -21,6 +22,7 @@ import org.south.itms.service.impl.StatisticService;
 import org.south.itms.util.Constant;
 import org.south.itms.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,7 +82,7 @@ public class StatisticController {
 	
 	 
 	@RequestMapping(value = "/searchPlayDetail")
-	public @ResponseBody PageResultData<PlayLog> searchPlayDetail(String terminalId, String dateTime) {
+	public @ResponseBody PageResultData<PlayLog> searchPlayDetail(String terminalId, String dateTime, int page, int limit) {
 		if(StringUtil.isEmpty(terminalId) || StringUtil.isEmpty(dateTime)) {
 		    return null;
 		}
@@ -90,13 +92,13 @@ public class StatisticController {
 			String startTime = time[0] + " " + time[1];
 			String endTime = time[3] + " " + time[4];
 
-			
-			List<PlayLog> list = statisticService.findPlayLog(terminalId, startTime, endTime);
+			//List<PlayLog> list = statisticService.findPlayLog(terminalId, startTime, endTime);
+			Page dataPage = statisticService.findPlayLogByPages(terminalId, startTime, endTime, page, limit);
 			PageResultData<PlayLog> pageResult = new PageResultData<PlayLog>();
-			pageResult.setCount(list.size());
+			pageResult.setCount(dataPage.getTotalRecord());
 			pageResult.setCode(0);
 			pageResult.setMsg("");
-			pageResult.setData(list);
+			pageResult.setData(dataPage.getList());
 			return pageResult;
 		} catch (Exception e) {
 			e.printStackTrace();

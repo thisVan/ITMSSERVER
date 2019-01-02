@@ -172,7 +172,7 @@ function periodTable(){
 	                   + "<td>" + msg[i].endInterval + "</td>"
 	                   //+ "<td>" + "<input id='dataTime" + i + "'  style='width:180px;'/></td>"
 	                   + "<td>"
-	                   + "<div class='layui-inline'><input type='text' class='layui-input' name='myDate' id='timeRange" + i + "' placeholder=' - '/></div>"
+	                   + "<input type='text' class='layui-input' style='width:100%;' name='myDate' id='timeRange" + i + "' placeholder=' - '/>"
 	                   //+ "<input class='Wdate' type='text' id='startDate" + i + "' onclick='WdatePicker({firstDayOfWeek:0})' style='width:100px;'/>"
 	                  // + "<div class='layui-inline'><div class='layui-input-inline'><input type='text' id='startDate" + i + "' name='myDate' class='layui-input'  placeholder='yyyy-MM-dd'  style='width:100px;' />"
 	                  // + " - "
@@ -187,13 +187,10 @@ function periodTable(){
 	                //generatePtable 7-9 187 修改laydate生成，解决生成播表日期不显示bug 张一鸣
 	           		 laydate.render({
 					    elem: '#timeRange'+i
+					    ,value: new Date().format("yyyy-MM-dd") +" - "+ new Date().format("yyyy-MM-dd")
 					    ,range: true
 					 });
-				}
-				
-			
-				 
-				 
+				}	 
 			}
 		});
 	
@@ -204,7 +201,7 @@ function generateTb(id){
 	
 	var periodId = pids[id];
 	
-	var time = $("#timeRange"  + id).val().split(" ");
+	var time = $("#timeRange" + id).val().split(" ");
 	var startDate = time[0];
 	var endDate = time[2];
 	console.log("startDate " +startDate + " endDate " + endDate);
@@ -228,13 +225,24 @@ function generateTb(id){
 			  contentType : false,
 			  dataType : "json",
 			  success : function(msg) {
-				  var value = msg.toString();
+				  var value = msg.stateCode;
+				  var ignorePidsList = msg.ignorePidsList;
+				  console.log(ignorePidsList);
 				  layer.closeAll('loading'); //关闭loading
 				  if(value=="true"){
-					  layer.msg('播表生成成功!', {
-							icon : 6,
-							time : 2000
-						});
+				  	  if (ignorePidsList.length > 0) {
+					  	  layer.msg('播表生成成功！但是有播表已经审核，系统无法覆盖，请知悉！', {
+								icon : 6,
+								time : 5000
+							});
+				  	  } else {
+					  	  layer.msg('播表生成成功!', {
+								icon : 6,
+								time : 2000
+							});
+				  	  
+				  	  }
+					  
 					  //var pid = document.getElementById("p"+id).innerText;
 					  //document.getElementById("startDate"+id).value = "";
 					  //document.getElementById("endDate"+id).value = "";
@@ -324,8 +332,7 @@ function highChart(){
 
 </script>
 
-
-	<script type="text/javascript">
+<script type="text/javascript">
 var node = [];
 /* $(function(){
 	  
@@ -497,11 +504,29 @@ function allTable(){
 
 function goBack(){
 	document.location = "<%=request.getContextPath()%>/material/broadcastList.do";
+	}
+
+function preView() {
+	var newWindow = window.open('video.html', "_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes,left=300,top=100, width=800, height=500");
+/* newWindow.document.getElementById("val").value = 'your code here'; */
 }
 
-function preView(){
-	var newWindow = window.open('video.html',"_blank","toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes,left=300,top=100, width=800, height=500");
-	/* newWindow.document.getElementById("val").value = 'your code here'; */
+Date.prototype.format = function(fmt) { //author: meizz 
+	var o = {
+		"M+" : this.getMonth() + 1, //月份 
+		"d+" : this.getDate(), //日 
+		"h+" : this.getHours(), //小时 
+		"m+" : this.getMinutes(), //分 
+		"s+" : this.getSeconds(), //秒 
+		"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+		"S" : this.getMilliseconds() //毫秒 
+	};
+	if (/(y+)/.test(fmt))
+		fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	for (var k in o)
+		if (new RegExp("(" + k + ")").test(fmt))
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
 }
 </script>
 </body>

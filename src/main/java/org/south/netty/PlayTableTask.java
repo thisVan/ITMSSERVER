@@ -11,11 +11,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimerTask;
+
+import org.apache.log4j.Logger;
 
 import com.mysql.jdbc.PreparedStatement;
 
@@ -26,7 +30,7 @@ import com.mysql.jdbc.PreparedStatement;
  * @version V1.0 
  */
 public class PlayTableTask extends TimerTask {
-	
+	private static Logger logger = Logger.getLogger(PlayTableTask.class);
 	
     public static String driver;
 	
@@ -201,14 +205,16 @@ public class PlayTableTask extends TimerTask {
 	}
 	
 	//一个终端时段生成多天播表
-	public void generateTb(String terminalId, String periodId, String uid, int start, int length) throws ParseException {
+	public ArrayList<String> generateTb(String terminalId, String periodId, String uid, int start, int length) throws ParseException {
+		ArrayList<String> ignorePids = new ArrayList<String>();
 		getTableFileMessage(periodId);
 		System.out.println("listFile==" + listFile);
 		if("".equals(periodId)) {
-			
 		}else {
 			TableAutoGenerate t = new TableAutoGenerate();
-			t.deleteNewPlayTb(Integer.parseInt(periodId), start, length);
+			ignorePids = t.deleteNewPlayTb(Integer.parseInt(periodId), start, length);
+			logger.info("删除播表，参数为uid=" + uid + ",periodId=" + periodId + ",start=" + start + ",length=" + length);
+			logger.info("删除播表，忽略播表列表为ignorePids=" + ignorePids);
 		}
 		for(int i = start; i <= length; i++) {
 			List<AutoPlayTable> listNull = new ArrayList<AutoPlayTable>();
@@ -219,6 +225,7 @@ public class PlayTableTask extends TimerTask {
 			tag.PlayTableGenerate(listTable, uid, i);
 		}
 		System.out.println(listFile);
+		return ignorePids;
 //		for(AutoPlayTable a : listTable) {
 //			System.out.println(a);
 //		}

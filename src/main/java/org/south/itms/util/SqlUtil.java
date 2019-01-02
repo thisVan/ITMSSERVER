@@ -217,16 +217,17 @@ public class SqlUtil {
 				 hql.append(entry.getKey());
 			}
 		}
-		if(!StringUtil.isEmpty(alreadymid))
+		
+		//2018.12.20 加载所有素材
+/*		if(!StringUtil.isEmpty(alreadymid))
 		{
 			String notmids=" ( "+alreadymid+" ) ";
 			hql.append(" and ");
-			hql.append("mid not in ");
+			//2018.12.20修改
+			//hql.append("mid not in ");
+			hql.append("mid in ");
 			hql.append(notmids);
-		}
-		
-		
-		
+		}*/
 		
 		if(orderBy != null && !"".equals(orderBy)) {
 			 hql.append(" order by ");

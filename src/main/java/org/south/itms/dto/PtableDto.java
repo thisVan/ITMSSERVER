@@ -30,6 +30,8 @@ public class PtableDto {
 	
 	private Date createTime;
 	
+	private Date modifyTime;
+	
 	private String periodName;
 	
 	private String periodTime;
@@ -139,6 +141,14 @@ public class PtableDto {
 	public Date getCreateTime() {
 		return createTime;
 	}
+	
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
@@ -205,7 +215,7 @@ public class PtableDto {
 	}
 
 	public PtableDto(String TerminalId,String pid, String statusId, String playTotalTime, Date playDate, String screenRate,
-			String allTime, String ptableName, Date createTime, int min, int insertFlag, int state) {
+			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state) {
 		super();
 		this.tid=TerminalId;
 		this.pid = pid;
@@ -216,6 +226,7 @@ public class PtableDto {
 		this.allTime = allTime;
 		this.ptableName = ptableName;
 		this.createTime = createTime;
+		this.modifyTime = modifyTime;
 		this.min = min;
 		this.insertFlag = insertFlag;
 		this.state = state;

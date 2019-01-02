@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -10,8 +9,7 @@
 <title>播表详情</title>
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <script type="text/javascript" defer="defer">
 	var pid = '${pid}'; //播表ID
 	var periodName = '${periodName}'; //时段名
@@ -35,6 +33,9 @@
 				id : 'flagOne',
 				url : '<%=request.getContextPath()%>/ptable/getPtableById.do', //,height: 320
 				skin : 'row', //,cellMinWidth: 120
+				even : true,
+				title: "播表详情",
+				toolbar: '#toolbarDemo',
 				limits : [ 10, 25, 50, 75, 100 ],
 				cols : [ [
 					//{field:'id', width:'1%'}
@@ -311,6 +312,44 @@
 			time : 1500
 		});
 	}
+	
+	function testbuttonmsg() {
+		layer.msg(pid + ',' + periodName + ',' + periodID + ',' + ptdate + ',' + tid, {
+			icon : 5,
+			time : 1500
+		});
+	}
+	
+	function exportImage(){
+		document.getElementsByClassName("layui-table-tool")[0].style.display="none";
+		html2canvas(document.querySelector("#playTableMaterialsDiv")).then(canvas => {
+			document.getElementById("showScreenShot").innerHTML = "";
+			document.getElementById("showScreenShot").appendChild(canvas);
+		});
+	
+		/* 	
+		html2canvas(document.querySelector("#playTableMaterialsDiv"), {
+	        onrendered: function(canvas) {
+	            //document.getElementById("showScreenShot").innerHTML = "";
+	    		document.getElementById("showScreenShot").appendChild(canvas);
+	        },
+	        // height: 300
+	        ignoreElements: function() {
+	        	document.querySelector(".ayui-table-tool-temp") => false
+	        } 
+	    });*/
+
+		layer.open({
+	   		type : 1,
+	   		title : "播表详情-右键可复制或保存截图",
+	   		area : [ '70%', '80%' ],
+	   		content : $("#showScreenShot"), //注意，如果str是object，那么需要字符拼接
+	   		cancel : function () {
+	   			document.getElementsByClassName("layui-table-tool")[0].style.display="block";
+	   			//document.getElementsByClassName("layui-table-tool")[0].removeAttribute("style");
+	   		}
+	   	});
+	}
 </script>
 <body>
 	<input type="hidden" id="videoView" value="">
@@ -362,30 +401,33 @@
 						<!-- <div class="layui-inline">
 							<label class="layui-form-mid" id="ptableNameOnce"> </label>
 						</div> -->
-						<div class="layui-col-md12 layui-col-space1">
+						<div class="layui-col-md12 layui-col-space1" id="playTableMaterialsDiv">
+							<label class="layui-form-mid" id="ptableNameOnce"> </label>
 							<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
+							<script type="text/html" id="toolbarDemo">
+  								<div class="layui-btn-container">
+    								<button class="layui-btn layui-btn-sm" onclick="exportImage()"><i class="layui-icon">&#xe65d;</i> 截图</button>
+								</div>
+							</script>
+							<script type="text/html" id="barDemo">
+  						 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="mediaView">预览</a>
+							</script>
 							<br>
-							<div>
-								<button class="layui-btn" type="button" onclick="goBack()">
-									<i class="layui-icon">&#xe65c;</i>返回
-								</button>
-
-<!-- 								<button class="layui-btn layui-btn-norma" type="button"
+						</div>
+						<div class="layui-col-md12 layui-col-space1">
+							<button class="layui-btn" type="button" onclick="goBack()">
+								<i class="layui-icon">&#xe65c;</i>返回
+							</button>
+							<!-- <button class="layui-btn layui-btn-norma" type="button"
 									onclick="updateSort()">
 									<i class="layui-icon">&#xe642;</i>修改顺序
-								</button>
-
-								<button class="layui-btn layui-btn-norma" type="button"
+							</button>
+							<button class="layui-btn layui-btn-norma" type="button"
 									onclick="broadlistmaterialadd()">
 									<i class="layui-icon">&#xe642;</i>添加素材
-								</button> -->
-
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label id="totalMaterial"></label>
-							</div>
+							</button> -->
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label id="totalMaterial"></label>
 							<br>
-							<script type="text/html" id="barDemo">
-  						 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="mediaView">预览</a>
-					</script>
 						</div>
 					</div>
 					<br>
@@ -394,4 +436,5 @@
 		</div>
 	</div>
 </body>
+<div id="showScreenShot" style="display: none;"></div>
 </html>

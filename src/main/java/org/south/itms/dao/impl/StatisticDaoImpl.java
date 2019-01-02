@@ -4,13 +4,19 @@ package org.south.itms.dao.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.hibernate.type.StandardBasicTypes;
+import org.south.itms.dto.Page;
 import org.south.itms.dto.PlayNumDto;
+import org.south.itms.dto.ValueParam;
 import org.south.itms.entity.PlayLog;
+import org.south.itms.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.SetFactoryBean;
 import org.springframework.stereotype.Repository;  
   
 /**
@@ -50,6 +56,44 @@ public class StatisticDaoImpl implements StatisticDao {
         return result;
     }
     
+    /**
+     * 分页查询播放日志
+     */
+	@Override
+	public Page pageSearchPlayLog(String terminalId, String startTime, String endTime, int currentPage, int pageSize) { // 分页查询
+		if (pageSize < 1) {
+			pageSize = 20;
+		}
+		String sql = "select * from play_log where deleted = 0 "
+				+ "and terminal_id = :terminalId and str_to_date(play_start_time, '%Y-%m-%d %H:%i:%S') >= :startTime "
+				+ "and str_to_date(play_end_time, '%Y-%m-%d %H:%i:%S') <= :endTime ORDER BY play_end_time desc";
+		// 先计算出在数据库总共有多少条数据
+		Query countQuery = getCurrentSession().createNativeQuery(sql, PlayLog.class);
+		countQuery.setParameter("terminalId", terminalId);
+		countQuery.setParameter("startTime", startTime);
+		countQuery.setParameter("endTime", endTime);
+		int totalRecord = countQuery.list().size();
+		//int totalRecord = Integer.valueOf(countQuery.uniqueResult() + "");
+		int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+		
+		if (currentPage > totalPage) {
+			currentPage = totalPage;
+		}
+		if (currentPage < 1) {
+			currentPage = 1;
+		}
+		// 再获取某页的数据
+		Query<PlayLog> query = getCurrentSession().createNativeQuery(sql, PlayLog.class);
+		query.setParameter("terminalId", terminalId);
+		query.setParameter("startTime", startTime);
+		query.setParameter("endTime", endTime);
+		query.setFirstResult(pageSize * (currentPage - 1));
+		query.setMaxResults(pageSize);
+		List list = query.list();
+
+		// 把结果包装成page返回
+		return new Page(currentPage, totalPage, pageSize, totalRecord, list);
+	}
     
     @Override 
     public List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime) {

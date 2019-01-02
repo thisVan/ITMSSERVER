@@ -3,6 +3,7 @@ package org.south.itms.service.impl;
 import java.util.List;
 
 import org.south.itms.entity.IPTable;
+import org.south.itms.entity.Material;
 import org.south.itms.entity.PlayTable;
 
 public interface PtableService {
@@ -27,6 +28,14 @@ public interface PtableService {
 	void updateTableStatusFinalUn(String pid, String mark);
 
 	void playTableUnAccess(String pid, String string);
+	
+	/**
+	 * 更新播表的播放时长和占屏率
+	 * @param pid
+	 * @param allTime
+	 * @param screenRate
+	 */
+	void updatePlayTableAllTime(String pid, String allTime, String screenRate);
 
 	List<PlayTable> getTableById(String string);
 
@@ -43,6 +52,13 @@ public interface PtableService {
 	 * @return
 	 */
 	PlayTable getPlayTableByPid(String pid);
+	
+	//2018.11.27
+	List<PlayTable> findPlayTable(String terminalId, String startTime, String endTime, String statusId);
+	
+	List<PlayTable> findPlayTablesByTerminalId(String terminalId);
 
- 
+	List<PlayTable> findInsertPlayTablesByTerminalId(String terminalId);
+	
+	List<Material> findAllMaterialsByPlayTableId(String pid);
 }  

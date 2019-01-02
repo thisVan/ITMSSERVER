@@ -23,6 +23,7 @@ public class PlayTable implements java.io.Serializable {
 	private static final long serialVersionUID = 3203717325370760241L;
 	private String pid;
 	private Date createTime;
+	private Date modifyTime;
 	private int deleted;
 	
 	//外键的id
@@ -69,6 +70,16 @@ public class PlayTable implements java.io.Serializable {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	
+	@Column(name = "modify_time")
+	@Temporal(TemporalType.TIMESTAMP) 
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
 	@Column(name = "deleted")
@@ -239,7 +250,7 @@ public class PlayTable implements java.io.Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "PlayTable [pid=" + pid + ", createTime=" + createTime + ", deleted=" + deleted + ", userId=" + userId
+		return "PlayTable [pid=" + pid + ", playDate=" + playDate + ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", deleted=" + deleted + ", userId=" + userId
 				+ ", terminalId=" + terminalId + ", periodId=" + periodId + ", statusId=" + statusId + "]";
 	}
 	

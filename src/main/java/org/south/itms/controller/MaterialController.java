@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -106,8 +107,10 @@ public class MaterialController {
 		for (int i = 0; i < files.size(); i++) {
 			sortNum += "," + files.get(i).getMaterial().getMid();
 		}
-		sortNum=sortNum.substring(1);
-		
+		if (files != null && files.size() > 0) {
+			sortNum=sortNum.substring(1);
+		}
+		//2018.12.24已经修改为加载所有素材，sortNum为空也不影响程序执行		
 		modelMap.addAttribute("alreadymid", sortNum);
 		
 		return "file/queryMaterialbybroadclist";
@@ -1311,7 +1314,20 @@ public class MaterialController {
 					item.setDuration(material.getDuration());
 					item.setItemName(material.getMaterialName());
 					System.out.println("item=" + item);
-					materialService.saveItem(item);
+					//检查是否是已经排播，且在播表范围内
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					List<Items> list = materialDao.findItemsByMidBetweenDates(mid, sdf.format(d1), sdf.format(d2));
+					if (list.size() == 0) {
+						materialService.saveItem(item);
+					} else if (list.size() > 0) {
+						PrintWriter out = response.getWriter();
+						//返回字符串，前台回显，素材在选定时间段已经排播，最好返回json数据，提示信息也在后台做
+						out.print("4");
+						out.flush();
+						out.close();
+						return;
+					}
+					//materialService.saveItem(item);
 					material.setInfo("1"); // 是否排播
 					material.setUsedNum(material.getUsedNum() + 1);
 					materialService.updateMaterial(material);

@@ -3,6 +3,7 @@ package org.south.itms.service.impl;
 
 import java.util.List;
 
+import org.south.itms.entity.PlayTable;
 import org.south.itms.entity.Terminal;  
  
  
@@ -32,5 +33,6 @@ public interface TerminalService {
 
    int countBySerialNumber(Terminal entity);
 
-   void resetTerminalPtable(String pid);  
+   void resetTerminalPtable(String pid); 
+   
 }  

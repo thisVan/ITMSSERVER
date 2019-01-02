@@ -1,3 +1,5 @@
+package org.south.itms.test;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +35,17 @@ public class TestUtil {
 		System.out.println(date2);
 				
 		System.out.println(date +  " " + date1);
+	}
+	
+	@Test
+	public void timeTest() {
+		long l = System.currentTimeMillis();
+		Time time1 = new Time(l);
+		Time time2 = new Time(l + 1000*60*60*12);
+		System.out.println(time2.getTime() - time1.getTime());
+		
+		System.out.println((double)27000 * 1000 / (time2.getTime() - time1.getTime()));
+		
 	}
 
 }

@@ -115,7 +115,7 @@
     			  var tmpdata = obj.data;
     			  var terminalId = tmpdata.terminalId;
     			  if(obj.event === 'restartTerminal'){
-    			      layer.confirm('真的重启终端运行么', function(index){
+    			      layer.confirm('真的重启终端么', function(index){
     			         //obj.del();
     			         layer.close(index);
     			         //重启终端运行
@@ -125,11 +125,11 @@
     							data:{"terminalId":terminalId},
     							dataType: "json",
     							success: function(msg){
-    								var value = msg.toString();
-    								if(value == "true"){
-    									layer.msg('10秒内将重启终端运行!',{icon:6,time:4000});
-    								}else if(value == "false"){
-    									layer.msg('终端未连接运行!',{icon:5,time:4000});
+    								//var value = msg.toString();
+    								if(msg.stateCode == "true"){
+    									layer.msg(msg.message,{icon:6,time:4000});
+    								}else if(msg.stateCode == "false"){
+    									layer.msg(msg.message,{icon:5,time:4000});
     								}
     							}
     						});
@@ -145,11 +145,10 @@
      						data:{"terminalId":terminalId},
      						dataType: "json",
      						success: function(msg){
-     							var value = msg.toString();
-     							if(value == "true"){
-     								layer.msg('10秒内将停止终端运行!',{icon:6,time:1500});
-     							}else if(value == "false"){
-     								layer.msg('终端未连接运行!',{icon:5,time:1500});
+     							if(msg.stateCode == "true"){
+     								layer.msg(msg.message,{icon:6,time:1500});
+     							}else if(msg.stateCode == "false"){
+     								layer.msg(msg.message,{icon:5,time:1500});
      							}
      						}
      					});

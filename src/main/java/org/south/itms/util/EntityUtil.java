@@ -94,7 +94,7 @@ public class EntityUtil {
 			String userName = checkName(pt.getUserId(), listUser);
 			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(),
 					pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(),
-					pt.getCreateTime(), pt.getMin(), pt.getInsertFlag(), pt.getState());
+					pt.getCreateTime(),pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState());
 			ptd.setTerminalName(terminalName);
 			ptd.setPeriodName(periodName);
 			ptd.setPeriodTime(periodTime);

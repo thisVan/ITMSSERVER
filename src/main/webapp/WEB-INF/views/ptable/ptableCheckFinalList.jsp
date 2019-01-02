@@ -3,13 +3,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <meta charset="UTF-8">
-   <%@ include file="/layui/header.jsp"%>
-   <title>播表列表</title>
-   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-   <script type="text/javascript" defer="defer">
+<meta charset="UTF-8">
+<title>播表列表</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="refresh" content="10">
+<%@ include file="/layui/header.jsp"%>
+<script type="text/javascript" defer="defer">
    $(function(){
 	   init();
    });
@@ -33,7 +34,8 @@
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'ptableName',width:250, event: 'set1', title: '播表名', fixed: true, sort: true}
+    		      {checkbox: true, event: 'set1', fixed: true}
+    		      ,{field:'ptableName',width:250, event: 'set1', title: '播表名', fixed: true, sort: true}
       		      ,{field:'playDate',width:120, event: 'set2', title: '播放日期', sort: true
       		    	,templet: function(d){
     		    		  var date = new Date(d.playDate);
@@ -54,7 +56,7 @@
   		    	,templet: function(d){
   		    		var flag = d.insertFlag;
   		    		if(flag == '0'){
-  		    			return '<span style="color: #90EE90;">周期轮播</span>';
+  		    			return '<span style="color: #ffbf47;">周期轮播</span>';
   		    		}else if(flag == '1'){
   		    			return '<span style="color: #FF6347;">插播</span>';
   		    		}
@@ -103,6 +105,72 @@
     		    	  //console.log(res.msg);
     		      }
     		  });
+			  
+			  var  active = {
+    				  	getDeleteData: function(){ //获取选中数据
+    				      var checkStatus = table.checkStatus('flagOne')
+    				      ,data = checkStatus.data;
+    				      var pid = [];
+    				      var ptableNames = [];
+    				      var statusids = [];
+    				      for(var i = 0; i < data.length; i++){
+    					      pid.push(data[i].pid);
+    					      statusids.push(data[i].statusId);
+    					      var j = data[i].ptableName.indexOf("(");
+    					      var pt = data[i].ptableName.substring(0,j);
+    					      if(ptableNames.indexOf(pt)<0){
+    					          ptableNames.push(pt);}
+    				      }
+    				      console.log(ptableNames);
+    				      console.log(pid);
+    				      if(pid.length == 0){
+    				    	  layer.msg('请选择要审核的播表!',{icon:6,time:1500});
+    				    	  return ;
+    				      }
+    				      else if(ptableNames.length>1){
+    				    	  for(var i=0; i<ptableNames.length;i++){
+    				    		  if(ptableNames.indexOf(ptableNames[i])>0){
+    				    			layer.msg('请选择一致的播表名!',{icon:6,time:1500});
+    	  				    	    return ;
+    				    		  }
+    				    	  }
+    				      }
+						 else if(statusids.indexOf("3")>-1){
+  				    	    layer.msg('选择的播表含有已通过播表!',{icon:6,time:2000});
+				    	    init();
+  				          }
+    				      
+    				      //批量删除
+    				      else{
+    				    	layer.confirm('确认审核选中的播表吗', {
+    				          icon:3,                  
+    				          title:'提示',        
+    				          btn:['是','否'],  
+    				          btn2:function(index,layero){
+    				        	init();
+    				        	layer.close(index);
+    				          }},
+    				    	function(index){
+    				        	  var pids = pid.join(",");
+    			    			  document.location = '<%=request.getContextPath()%>/ptable/goCheckPtablesFinal/' + pids + '.do';
+    				          }
+    				    	
+    				        
+    				        );
+    					       
+    					         
+    			    	  }
+    				    }
+    	    		  };
+    	    		  
+    	    		  $('.operatorTable').on('click', function(){
+    					  var othis = $(this);
+    					  var dothing = othis.attr("function");
+    					  if(dothing == "getDeleteData"){
+    						  //console.log(dothing);
+    						  active.getDeleteData();
+    					  }
+    				  });
     		  
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
@@ -127,16 +195,20 @@
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
 							
-							<div class="layui-inline">
-								<div class="layui-inline">
-									<button class="layui-btn" type="button" onclick="init()">
-										<i class="layui-icon">&#x1002;</i>刷新
-									</button>
-								</div>
-							</div>
+							
 						</div>
 					</form>
 				</div>
+			</div>
+			
+			
+			<div class="layui-btn-container">
+			<button class="layui-btn layui-btn-danger operatorTable" function="getDeleteData" data-type="getDeleteData">
+		        <i class="layui-icon">&#xe6ed;</i>批量审核
+		    </button>
+			<button class="layui-btn" type="button" onclick="init()">
+				<i class="layui-icon">&#x1002;</i>刷新
+			</button>
 			</div>
 			
 		 <div class="layui-col-md12">

@@ -120,7 +120,7 @@ public interface CommonService {
 
 	List<Period> getAllItemsPeriod(String string);
 
-	boolean generateTb(String periodId, String uid, String startDate, String endDate);
+	Map<String, Object> generateTb(String periodId, String uid, String startDate, String endDate);
 
 	void resetPtableState(String pid);
 

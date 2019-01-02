@@ -9,6 +9,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>在线排播系统</title>
+<link rel="icon" href="../images/logo.png" type="image/x-icon" />
+<link rel="shortcut icon" href="../images/logo.png" type="image/x-icon" />
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/layui/css/login.css" media="all" />
     <script type="text/javascript">

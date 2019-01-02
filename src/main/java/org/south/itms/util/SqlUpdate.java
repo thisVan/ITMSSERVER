@@ -48,8 +48,7 @@ public class SqlUpdate {
 		try{  
 		    //获得当前类的绝对路径
 		    //replaceAll("%20", "")这个替换是因为据说getPath()读取时会把空格读取为“%20”
-		    String webPath = this.getClass().getResource("/").getPath()
-		                                                 .replaceAll("%20", ""); 
+		    String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", " "); 
 		    //截取字符串得到WEB-INF路径然后拼接
 		    System.out.println("webPath=" + webPath);
 		    //webPath = webPath.substring(0, webPath.indexOf("WEB-INF"));

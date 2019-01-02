@@ -62,10 +62,6 @@ public class PeriodController {
 		return "forward:/file/periodList.jsp";
 	}
 	
-	
-	
-	
-	
 	@RequestMapping("/periodTable")
 	public String periodTable(String periodName, Model model, HttpServletRequest request) {
 		System.out.println(periodName);
@@ -224,9 +220,9 @@ public class PeriodController {
 	public void update(Period period, String timeStr, Period sqlPeriod,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		if("".equals(period.getMark())) {
+/*		if("".equals(period.getMark())) {
 			period.setMark(sqlPeriod.getMark());
-		}
+		}*/
 		if("".equals(timeStr)) {
 			period.setStartInterval(sqlPeriod.getStartInterval());
 			period.setEndInterval(sqlPeriod.getEndInterval());

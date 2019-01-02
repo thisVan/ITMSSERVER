@@ -289,12 +289,15 @@
         					    
 	        					    var trObj = document.createElement("tr");
 	        						trObj.id = "insertM" + i;
+	        						if ($("#ptableName").val() == "") {
+	        							$("#ptableName").val("插播-" + str[(i-len)*4]);
+	        						}
 	        						var tdStr = "<td>" + str[(i-len)*4] + "</td>"
 	                                + "<td>" + str[(i-len)*4 + 1] + "</td>"
 	                                + "<td>" + str[(i-len)*4 + 2] + "</td>"
 	                                + "<td>" + str[(i-len)*4 + 3] + "</td>"
 	                                + "<td>"
-	                                + "<input id='toNum" + i + "' value='1' type='text' oninput='checkTip()' style='width:30px;'>"
+	                                + "<input id='toNum" + i + "' value='1' type='text' class='layui-input' oninput='checkTip()' style='width:30px;'>"
 	                                + "</td>"
 	                                + "<td><button id='delbtn"+i+"' class='layui-btn layui-btn-mini layui-btn-danger' onclick='delFile(" + i + ")'>删除</button></td>";
 	                                trObj.innerHTML = tdStr;
@@ -334,11 +337,15 @@
 	    	//var method = document.getElementById("method").value;
 	    	//if(method == 'on'){
 	    	if($("#shijian").is(":visible") == true){
+	    		var ptableName = document.getElementById("ptableName").value;//播表名
 	    		var dateTime = document.getElementById("dateTime").value;//插播日期
 	    		var testDate = document.getElementById("testDate").value;//插播时间段
 	    		var stat = document.getElementById("stat").value;
 	    		var terminalId = document.getElementById("terminal").value;
 	    		var intervalTime = document.getElementById("intervalTime").value;
+	    		if(ptableName == ''){
+	    			layer.msg("没有指定播表名，系统将自动生成！",{icon:1,time:2000});
+	    		}
 	    		if(terminalId == ''){
 	    			layer.msg("请选择终端",{icon:5,time:2000});
 	    			return ;
@@ -381,7 +388,7 @@
 	    		$.ajax({
 					type:"POST",
 				    url: '<%=request.getContextPath()%>/ptable/addInsertMaterial.do',
-				    data: {"terminalId":terminalId,"mid": midds, "dateTime":dateTime, "testDate":testDate, "stat":stat, "intervalTime":intervalTime},
+				    data: {"ptableName":ptableName,"terminalId":terminalId,"mid": midds, "dateTime":dateTime, "testDate":testDate, "stat":stat, "intervalTime":intervalTime},
 				    dataType : "json",
 				    success: function(msg){
 				    	var value = msg.toString();
@@ -399,11 +406,15 @@
 				});
 	    		
 	    	}else{
+	    		var ptableName = document.getElementById("ptableName").value;//播表名
 	    		var dateTime = document.getElementById("dateTime").value;//插播日期
 	    		var testDate = document.getElementById("testDate").value;
 	    		var stat = document.getElementById("stat").value;
 	    		var terminalId = document.getElementById("terminal").value;
 	    		var insertCi = document.getElementById("insertCi").value;
+	    		if(ptableName == ''){
+	    			layer.msg("没有指定播表名，系统将自动生成！",{icon:1,time:2000});
+	    		}
 	    		if(terminalId == ''){
 	    			layer.msg("请选择终端",{icon:5,time:2000});
 	    			return ;
@@ -431,6 +442,7 @@
 	 			}
 	    		
 	    		var dat = testDate.split("-");
+	    		//任意一天，计算插播开始时间和结束时间之间的秒数
 				var start = '2017/12/14 ' + dat[0];
 				var end = '2017/12/14 ' + dat[1];
 				var d1 = new Date(start);
@@ -456,7 +468,7 @@
 	    		$.ajax({
 					type:"POST",
 				    url: '<%=request.getContextPath()%>/ptable/addInsertMaterial.do',
-				    data: {"terminalId":terminalId,"mid": midds, "dateTime":dateTime, "testDate":testDate, "stat":stat, "intervalTime":intervalTime},
+				    data: {"ptableName":ptableName,"terminalId":terminalId,"mid": midds, "dateTime":dateTime, "testDate":testDate, "stat":stat, "intervalTime":intervalTime},
 				    dataType : "json",
 				    success: function(msg){
 				    	var value = msg.toString();
@@ -623,14 +635,13 @@
 							<div class="layui-form-query">
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
-							
-		                    <div class="layui-inline">
-			                    <label class="layui-form-mid">方式：</label>
-			                    <div class="layui-inline" style="">
-			                      <input type="checkbox" id="method" name="method" lay-skin="switch" lay-filter="infoValue" lay-text="时段|频次" checked>
+							<div class="layui-inline">
+			                    <label class="layui-form-mid">播表名：</label>
+			                    <div class="layui-inline">
+				                    <input type="text" id="ptableName" name="ptableName" style="width: 200px; height: 36px;" class="layui-input"/>
 			                    </div>
 		                    </div>
-							
+		                    
 							<div class="layui-inline">
 			                    <label class="layui-form-mid">插播日期：</label>
 			                    <div class="layui-inline" style="">
@@ -655,7 +666,7 @@
 							</div>
 							
 							<div class="layui-inline">
-								<label class="layui-form-mid">插播时态 ：</label>
+								<label class="layui-form-mid">插播形式：</label>
 								<div class="layui-input-inline"
 									style="width: 110px; height: 35px;">
 									<select name="stat" id="stat" style="width: 110px; height: 35px;">
@@ -664,7 +675,14 @@
 									</select>
 								</div>
 							</div>
-							
+									                    
+		                     <div class="layui-inline">
+			                    <label class="layui-form-mid">插播方式：</label>
+			                    <div class="layui-inline" style="">
+			                      <input type="checkbox" id="method" name="method" lay-skin="switch" lay-filter="infoValue" lay-text="时间|频次" checked>
+			                    </div>
+		                    </div>
+		                    
 							<div class="layui-inline" id="shijian">
 			                    <label class="layui-form-mid">时间间隔：</label>
 			                    <div class="layui-inline" style="">
@@ -723,7 +741,7 @@
 				  </div>
 			   </div>
 			</div>
-			</div>>
+			</div>
 			
 			<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 			<script type="text/html" id="barDemo">

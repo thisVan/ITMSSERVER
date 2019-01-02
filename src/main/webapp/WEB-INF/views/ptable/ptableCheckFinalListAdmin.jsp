@@ -33,8 +33,9 @@
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'ptableName',width:250, event: 'set1', title: '播表名', fixed: true, sort: true}
-    		      ,{field:'playDate',width:120, event: 'set2', title: '播放日期', sort: true
+				  {checkbox: true, event: 'set1', fixed: true}
+    		      ,{field:'ptableName',width:250, event: 'set2', title: '播表名', fixed: true, sort: true}
+    		      ,{field:'playDate',width:120, event: 'set3', title: '播放日期', sort: true
         		    	,templet: function(d){
       		    		  var date = new Date(d.playDate);
       		    		  var Y = date.getFullYear() + '-';
@@ -43,14 +44,14 @@
       		    		  return Y+M+D;
       		    	  } 
         		      }
-        		    ,{field:'periodTime',width:260, event: 'set3', title: '时段范围', sort: true
+        		    ,{field:'periodTime',width:260, event: 'set4', title: '时段范围', sort: true
         		    	,templet: function(d){
         		    		var periodName = d.periodName;
         		    		var periodTime = d.periodTime;
         		    		return periodName + " " + periodTime;
         		    	}
         		      }
-        		  ,{field:'insertFlag',width:100, event: 'set4', title: '播表类型', sort: true
+        		  ,{field:'insertFlag',width:100, event: 'set5', title: '播表类型', sort: true
     		    	,templet: function(d){
     		    		var flag = d.insertFlag;
     		    		if(flag == '0'){
@@ -60,7 +61,7 @@
     		    		}
     		    	}
     		      }
-      		      ,{field:'statusId',width:100, event: 'set5', title: '审核状态', sort: true
+      		      ,{field:'statusId',width:100, event: 'set6', title: '审核状态', sort: true
       		    	  ,templet: function(d){
       		    		  var state = d.statusId;
       		    		if(state == 1){
@@ -80,12 +81,12 @@
   		    		  }
       		    	  }
       		      }
-        		      ,{field:'playTotalTime',width:120, event: 'set6', title: '播表时长', sort: true}
-        		      ,{field:'allTime',width:120, event: 'set7', title: '可播时长'}
-        		      ,{field:'screenRate',width:100, event: 'set8', title: '占屏比', sort: true}
-        		    ,{field:'terminalName',width:120, event: 'set9', title: '终端名', sort: true}
-        		      ,{field:'createName',width:120, event: 'set10', title: '创建人', sort: true}
-        		      ,{field:'createTime',width:180, event: 'set11', title: '创建时间', sort: true
+        		      ,{field:'playTotalTime',width:120, event: 'set7', title: '播表时长', sort: true}
+        		      ,{field:'allTime',width:120, event: 'set8', title: '可播时长'}
+        		      ,{field:'screenRate',width:100, event: 'set9', title: '占屏比', sort: true}
+        		    ,{field:'terminalName',width:120, event: 'set10', title: '终端名', sort: true}
+        		      ,{field:'createName',width:120, event: 'set11', title: '创建人', sort: true}
+        		      ,{field:'createTime',width:180, event: 'set12', title: '创建时间', sort: true
         		    	,templet: function(d){
     		    		  var date = new Date(d.createTime);
     		    		  var Y = date.getFullYear() + '-';
@@ -97,7 +98,7 @@
     		    		  return Y+M+D+h+m+s;
     		    	  }
         		      }
-      		      ,{fixed: 'right', width:100, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
+      		     // ,{fixed: 'right', width:100, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
     		    ,where: {"statusId":statusId}
@@ -109,6 +110,72 @@
     		    	  //console.log(res.msg);
     		      }
     		  });
+			  
+			  var  active = {
+  				  	getDeleteData: function(){ //获取选中数据
+  				      var checkStatus = table.checkStatus('flagOne')
+  				      ,data = checkStatus.data;
+  				      var pid = [];
+  				      var ptableNames = [];
+  				      var statusids = [];
+  				      for(var i = 0; i < data.length; i++){
+  					      pid.push(data[i].pid);
+  					      statusids.push(data[i].statusId);
+  					      var j = data[i].ptableName.indexOf("(");
+  					      var pt = data[i].ptableName.substring(0,j);
+  					      if(ptableNames.indexOf(pt)<0){
+  					          ptableNames.push(pt);}
+  				      }
+  				      console.log(ptableNames);
+  				      console.log(pid);
+  				      if(pid.length == 0){
+  				    	  layer.msg('请选择要审核的播表!',{icon:6,time:1500});
+  				    	  return ;
+  				      }
+  				      else if(ptableNames.length>1){
+  				    	  for(var i=0; i<ptableNames.length;i++){
+  				    		  if(ptableNames.indexOf(ptableNames[i])>0){
+  				    			layer.msg('请选择一致的播表名!',{icon:6,time:1500});
+  	  				    	    init();
+  				    		  }
+  				    	  }
+  				      }
+  				      else if(statusids.indexOf("3")>-1){
+  				    	layer.msg('选择的播表含有已通过播表!',{icon:6,time:2000});
+				    	init();
+  				      }
+  				      
+  				      //批量删除
+  				      else{
+  				    	layer.confirm('确认审核选中的播表吗', {
+  				          icon:3,                  
+  				          title:'提示',        
+  				          btn:['是','否'],  
+  				          btn2:function(index,layero){
+  				        	init();
+  				        	layer.close(index);
+  				          }},
+  				    	function(index){
+  				        	  var pids = pid.join(",");
+  			    			  document.location = '<%=request.getContextPath()%>/ptable/goCheckPtablesFirst/' + pids + '.do';
+  				          }
+  				    	
+  				        
+  				        );
+  					       
+  					         
+  			    	  }
+  				    }
+  	    		  };
+  	    		  
+  	    		  $('.operatorTable').on('click', function(){
+  					  var othis = $(this);
+  					  var dothing = othis.attr("function");
+  					  if(dothing == "getDeleteData"){
+  						  //console.log(dothing);
+  						  active.getDeleteData();
+  					  }
+  				  });
     		  
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
@@ -133,16 +200,19 @@
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
 							
-							<div class="layui-inline">
-								<div class="layui-inline">
-									<button class="layui-btn" type="button" onclick="init()">
-										<i class="layui-icon">&#x1002;</i>刷新
-									</button>
-								</div>
-							</div>
+							
 						</div>
 					</form>
 				</div>
+			</div>
+			
+			<div class="layui-btn-container">
+			<button class="layui-btn layui-btn-danger operatorTable" function="getDeleteData" data-type="getDeleteData">
+		        <i class="layui-icon">&#xe6ed;</i>批量审核
+		    </button>
+			<button class="layui-btn" type="button" onclick="init()">
+				<i class="layui-icon">&#x1002;</i>刷新
+			</button>
 			</div>
 			
 		 <div class="layui-col-md12">
