@@ -49,6 +49,16 @@ public class PtableDto {
 	private Time endTime;
 	
 	private String tid;
+	
+	private int duraTime;	
+
+	public int getDuraTime() {
+		return duraTime;
+	}
+
+	public void setDuraTime(int duraTime) {
+		this.duraTime = duraTime;
+	}
 
 	public int getInsertFlag() {
 		return insertFlag;

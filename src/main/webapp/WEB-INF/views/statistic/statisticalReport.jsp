@@ -26,8 +26,6 @@
 		search();
    });
    
-  
-   
     function search() {
       var statisType = $("#statisType").val();
       if(statisType == "1") {
@@ -37,7 +35,6 @@
       }
       
     }
-   
    
     function searchPlayNum(){
     	  
@@ -58,7 +55,7 @@
       		     
       		    ]]
     		    ,page: true
-    		    ,where: {"terminalId": $("#terminal").val(), "dateTime": $("#statisTime").val()}
+    		    ,where: {"terminalId": $("#terminal").val(), "dateTime": $("#statisTime").val(), "materialName": $("#material_name").val()}
     		    ,done: function(res, curr, count){	
     		      }
     		  });
@@ -66,13 +63,7 @@
     		});
       }
    
-   
-   
-   
-   
-   
       function searchPlayDetail(){
-
     	  
     	  layui.use('table', function(){
     		  var table = layui.table;
@@ -114,7 +105,7 @@
       		      ,{field: 'pname',width:350, event: 'set5', title: '所属播表', sort: true}
       		    ]]
     		    ,page: true
-    		    ,where: {"terminalId": $("#terminal").val(), "dateTime": $("#statisTime").val()}
+    		    ,where: {"terminalId": $("#terminal").val(), "dateTime": $("#statisTime").val(), "material_name": $("#material_name").val()}
     		    ,done: function(res, curr, count){
     		    	 
     		     }
@@ -122,7 +113,6 @@
     		  
     		});
       }
-      
       
       function generateExcel() {
           	  var url = '<%=request.getContextPath()%>/statistic/generateExcel.do?terminalId=' + $("#terminal").val() + '&dateTime=' + $("#statisTime").val() +'&type=' + $("#statisType").val();
@@ -151,8 +141,6 @@
 			  // 发送ajax请求
 			  xhr.send()
       }
-      
-      
    </script>
    
 </head>
@@ -178,8 +166,12 @@
 								</div>
 							</div>
 							
-							
-				
+							<div class="layui-inline">
+								<label class="layui-form-mid">素材名称：</label>
+								<div class="layui-input-inline" style="width: 150px; height: 35px;">
+									<input type="text" class="layui-input" id="material_name" name="material_name" placeholder="素材名称关键字">
+								</div>
+							</div>
 							
 							<div class="layui-inline">
 								<label class="layui-form-mid">统计类型：</label>
@@ -190,8 +182,6 @@
 			                        </select>
 								</div>
 							</div>
-							
-							
 							
 							<div class="layui-inline">
 						      <label class="layui-form-label">统计时间：</label>
@@ -212,10 +202,6 @@
 				</div>
 			</div>
 	
-	
-	
-	
-	
 			<div class="layui-col-md12">
 		  	 	<div class="layui-row grid-demo">
 			        <div class="layui-btn-container">
@@ -230,7 +216,6 @@
 				     </div>
 				</div>
 			</div>
-	
 			
 		</div>
 	</div>
@@ -248,7 +233,6 @@
 		  
 		});
 	</script>
-
 	
 </body>
 </html>

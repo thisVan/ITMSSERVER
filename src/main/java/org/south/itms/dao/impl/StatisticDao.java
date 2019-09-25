@@ -11,10 +11,12 @@ import org.south.itms.entity.PlayLog;
 public interface StatisticDao {
 
 	List<PlayNumDto> findPlayNumDto(String terminalId, String startTime, String endTime);
+	
+	List<PlayNumDto> findPlayNumDto(String terminalId, String startTime, String endTime, String materialName);
 
 	List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime);
 	
-	Page pageSearchPlayLog(String terminalId, String startTime, String endTime, int currentPage, int pageSize);
+	Page pageSearchPlayLog(String terminalId, String material_name, String startTime, String endTime, int currentPage, int pageSize);
 
 	
 }  

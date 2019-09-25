@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -142,6 +143,24 @@ public class PtableController {
 		}
 
 		return "ptable/ptableListOther";
+	}
+	
+	//12.30
+	@RequestMapping("/insertPtableList")
+	public String insertPtableList(Model model, HttpServletRequest request) {
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminalPtable", listTerminal);
+		//request.getSession().setAttribute("terminalPtable", listTerminal);
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = userService.getAllUser();
+		request.getSession().setAttribute("periodList", listPeriod);
+		model.addAttribute("periodL", listPeriod);
+		model.addAttribute("userL", listUser);
+		if((Constant.adminValue).equals((String)request.getSession().getAttribute("rId"))||
+				(Constant.broadValue).equals((String)request.getSession().getAttribute("rId"))) {
+			return "ptable/insertPtable";
+		}
+		return "ptable/insertPtable";
 	}
 
 	@RequestMapping("/insteadPtable")
@@ -320,8 +339,7 @@ public class PtableController {
 	public String goAddPtable(Model model, HttpServletRequest request) {
 		List<Terminal> listTerminal = commonService.getAllTerminal();
 		model.addAttribute("terminals", listTerminal);
-		List<IPTable> listInsert = commonService
-				.getAllIPTable(listTerminal.size() == 0 ? "" : listTerminal.get(0).getTerminalId());
+		List<IPTable> listInsert = commonService .getAllIPTable(listTerminal.size() == 0 ? "" : listTerminal.get(0).getTerminalId());
 		model.addAttribute("insertTables", listInsert);
 		request.getSession().setAttribute("tableNum", listInsert.size());
 		// return "ptable/insertPtableOld";
@@ -404,7 +422,8 @@ public class PtableController {
 				Page pageD = commonService.pageSearchInsertByTemplateHQL(params, page, limit, "PlayTable", "pid asc",
 						null);
 				List<PlayTable> listPtable = pageD.getList();
-				List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+				//List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+				List<PtableDto> listDto = EntityUtil.ptableDtoInsert(list, listPeriod, listUser, listPtable, ptableDao);
 				PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
 				pageResult.setCount(pageD.getTotalRecord());
 				pageResult.setCode(0);
@@ -538,14 +557,17 @@ public class PtableController {
 	}
 
 	@RequestMapping(value = "/searchUnckeckFirstPtable")
-	public @ResponseBody PageResultData<PtableDto> searchUnckeckFirstPtable(String statusId, int page, int limit) {
+	public @ResponseBody PageResultData<PtableDto> searchUnckeckFirstPtable(String statusId, int page, int limit, String sortName, String sortBy) {
 		String[] param = initUncheckParam(statusId);
 		List<Terminal> list = commonService.getAllTerminal();
 		List<Period> listPeriod = commonService.getAllPeriod();
 		List<User> listUser = commonService.getAllUser();
+		String sortString = "createTime desc";
+		if (sortName != null && sortBy != null) {
+			sortString = sortName + " " + sortBy;
+		}
 		try {
-			Page pageD = commonService.pageSearchFirstByTemplateHQL(param, page, limit, "PlayTable", "createTime desc",
-					null);
+			Page pageD = commonService.pageSearchFirstByTemplateHQL(param, page, limit, "PlayTable", sortString, null);
 			List<PlayTable> listPtable = pageD.getList();
 			List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
 			PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
@@ -732,6 +754,8 @@ public class PtableController {
 		if (playTable.getStatusId() != null && "1".contentEquals(playTable.getStatusId())) {
 			playTableIsUnChecked = true;
 		}
+		//计算最大公约数
+		modelMap.addAttribute("ptableStyle", "ptablelist");
 		modelMap.addAttribute("pid", pid);
 		modelMap.addAttribute("periodName", periodName);
 		modelMap.addAttribute("periodID", playTable.getPeriodId());
@@ -739,6 +763,9 @@ public class PtableController {
 		modelMap.addAttribute("isUnChecked", playTableIsUnChecked);
 		modelMap.addAttribute("playTableName", playTable.getPtableName());
 		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
+		
+		modelMap.addAttribute("playTableDuration", playTable.getPlayTotalTime());
+		modelMap.addAttribute("playTableMaxCommonDivisor", playTable.getBaseFrequency());//基础频次，最大公约数
 		
 		return "ptable/addPtable";
 	}
@@ -750,6 +777,9 @@ public class PtableController {
 		modelMap.addAttribute("pid", pid);
 		modelMap.addAttribute("periodName", ptb.getPtableName());
 		modelMap.addAttribute("tid", ptb.getTerminalId());
+		
+		modelMap.addAttribute("playTableDuration", ptb.getPlayTotalTime());
+		modelMap.addAttribute("playTableMaxCommonDivisor", ptb.getBaseFrequency());//基础频次，最大公约数
 
 		List<Material> files = fileDao.findByPtable(pid);
 		request.getSession().setAttribute("tableFirst", files);
@@ -848,7 +878,7 @@ public class PtableController {
 				return pageResult;
 			} else if (playTable.getInsertFlag() == 1) {
 				List<Material> files = materialDao.findMaterialByPtable(pid);
-				List<Items> files1 = EntityUtil.createNewItems(files);
+				List<Items> files1 = EntityUtil.createNewItems(files, playTable);
 				request.getSession().setAttribute("modifyPid", pid);
 				System.out.println(files);
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -932,7 +962,7 @@ public class PtableController {
 				out.close();
 			} else if (playTable.getInsertFlag() == 1) {
 				List<Material> files = materialDao.findMaterialByPtable(pid);
-				List<Items> filesList = EntityUtil.createNewItems(files);
+				List<Items> filesList = EntityUtil.createNewItems(files, playTable);
 
 				Collections.sort(filesList, new Comparator<Items>() {
 					@Override
@@ -1342,11 +1372,9 @@ public class PtableController {
 		return "file/checkExcepList";
 	}
 
-	// 7.14
-	
+	// 2018.7.14
 	@RequestMapping(value = "/copyOneToPlayFile")
-	public void copyOneToPlayFile(String ppid, HttpServletRequest request, HttpServletResponse response, String mmid,
-			String num) throws IOException {
+	public void copyOneToPlayFile(String ppid, HttpServletRequest request, HttpServletResponse response, String mmid, String num) throws IOException {
 		if (StringUtil.isEmpty(ppid)) {
 			PrintWriter out = response.getWriter();
 			out.print("获取失败，没有传入ppid");
@@ -1372,13 +1400,21 @@ public class PtableController {
 				List<Items> itmsList = materialDao.findByPtable(ppid);
 				int allTime = 0;
 				String terminalId = "";
+				if (itmsList.size() > 0) {
+					terminalId = itmsList.get(0).getTerminalId();
+				}
+				Set<Items> itemSet = new HashSet<Items>();
 				for (Items items : itmsList) {
-					allTime += items.getDuration() * items.getFrequency();
-					if ("".equals(terminalId)) {
-						terminalId = items.getTerminalId();
+					System.out.println(items.toString());
+					//2019.9.22修复添加节目到播表时，播表时间计算错误
+					if (itemSet.add(items)) {
+						allTime += items.getDuration() * items.getFrequency();
 					}
 				}
-				String allTimeStr = allTime / 60 + "分" + allTime % 60 + "秒";
+				String allTimeStr = allTime / 60 + "分";
+				if (allTime % 60 == 0) {
+					allTimeStr += allTime % 60 + "秒";
+				}
 				Terminal terminal = terminalService.get(terminalId);
 				double fullScreenRate = (double) allTime * 1000 / (terminal.getRunEndTime().getTime() - terminal.getRunStartTime().getTime());
 				ptableService.updatePlayTableAllTime(ppid, allTimeStr, new DecimalFormat("#.##%").format(fullScreenRate));
@@ -1575,11 +1611,11 @@ public class PtableController {
 			}
 
 			// 第六步，将文件存到指定位置
-			File file = new File(Constant.ExcelPath);
+			File file = new File(Constant.EXCELPATH);
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-			String excelFileName = Constant.ExcelPath + "/" + UUID.randomUUID().toString() + ".xls";
+			String excelFileName = Constant.EXCELPATH + "/" + UUID.randomUUID().toString() + ".xls";
 			FileOutputStream fout = new FileOutputStream(excelFileName);
 			wb.write(fout);
 			fout.close();

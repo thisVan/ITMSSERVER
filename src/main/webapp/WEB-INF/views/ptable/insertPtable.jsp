@@ -1,58 +1,60 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
-   <meta charset="UTF-8">
-   <%@ include file="/layui/header.jsp"%>
-   <title>插播管理列表</title>
-   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-   <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
-   	<script type="text/javascript">
-   	layui.use('layer', function(){
-		  var layer = layui.layer;
-	  });
-	layui.use('form', function(){
-		  var form = layui.form;
-		  
-		  form.on('select(test)', function(data){
-			  //console.log(data);
-			  initUncheck();
+<meta charset="UTF-8">
+<%@ include file="/layui/header.jsp"%>
+<title>插播管理列表</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+<script type="text/javascript">
+	layui.use('layer', function() {
+		var layer = layui.layer;
+	});
+	layui.use('form', function() {
+		var form = layui.form;
+		form.on('select(test)', function(data) {
+			//console.log(data);
+			initUncheck();
 		});
-		  
-		  form.on('switch(infoValue)', function(data){
-		       
-				if(data.elem.checked == true){
-					document.getElementById("pinci").style.display="none";//隐藏
-					document.getElementById("shijian").style.display="";//显示
-				}else if(data.elem.checked == false){
-					document.getElementById("pinci").style.display="";//显示
-					document.getElementById("shijian").style.display="none";//隐藏
-				}
-				
-				checkTip();  //前台提示该插播安排是否有溢出
-			});
-		  
+
+		form.on('radio(infoValue)', function(data) {
+			if (data.value == "时间") {
+				document.getElementById("pinci").style.display = "none"; //隐藏
+				document.getElementById("shijian").style.display = ""; //显示
+			} else if (data.value == "频次") {
+				document.getElementById("pinci").style.display = ""; //显示
+				document.getElementById("shijian").style.display = "none"; //隐藏
+			}
+
+			checkTip(); //前台提示该插播安排是否有溢出
+		});
+
 	});
-	layui.use('laydate', function(){
-	var laydate = layui.laydate;
-	laydate.render({
-	    elem: '#dateTime' //指定元素
-	    ,range:true
-	  });
-  laydate.render({
-	    elem: '#testDate' //指定元素
-	    ,type: 'time'
-	    ,range: true
-	  });
+	layui.use('laydate', function() {
+		var laydate = layui.laydate;
+		laydate.render({
+			elem : '#dateTime', //指定元素
+			range : true
+		});
+		laydate.render({
+			elem : '#testDate', //指定元素
+			type : 'time',
+			range : true
+		});
 	});
-	</script>
-   <script type="text/javascript" defer="defer">
+</script>
+<script type="text/javascript" defer="defer">
    $(function(){
 	   init();
 	   document.getElementById("pinci").style.display="none";//隐藏
+	   
+	   initDateTime();
    });
    
       function init(){
@@ -114,7 +116,18 @@
     		    	}
     		      }
       		      ,{field:'min',width:95, event: 'set5', title: '间隔', sort: true}
-      		      ,{field:'state',width:110, event: 'set6', title: '插播时态', sort: true
+      		      ,{field:'duraTime',width:120, event: 'set6', title: '视频总时间', sort: true}
+      		      ,{fiels:'frequency',width:95, event: 'set7', title: '频次',sort:true
+      		    	  ,templet: function(d){
+      		    		  var start = '2017/12/14 ' + d.startTime;
+      		    		  var end = '2017/12/14 ' + d.endTime;
+      		    		  var d1 = new Date(start);
+      		    		  var d2 = new Date(end);
+      		    		  var fre = parseInt((d2-d1)/1000);
+      		    		  var fre1 = parseInt(fre/(d.min + d.duraTime));
+      		    		  return fre1;
+      		    	  }
+      		      },{field:'state',width:110, event: 'set6', title: '插播时态', sort: true
       		    	  ,templet: function(d){
       		    		  var state = d.state;
       		    		  if(state == 1){
@@ -127,21 +140,21 @@
       		    ,{field:'statusId',width:100, event: 'set5', title: '审核状态', sort: true
     		    	  ,templet: function(d){
     		    		  var state = d.statusId;
-    		    		if(state == 1){
-		    			  return '<span style="color: #FF6347;">' + '未审核' + '</span>';
-		    		  }else if(state == 2){
-		    			  return '<span style="color: #90EE90;">' + '已初审' + '</span>';
-		    		  }else if(state == 3){
-		    			  return '<span style="color: #90EE90;">' + '已通过' + '</span>';
-		    		  }else if(state == 4){
-		    			  return '<span style="color: #FF6347;">' + '未通过' + '</span>';
-		    		  }else if(state == 5){
-		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误)' + '</span>';
-		    		  }else if(state == 6){
-		    			  return '<span style="color: #FF6347;">' + '未通过(素材敏感)' + '</span>';
-		    		  }else if(state == 7){
-		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误、素材敏感)' + '</span>';
-		    		  }
+    		    		  if(state == 1){
+		    			  	return '<span style="color: #FF6347;">' + '未审核' + '</span>';
+		    			  }else if(state == 2){
+		    			  	return '<span style="color: #90EE90;">' + '已初审' + '</span>';
+		    			  }else if(state == 3){
+		    			  	return '<span style="color: #90EE90;">' + '已通过' + '</span>';
+		    			  }else if(state == 4){
+		    			  	return '<span style="color: #FF6347;">' + '未通过' + '</span>';
+		    			  }else if(state == 5){
+		    			  	return '<span style="color: #FF6347;">' + '未通过(排播有误)' + '</span>';
+		    			  }else if(state == 6){
+		    			  	return '<span style="color: #FF6347;">' + '未通过(素材敏感)' + '</span>';
+		    			  }else if(state == 7){
+		    			  	return '<span style="color: #FF6347;">' + '未通过(排播有误、素材敏感)' + '</span>';
+		    			  }
     		    	  }
     		      }
       		  ,{field:'terminalName',width:140, event: 'set9', title: '终端名', sort: true
@@ -166,32 +179,37 @@
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
     			  var pid = tmpdata.pid;
+    			  //console.log(obj);
     			  if(obj.event === 'ptableDel'){
-    			     
-    			          //批量删除
-    				      layer.confirm('确定删除该插播记录?', function(index){
-    					         var pids = [];
-    					         pids.push(pid);
-    					         layer.close(index);
-    					        
-    					         $.ajax({
-    									type: "POST",
-    									url: "<%=request.getContextPath()%>/ptable/delPtable.do",
-    									data: {"ids":pids},
-    									traditional: true,
-    									dataType : "json",
-    									success : function(data){
-    										 if(data.success) {
-    										   initUncheck();
-										       layer.msg('删除成功!',{icon:6,time:2000});
-										     } else {
-										       layer.msg(data.msg, {icon:5,time:2000});
-										     }
-    									}
-    								});
-    			    	  });
-    			     
-    			     
+   			          //批量删除
+   				      layer.confirm('确定删除该插播记录?', function(index){
+   					         var pids = [];
+   					         pids.push(pid);
+   					         layer.close(index);
+   					        
+   					         $.ajax({
+   								type: "POST",
+  									url: "<%=request.getContextPath()%>/ptable/delPtable.do",
+  									data: {"ids":pids},
+  									traditional: true,
+  									dataType : "json",
+  									success : function(data){
+  										 if(data.success) {
+  										   initUncheck();
+								       layer.msg('删除成功!',{icon:6,time:2000});
+								     } else {
+								       layer.msg(data.msg, {icon:5,time:2000});
+								     }
+  									}   					         
+   					         });
+   			    	  });
+    			  }
+    			  if(obj.event === 'mediaInfo'){
+					var pid = tmpdata.pid;
+					var periodName=tmpdata.periodName+" ";
+					var tid=tmpdata.tid;
+					//console.log('<%=request.getContextPath()%>/ptable/goModifyPtable/' + pid + '/' + periodName + '/' + tid + '.do');
+					document.location = '<%=request.getContextPath()%>/ptable/goModifyPtable/' + pid + '/' + periodName + '/' + tid + '.do';
     			  }
     		  });
     		});
@@ -302,12 +320,9 @@
 	                                + "<td><button id='delbtn"+i+"' class='layui-btn layui-btn-mini layui-btn-danger' onclick='delFile(" + i + ")'>删除</button></td>";
 	                                trObj.innerHTML = tdStr;
 	                                document.getElementById("demoList").appendChild(trObj);
-        					    
-       
         					}
         					odiv.style.display="block";
         					checkTip();  //前台提示该插播安排是否有溢出
-        					
         					
         				}
     				}
@@ -449,7 +464,10 @@
 				var d2 = new Date(end);
 				var fre = parseInt(d2 - d1)/1000;
 				var fre1 = parseInt(fre/insertCi);
-	    		var intervalTime = fre1;
+	    		//var intervalTime = fre1;
+	    		//2019.1.3
+	    		var timeDurationStr = document.getElementById("frequ").innerHTML;
+	    		var intervalTime= parseInt(timeDurationStr.replace(/[^0-9]/ig,""));
 	    		
 	    		var midds = '';
 	    		console.log("midArr=" + midArr);
@@ -487,8 +505,6 @@
 	    	}
 	    }
 	    
-	    
-	    
 	    function checkTip() {
 	        var reg = /^\d+(?=\.{0,1}\d+$|$)/
  
@@ -517,7 +533,6 @@
             
             if(insertSecond == 0) return;
    
-   
             //校验插播时段不为空
             var tim = document.getElementById("testDate").value;
             if(tim == ""){
@@ -530,8 +545,6 @@
 			var d2 = new Date(end);
 			var totalSecond = parseInt(d2 - d1)/1000;
    
-	    
-	       
 	    	if($("#shijian").is(":visible") == true){  //时段
 	    	   var intervalTime = document.getElementById("intervalTime").value;
 	    	   if(!reg.test(intervalTime))  {  //不是合法的输入
@@ -553,7 +566,6 @@
  					document.getElementById("frequ").innerText = "约" + num + "次";
 	    	   }
 
-	    	
 	    	} else {
 	    	
 	    	   var insertCi = document.getElementById("insertCi").value;
@@ -576,21 +588,38 @@
 	    	   }
 	    	
 	    	}
-	    
-	    
-	    
+	    	
 	    }
 	    
+	    function initDateTime(){
+	    	var timeStr = new Date().format("yyyy-MM-dd") +" - "+ new Date().format("yyyy-MM-dd");
+	    	$("#dateTime").val(timeStr);
+	    }
 	    
-	    
-	    
-	    
+	    Date.prototype.format = function(fmt) { //author: meizz 
+			var o = {
+				"M+" : this.getMonth() + 1, //月份 
+				"d+" : this.getDate(), //日 
+				"h+" : this.getHours(), //小时 
+				"m+" : this.getMinutes(), //分 
+				"s+" : this.getSeconds(), //秒 
+				"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+				"S" : this.getMilliseconds() //毫秒 
+			};
+			if (/(y+)/.test(fmt))
+				fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			for (var k in o)
+				if (new RegExp("(" + k + ")").test(fmt))
+					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			return fmt;
+		}
+    
 <%-- 	    function goBack() {
 			   document.location = "<%=request.getContextPath()%>/ptable/ptableList.do";
 			} --%>
 
    </script>
-   
+
 </head>
 <body>
 	<input type="hidden" id="videoView" value="">
@@ -598,118 +627,138 @@
 	<input type="hidden" id="checkTwice" value="">
 	<input type="hidden" id="midData" value="">
 	<div class="layui-fluid">
-	<div  align="center">
-       <blockquote class="layui-elem-quote">
-                         插播管理页
-       </blockquote>
-   </div>
+		<div align="center">
+			<blockquote class="layui-elem-quote">插播管理页</blockquote>
+		</div>
 		<div class="layui-row layui-col-space1">
 			<div class="layui-col-md12">
 				<div class="layui-form-query">
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
-							
+
 							<div class="layui-inline">
-								<label class="layui-form-mid"><i class="layui-icon">&#xe6ed;</i>当前终端已有的插播信息 ：</label>
+								<label class="layui-form-mid"><i class="layui-icon">&#xe6ed;</i>当前终端已有的插播信息
+									：</label>
 								<div class="layui-input-inline"
 									style="width: 140px; height: 35px;">
-									<select name="terminal" id="terminal" lay-filter="test" style="width: 140px; height: 35px;">
+									<select name="terminal" id="terminal" lay-filter="test"
+										style="width: 140px; height: 35px;">
 										<option value="">直接选择或搜索</option>
-										<c:forEach items="${terminals}" var = "terminal" varStatus = "status">
-                                        <option value="${terminal.terminalId}">${terminal.terminalName}</option>
-                                        </c:forEach>
+										<c:forEach items="${terminals}" var="terminal"
+											varStatus="status">
+											<option value="${terminal.terminalId}">${terminal.terminalName}</option>
+										</c:forEach>
 									</select>
 								</div>
-								<button class="layui-btn layui-bg-green" type="button"  onclick="addFileMaterial()">
-						       <i class="layui-icon">&#xe654;</i>插播
-						        </button>
+								<button class="layui-btn layui-bg-green" type="button"
+									onclick="addFileMaterial()">
+									<i class="layui-icon">&#xe654;</i>插播
+								</button>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
-			
-		 <div class="layui-col-md12">
-            
-			<div id="thediv" style="display:none">
-							<div class="layui-form-query">
-					<form class="layui-form" id="query_form">
-						<div class="layui-form-item">
-							<div class="layui-inline">
-			                    <label class="layui-form-mid">播表名：</label>
-			                    <div class="layui-inline">
-				                    <input type="text" id="ptableName" name="ptableName" style="width: 200px; height: 36px;" class="layui-input"/>
-			                    </div>
-		                    </div>
-		                    
-							<div class="layui-inline">
-			                    <label class="layui-form-mid">插播日期：</label>
-			                    <div class="layui-inline" style="">
-				                    <input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 200px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
-			                    </div>
-		                    </div>
-		                    
-		                    <!-- <div class="layui-form-item">
+
+			<div class="layui-col-md12">
+
+				<div id="thediv" style="display:none">
+					<div class="layui-form-query">
+						<form class="layui-form" id="query_form">
+							<div class="layui-form-item">
+								<div class="layui-inline">
+									<label class="layui-form-mid">播表名：</label>
+									<div class="layui-inline">
+										<input type="text" id="ptableName" name="ptableName"
+											style="width: 200px; height: 36px;" class="layui-input" />
+									</div>
+								</div>
+
+								<div class="layui-inline">
+									<label class="layui-form-mid">插播日期：</label>
+									<div class="layui-inline" style="">
+										<input type="text" id="dateTime" name="dateTime"
+											autocomplete="off" style="width: 200px; height: 36px;"
+											class="layui-input fsDate" dateRange="1" placeholder=" - " />
+									</div>
+								</div>
+
+								<!-- <div class="layui-form-item">
 
 						   <label class="layui-form-label">投放周期：</label>
 						   <div class="layui-input-inline">
 						     <input type="text" id="testDate" name="testDate" placeholder="请选择日期" style="width:250px;" class="layui-input input-text" />
 						   </div>
 						 </div> -->
-		                    
-		                    <div class="layui-inline">
-								<label class="layui-form-mid">插播时段 ：</label>
-								<div class="layui-input-inline"
-									style="width: 160px; height: 35px;">
-									<input type="text" id="testDate" name="testDate" placeholder="请选择时间" class="layui-input input-text" />
+
+								<div class="layui-inline">
+									<label class="layui-form-mid">插播时段：</label>
+									<div class="layui-input-inline"
+										style="width: 160px; height: 35px;">
+										<input type="text" id="testDate" name="testDate"
+											placeholder="请选择时间" class="layui-input input-text" />
+									</div>
 								</div>
-							</div>
-							
-							<div class="layui-inline">
-								<label class="layui-form-mid">插播形式：</label>
-								<div class="layui-input-inline"
-									style="width: 110px; height: 35px;">
-									<select name="stat" id="stat" style="width: 110px; height: 35px;">
-										<option value="2">插播</option>
-										<option value="1">紧急插播</option>
-									</select>
+
+								<div class="layui-inline">
+									<label class="layui-form-mid">插播形式：</label>
+									<div class="layui-input-inline"
+										style="width: 110px; height: 35px;">
+										<select name="stat" id="stat"
+											style="width: 110px; height: 35px;">
+											<option value="2">插播</option>
+											<option value="1">紧急插播</option>
+										</select>
+									</div>
 								</div>
+
+								<div class="layui-inline">
+									<label class="layui-form-mid">插播方式：</label>
+									<div class="layui-input-block">
+										<input type="radio" name="method" value="时间" title="时间"
+											lay-filter="infoValue" checked> <input type="radio"
+											name="method" value="频次" title="频次" lay-filter="infoValue">
+									</div>
+									<!-- <div class="layui-inline" style=""> -->
+									<!-- <input type="checkbox" id="method" name="method"
+											lay-skin="switch" lay-filter="infoValue" lay-text="时间|频次"
+											checked>
+									</div> -->
+								</div>
+
+								<div class="layui-inline" id="shijian">
+									<label class="layui-form-mid">时间间隔：</label>
+									<div class="layui-input-inline" style="">
+										<!-- <input type="text" id="intervalTime" placeholder="秒" oninput='myFunction()' name="intervalTime" autocomplete="off" style="width: 100px; height: 36px;" class="layui-input input-text">-->
+										<input type="text" id="intervalTime" placeholder="秒"
+											oninput='checkTip()' name="intervalTime" autocomplete="off"
+											style="width: 100px; height: 36px;"
+											class="layui-input input-text">
+									</div>
+								</div>
+
+								<div class="layui-inline" id="pinci">
+									<label class="layui-form-mid">频次：</label>
+									<div class="layui-input-inline" style="">
+										<!--  <input type="text" id="insertCi" placeholder="次" oninput='myCiFunction()' name="insertCi" autocomplete="off" style="width: 100px; height: 36px;" class="layui-input input-text"> -->
+										<input type="text" id="insertCi" placeholder="次"
+											oninput='checkTip()' name="insertCi" autocomplete="off"
+											style="width: 100px; height: 36px;"
+											class="layui-input input-text">
+									</div>
+								</div>
+
+								<div class="layui-inline">
+									<div class="layui-inline" style="">
+										&nbsp;&nbsp;<label id="frequ" style="width:60px;"></label>
+									</div>
+								</div>
+
 							</div>
-									                    
-		                     <div class="layui-inline">
-			                    <label class="layui-form-mid">插播方式：</label>
-			                    <div class="layui-inline" style="">
-			                      <input type="checkbox" id="method" name="method" lay-skin="switch" lay-filter="infoValue" lay-text="时间|频次" checked>
-			                    </div>
-		                    </div>
-		                    
-							<div class="layui-inline" id="shijian">
-			                    <label class="layui-form-mid">时间间隔：</label>
-			                    <div class="layui-inline" style="">
-				                    <!-- <input type="text" id="intervalTime" placeholder="秒" oninput='myFunction()' name="intervalTime" autocomplete="off" style="width: 100px; height: 36px;" class="layui-input input-text">--> 
-			                        <input type="text" id="intervalTime" placeholder="秒" oninput='checkTip()' name="intervalTime" autocomplete="off" style="width: 100px; height: 36px;" class="layui-input input-text">
-			                    </div>
-		                    </div>
-		                    
-		                    <div class="layui-inline" id="pinci">
-			                    <label class="layui-form-mid">频次：</label>
-			                    <div class="layui-inline" style="">
-				                    <!--  <input type="text" id="insertCi" placeholder="次" oninput='myCiFunction()' name="insertCi" autocomplete="off" style="width: 100px; height: 36px;" class="layui-input input-text"> -->
-			                        <input type="text" id="insertCi" placeholder="次" oninput='checkTip()' name="insertCi" autocomplete="off" style="width: 100px; height: 36px;" class="layui-input input-text"> 
-			                    </div> 
-		                    </div>
-		                    
-		                    <div class="layui-inline">
-			                    <div class="layui-inline" style="">
-				&nbsp;&nbsp;<label id="frequ" style="width:60px;"></label>
-			                    </div>
-		                    </div>
-		                    
-						</div>
-					</form>
-				</div>
-			
-			<table class="layui-table" lay-skin="line">
+						</form>
+					</div>
+
+					<table class="layui-table" lay-skin="line">
 						<thead>
 							<tr>
 								<th>素材名称</th>
@@ -721,43 +770,47 @@
 							</tr>
 						</thead>
 						<tbody id="demoList"></tbody>
-			</table>
-			
-			<div class="layui-form-query">
-			   <div align="center">
-			      <div class="layui-inline">
-					<div class="layui-inline">
-						<button class="layui-btn layui-bg-green" type="button"  onclick="addFileMaterial()">
-						<i class="layui-icon">&#xe654;</i>添加素材
-						</button>
+					</table>
+
+					<div class="layui-form-query">
+						<div align="center">
+							<div class="layui-inline">
+								<div class="layui-inline">
+									<button class="layui-btn layui-bg-green" type="button"
+										onclick="addFileMaterial()">
+										<i class="layui-icon">&#xe654;</i>添加素材
+									</button>
+								</div>
+								<div class="layui-inline">
+									<div class="layui-inline">
+										<button class="layui-btn layui-bg-green" type="button"
+											onclick="addInsertPtable()">
+											<i class="layui-icon">&#xe605;</i>保存
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="layui-inline">
-					<div class="layui-inline">
-						<button class="layui-btn layui-bg-green" type="button"  onclick="addInsertPtable()">
-						<i class="layui-icon">&#xe605;</i>保存
-						</button>
-					</div>
-				  </div>
-				  </div>
-			   </div>
-			</div>
-			</div>
-			
-			<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
-			<script type="text/html" id="barDemo">
+				</div>
+
+				<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
+				<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="mediaInfo">
                 <i class="layui-icon">&#xe640;</i>删除</a>
 			</script>
-			<script type="text/html" id="barDemo1">
+				<script type="text/html" id="barDemo1">
  				<a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="md5" >MD5</a>
 			</script>
-			<script type="text/html" id="barDemo2">
+				<script type="text/html" id="barDemo2">
 
                 <a class="layui-btn layui-btn-sm" lay-event="ptableDel" >删除</a>
-			
+				<a class="layui-btn layui-btn-sm" lay-event="mediaInfo">
+                	<i class="layui-icon">&#xe6ed;</i>详情
+				</a>
             </script>
-	      </div>
-			
+			</div>
+
 		</div>
 	</div>
 </body>

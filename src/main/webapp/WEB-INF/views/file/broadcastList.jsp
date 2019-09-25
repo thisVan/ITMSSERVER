@@ -473,9 +473,7 @@
 							    } else {
 							          searchTerminal += item.id.slice(1) + ",";
 							    }
-								    
-					     
-					     
+				     
 					         //分两种情况查询
 					      	    var radioId = document.getElementsByName("info");
 								var infoId;
@@ -489,9 +487,7 @@
 								}else if(infoId == 1){
 								    doYesSearch();
 								}
-					            searchTerminal = "";
-					      
-					      
+					            searchTerminal = "";					      
 					    }
 					    ,nodes: node
 					  });
@@ -539,7 +535,12 @@
    function artificialGenerated(){
   	 //手动生成播表
   	 document.location = "<%=request.getContextPath()%>/ptable/generatePtable.do";
-      }
+   }
+   
+   $("ul li").click(function() {
+   		alert("asdgasdl");
+        $(this).css("background","#99CCFF").siblings().css("background","#ffffff"); 
+    });
    
    </script>
    </head>

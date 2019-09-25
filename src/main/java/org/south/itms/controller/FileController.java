@@ -25,6 +25,7 @@ import org.south.itms.entity.Material;
 import org.south.itms.entity.Period;
 import org.south.itms.entity.Terminal;
 import org.south.itms.service.impl.CommonService;
+import org.south.itms.util.Constant;
 import org.south.itms.util.FileUtil;
 import org.south.itms.util.StringUtil;
 import org.south.itms.util.TimeUtil;
@@ -283,7 +284,7 @@ public class FileController {
 			} else {
 				Calendar ca = Calendar.getInstance();
 				String year = "" + ca.get(Calendar.YEAR);
-				String savePath = "D:/filesystem/" + year;
+				String savePath = Constant.UPLOADDIRECORY + year;
 				String type = fileName.substring(fileName.lastIndexOf(".") + 1);
 				String fName = System.currentTimeMillis() + "." + type;
 				String path = savePath + "/" + fName;

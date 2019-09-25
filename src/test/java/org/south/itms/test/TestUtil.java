@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.junit.Test;
 import org.south.itms.util.FileUtil;
+import org.south.itms.util.OracleDBUtil;
 
 public class TestUtil {
 	
@@ -46,6 +47,21 @@ public class TestUtil {
 		
 		System.out.println((double)27000 * 1000 / (time2.getTime() - time1.getTime()));
 		
+	}
+	
+	@Test
+	public void strTest() {
+		String str = null;
+		String str1 = str + " ";
+		System.out.println(str1.toString());
+		System.out.println(str1.trim().toString());
+	}
+	
+	@Test
+	public void oracleConnectionTest() {
+		OracleDBUtil orclDB = new OracleDBUtil();
+		orclDB.getConnection();
+		orclDB.releaseResource();
 	}
 
 }

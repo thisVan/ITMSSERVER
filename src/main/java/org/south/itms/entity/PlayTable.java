@@ -18,15 +18,15 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "play_table")
-public class PlayTable implements java.io.Serializable { 
-	
+public class PlayTable implements java.io.Serializable {
+
 	private static final long serialVersionUID = 3203717325370760241L;
 	private String pid;
 	private Date createTime;
 	private Date modifyTime;
 	private int deleted;
-	
-	//外键的id
+
+	// 外键的id
 	private String userId;
 	private String terminalId;
 	private String periodId;
@@ -37,19 +37,19 @@ public class PlayTable implements java.io.Serializable {
 	private String allTime;
 	private String ptableName;
 	private String mark;
-	//private String createName;
-    private Time startTime;
-	
-	private Time endTime;
-	
-	private int min;  //时间间隔
-	
-	private int insertFlag; //插播  轮询
-	
-	private int state; //紧急or定时插播      0-轮播/1-紧急/2-定时插播(延时)
-	
+	// private String createName;
+	private Time startTime;
 
-	
+	private Time endTime;
+
+	private int min; // 时间间隔
+
+	private int insertFlag; // 插播 轮询
+
+	private int state; // 紧急or定时插播 0-轮播/1-紧急/2-定时插播(延时)
+
+	private Integer baseFrequency;
+
 	@Id
 	@Column(name = "pid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,9 +61,8 @@ public class PlayTable implements java.io.Serializable {
 		this.pid = pid;
 	}
 
-
 	@Column(name = "create_time")
-	@Temporal(TemporalType.TIMESTAMP) 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -71,9 +70,9 @@ public class PlayTable implements java.io.Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	@Column(name = "modify_time")
-	@Temporal(TemporalType.TIMESTAMP) 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getModifyTime() {
 		return modifyTime;
 	}
@@ -144,8 +143,7 @@ public class PlayTable implements java.io.Serializable {
 	public void setStatusId(String statusId) {
 		this.statusId = statusId;
 	}
-	
-	
+
 	@Column(name = "play_totaltime")
 	public String getPlayTotalTime() {
 		return playTotalTime;
@@ -245,14 +243,23 @@ public class PlayTable implements java.io.Serializable {
 		this.state = state;
 	}
 
+	@Column(name = "base_frequency")
+	public Integer getBaseFrequency() {
+		return baseFrequency;
+	}
+
+	public void setBaseFrequency(Integer baseFrequency) {
+		this.baseFrequency = baseFrequency;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "PlayTable [pid=" + pid + ", playDate=" + playDate + ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", deleted=" + deleted + ", userId=" + userId
-				+ ", terminalId=" + terminalId + ", periodId=" + periodId + ", statusId=" + statusId + "]";
+		return "PlayTable [pid=" + pid + ", playDate=" + playDate + ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", deleted=" + deleted
+				+ ", userId=" + userId + ", terminalId=" + terminalId + ", periodId=" + periodId + ", playTotalTime=" + playTotalTime + ", baseFrequency="
+				+ baseFrequency + ", statusId=" + statusId + "]";
 	}
-	
-	
+
 }

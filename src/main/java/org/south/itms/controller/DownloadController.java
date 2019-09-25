@@ -52,7 +52,6 @@ public class DownloadController {
 	
 	@RequestMapping(value = "/downloadZip")
     public String downloadFiles(String fileIds, HttpServletResponse response) {
-		System.out.println("66666666666666");
 		System.out.println("array= " + fileIds);
 		try {
 			if(StringUtil.isEmpty(fileIds)) return null;
@@ -74,7 +73,6 @@ public class DownloadController {
 	        if(files.size() < 1) return null;
 	        
 	        String fileName = UUID.randomUUID().toString() + ".zip";
-	       
 	
 	        File fileZip = new File(Constant.TmpZipPath + fileName);
 	        // 文件输出流
@@ -185,7 +183,7 @@ public class DownloadController {
 			if (StringUtil.isEmpty(filename))
 				return;
 
-			File file = new File(Constant.UploadDirecory + "/" + filename);
+			File file = new File(Constant.UPLOADDIRECORY + filename);
 
 			if (!file.exists())
 				return;

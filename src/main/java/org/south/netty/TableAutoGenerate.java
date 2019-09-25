@@ -89,7 +89,17 @@ public class TableAutoGenerate {
 		}
 	}
 
-	// 生成同时段多播表
+	/**
+	 * 生成同时段多播表, 轮播播表的数据库操作方法
+	 * @param terminalId
+	 * @param periodId
+	 * @param ad
+	 * @param uid
+	 * @param len
+	 * @throws ParseException
+	 * @date 2019年1月18日 11点18分
+	 * @author PC-FAN
+	 */
 	public static void writeSqlTable(int terminalId, int periodId, List<Ad> ad, String uid, int len)
 			throws ParseException {
 		Date date = new Date();
@@ -101,9 +111,11 @@ public class TableAutoGenerate {
 		Date nextDate = cal.getTime();
 		java.sql.Date sqlDate = new java.sql.Date(nextDate.getTime());
 		int sum = 0;
+		List<Integer> freqencyList = new ArrayList<Integer>();
 		for (Ad a : ad) {
 			int d = a.getDuration();
 			int f = a.getFreq();
+			freqencyList.add(f);
 			System.out.println(a.getDuration() + "=" + a.getFreq());
 			sum = sum + d * f;
 		}
@@ -123,6 +135,8 @@ public class TableAutoGenerate {
 		String allTime = screenTime / 60 + "分" + (screenTime - allTimeMin * 60) + "秒";
 		String ptableName = getNameById(terminalId, periodId);
 		ptableName = ptableName + "(" + format.format(nextDate) + ")";
+		
+		Integer baseFrequency = Playlist.arrGcd(freqencyList);
 		try {
 			// 加载驱动程序
 			Class.forName(driver);
@@ -132,8 +146,8 @@ public class TableAutoGenerate {
 				System.out.println("Succeeded connecting to the Database!");
 			// statement用来执行SQL语句
 			String insertSql = "INSERT INTO play_table"
-					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state)"
-					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state, base_frequency)"
+					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
 			String sql = "INSERT INTO play_table (user_id, period_id, terminal_id, status_id, create_time, deleted)"
 					+ " VALUES (" + 1 + ", " + periodId + ", " + terminalId + ", " + 1 + ", " + timestamp + ", " + 0
@@ -154,6 +168,7 @@ public class TableAutoGenerate {
 			statement.setInt(12, 0);
 			statement.setInt(13, 0);
 			statement.setInt(14, 0);
+			statement.setInt(15, baseFrequency);
 			int count = statement.executeUpdate();
 			System.out.println(count);
 			conn.close();

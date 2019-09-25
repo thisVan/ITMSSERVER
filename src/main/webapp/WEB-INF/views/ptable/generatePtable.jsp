@@ -251,7 +251,7 @@ function generateTb(id){
 					  //document.getElementById("b"+id).disabled=true;
 				  }else if(value=="false"){
 					  document.getElementById("stat"+id).innerText = "播表生成失败";
-					  layer.msg('播表生成失败! 请确定排播有包括今天以后的节目', {
+					  layer.msg('播表生成失败! 请确定排播有包括今天以后的节目。', {
 							icon : 5,
 							time : 2000
 						});

@@ -1,10 +1,12 @@
 package org.south.itms.util;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.south.itms.dao.impl.PtableDao;
 import org.south.itms.dto.ItemsDto;
 import org.south.itms.dto.MaterialDto;
 import org.south.itms.dto.PtableDto;
@@ -313,21 +315,56 @@ public class EntityUtil {
 		return tree;
 	}
 
-	public static List<Items> createNewItems(List<Material> files) {
+	public static List<Items> createNewItems(List<Material> files,PlayTable p) {
 		if(files == null || files.size() == 0) {
 			return null;
 		}else {
+			Time startTime = p.getStartTime();
+			Time endTime = p.getEndTime();
+			int min = p.getMin();
+			long totaltime = (endTime.getTime() - startTime.getTime())/1000;
 			List<Items> list = new ArrayList<Items>();
 			for(Material m : files) {
 				Items item = new Items();
 				item.setMaterial(m);
 				item.setMaterialName(m.getMaterialName());
-				item.setFrequency(0);
+				int fre = (int)totaltime/(min + m.getDuration()*files.size());
+				item.setFrequency(fre);
 				item.setDuration(m.getDuration());
 				list.add(item);
 			}
 			return list;
 		}
+	}
+	
+	public static List<PtableDto> ptableDtoInsert(List<Terminal> list, List<Period> listPeriod, List<User> listUser,
+			List<PlayTable> listPtable , PtableDao ptableDao) {
+		List<PtableDto> listDto = new ArrayList<PtableDto>();
+		for(PlayTable pt : listPtable) {
+			int duratime = 0;
+			String pid = pt.getPid();
+			List<Material> material = ptableDao.findAllMaterialByPlayTableId(pid);
+			for(Material m : material) {
+				duratime = duratime + m.getDuration();
+			}
+			String terminalName = checkTerminal(pt.getTerminalId(), list);
+			String periodName = checkPeriod(pt.getPeriodId(), listPeriod, 0);
+			String periodTime = checkPeriod(pt.getPeriodId(), listPeriod, 1);
+			String userName = checkName(pt.getUserId(), listUser);
+			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(),
+					pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(),
+					pt.getCreateTime(), pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState());
+			ptd.setTerminalName(terminalName);
+			ptd.setPeriodName(periodName);
+			ptd.setPeriodTime(periodTime);
+			ptd.setCreateName(userName);
+			ptd.setMark(pt.getMark());
+			ptd.setStartTime(pt.getStartTime());
+			ptd.setEndTime(pt.getEndTime());
+			ptd.setDuraTime(duratime);
+			listDto.add(ptd);
+		}
+		return listDto;
 	}
 
 }

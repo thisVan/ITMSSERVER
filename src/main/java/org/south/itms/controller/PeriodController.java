@@ -147,7 +147,6 @@ public class PeriodController {
 			boolean check = periodService.checkName(periodName);
 			System.out.println(check);
 			if (check) {
-				System.out.println("name is common");
 				PrintWriter out = response.getWriter();
 				out.print("false");
 				out.flush();

@@ -62,7 +62,7 @@ public class PeriodDaoImpl implements PeriodDao {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public boolean checkName(String periodName) {
-		String hql = "from Period where periodName = ?";
+		String hql = "from Period where periodName = ? and deleted = 0";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, periodName);
 		List<Period> list = query.list();

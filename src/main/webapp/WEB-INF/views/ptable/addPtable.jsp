@@ -20,6 +20,10 @@
 	var ptdate = '${playTablePlayDate}'; //播表的播放日期
 	var periodID = '${periodID}'; //时段ID
 	var itemnum; //该播表素材的总数
+	var ptableStyle = '${ptableStyle}';
+	
+	var ptableTotalDuration = '${playTableDuration}';
+	var ptableMaxCommonDivisor = '${playTableMaxCommonDivisor}';
 	$(function() {
 		initTable();
 	});
@@ -66,6 +70,7 @@
 					}
 					, {
 						fixed : 'right',
+						field : 'operator',
 						width : 110,
 						event : 'set4',
 						title : '操作',
@@ -103,7 +108,8 @@
 							time : 2000
 						});
 					} else if (res.fail == 0) {
-						document.getElementById("ptableNameOnce").innerHTML = '<font  size="4"  color="red"> 当前播表名：' + res.msg + '</font>';
+						document.getElementById("ptableNameOnce").innerHTML = '<font  size="3"  color="red"> 当前播表名：' + res.msg + '</font>' 
+						+ '<br>播表总时长: ' + ptableTotalDuration + '&nbsp;&nbsp;&nbsp;&nbsp; 播表基频: ' + ptableMaxCommonDivisor;
 						//var tempstr = res.msg;
 						//var date = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(tempstr);
 						//ptdate = date[2];
@@ -272,7 +278,11 @@
 	}
 
 	function goBack() {
-		document.location = "<%=request.getContextPath()%>/ptable/ptableList.do";
+	    if(ptableStyle == "ptablelist"){
+		    document.location = "<%=request.getContextPath()%>/ptable/ptableList.do";
+        }else{
+        	document.location = "<%=request.getContextPath()%>/ptable/insertPtableList.do";
+        }
 	}
 	
 	function showMaterialsSortByName(){
@@ -398,6 +408,7 @@
 	
 	function exportImage(){
 		document.getElementsByClassName("layui-table-tool")[0].style.display="none";
+		$("[data-field='operator']").addClass("layui-hide");
 		html2canvas(document.querySelector("#playTableMaterialsDiv")).then(canvas => {
 			document.getElementById("showScreenShot").innerHTML = "";
 			document.getElementById("showScreenShot").appendChild(canvas);
@@ -422,6 +433,7 @@
 	   		content : $("#showScreenShot"), //注意，如果str是object，那么需要字符拼接
 	   		cancel : function () {
 	   			document.getElementsByClassName("layui-table-tool")[0].style.display="block";
+	   			initTable();
 	   			//document.getElementsByClassName("layui-table-tool")[0].removeAttribute("style");
 	   		}
 	   	});

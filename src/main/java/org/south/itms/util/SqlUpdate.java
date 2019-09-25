@@ -253,6 +253,12 @@ public class SqlUpdate {
 		}
 	}
 
+	/**
+	 * 插播，数据库插入记录
+	 * @param ptable
+	 * @param mid
+	 * @param listM
+	 */
 	public void savePtableFile(PlayTable ptable, String mid, List<Material> listM) {
 		try {
 			// 加载驱动程序

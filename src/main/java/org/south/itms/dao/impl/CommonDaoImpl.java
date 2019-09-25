@@ -892,6 +892,9 @@ public class CommonDaoImpl implements CommonDao {
 		this.getCurrentSession().update(ptable);
 	}
 
+	/**
+	 * 插播的DAO层方法
+	 */
 	@Override
 	public void saveInsetPlayTable(PlayTable ptable, String mid) {
 		// this.getCurrentSession().save(ptable);

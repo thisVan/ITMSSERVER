@@ -10,7 +10,6 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="refresh" content="10">
 <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
 <script type="text/javascript">
 	layui.use('form', function(){
@@ -197,7 +196,9 @@
 				] ],
 				page : true,
 				where : {
-					"statusId" : statusId
+					"statusId" : statusId,
+					"sortName" : "playDate",
+					"sortBy" : "desc"
 				},
 				done : function(res, curr, count) {
 					//document.getElementById("table1").remove();
@@ -469,6 +470,8 @@
 			});
 		});
 	}
+	
+	setInterval(init, 10000);
 </script>
 </head>
 <body>

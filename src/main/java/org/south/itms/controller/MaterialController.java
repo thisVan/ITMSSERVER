@@ -63,7 +63,7 @@ public class MaterialController {
 
 	@Autowired
 	private CommonService commonService;
-	
+
 	@Autowired
 	private MaterialDao materialDao;
 
@@ -99,20 +99,20 @@ public class MaterialController {
 
 	// 7.16
 	@RequestMapping(value = "/getMaterialInfoBytid/{terminalId}/{ppid}")
-	public String getMaterialInfoBytid(@PathVariable String terminalId,@PathVariable String ppid, ModelMap modelMap,HttpServletRequest request) {
+	public String getMaterialInfoBytid(@PathVariable String terminalId, @PathVariable String ppid, ModelMap modelMap, HttpServletRequest request) {
 		modelMap.addAttribute("resterminalid", terminalId);
-		
+
 		List<Items> files = materialDao.findalreadyItemByPtable(ppid);// 获取播表id对应的所有素材item
 		String sortNum = "";// 当前ppid所存在的所有素材mid
 		for (int i = 0; i < files.size(); i++) {
 			sortNum += "," + files.get(i).getMaterial().getMid();
 		}
 		if (files != null && files.size() > 0) {
-			sortNum=sortNum.substring(1);
+			sortNum = sortNum.substring(1);
 		}
-		//2018.12.24已经修改为加载所有素材，sortNum为空也不影响程序执行		
+		// 2018.12.24已经修改为加载所有素材，sortNum为空也不影响程序执行
 		modelMap.addAttribute("alreadymid", sortNum);
-		
+
 		return "file/queryMaterialbybroadclist";
 	}
 
@@ -155,8 +155,7 @@ public class MaterialController {
 
 	@RequestMapping("/searchMyFile")
 	@ResponseBody
-	public PageResultData<MaterialDto> searchMyFile(int page, int limit, Model model, HttpServletRequest request,
-			String param, String dateTime) {
+	public PageResultData<MaterialDto> searchMyFile(int page, int limit, Model model, HttpServletRequest request, String param, String dateTime) {
 		// String[] params = new String[3];
 		String name = (String) request.getSession().getAttribute("userName");
 		if (name == null || "".equals(name)) {
@@ -173,8 +172,7 @@ public class MaterialController {
 			String[] params = param.split(",");
 			if (dateTime == null || "".equals(dateTime)) {
 				try {
-					Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material",
-							"uploadTime desc", null);
+					Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", null);
 					List<Material> listM = pageD.getList();
 					System.out.println(listM);
 					List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
@@ -194,14 +192,14 @@ public class MaterialController {
 					return pageResult1;
 				}
 			} else {
-				// List<Terminal> listTerminal1 = commonService.getAllTerminal();
+				// List<Terminal> listTerminal1 =
+				// commonService.getAllTerminal();
 				String[] time = dateTime.split(" ");
 				String startDate = time[0];
 				String endDate = time[2];
 
 				try {
-					Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit,
-							"Material", "uploadTime desc", null);
+					Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material", "uploadTime desc", null);
 					List<Material> listM = pageD.getList();
 					List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
 					// System.out.println("listM" + listM);
@@ -227,13 +225,11 @@ public class MaterialController {
 
 	@RequestMapping("/getAllMaterialInfo")
 	@ResponseBody
-	public PageResultData<Material> getAllMaterialInfo(String param, int page, int limit, Model model,
-			HttpServletRequest request) {
+	public PageResultData<Material> getAllMaterialInfo(String param, int page, int limit, Model model, HttpServletRequest request) {
 		System.out.println(param);
 		String[] params = param.split(",");
 		try {
-			Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc",
-					null);
+			Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", null);
 			List<Material> listM = pageD.getList();
 			for (Material m : listM) {
 				System.out.println(m);
@@ -272,16 +268,14 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/searchFile")
-	public @ResponseBody PageResultData<MaterialDto> searchFile(Model model, String param, String dateTime, int page,
-			int limit) throws ParseException {
+	public @ResponseBody PageResultData<MaterialDto> searchFile(Model model, String param, String dateTime, int page, int limit) throws ParseException {
 		System.out.println("param=" + param + " dateTime=" + dateTime);
 		List<Terminal> listTerminal = commonService.getAllTerminal();
 		model.addAttribute("listTerminal", listTerminal);
 		String[] params = param.split(",");
 		if (dateTime == null || "".equals(dateTime)) {
 			try {
-				Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc",
-						null);
+				Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", null);
 				List<Material> listM = pageD.getList();
 				System.out.println(listM);
 				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
@@ -307,8 +301,7 @@ public class MaterialController {
 			String endDate = time[1];
 
 			try {
-				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material",
-						"uploadTime desc", null);
+				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material", "uploadTime desc", null);
 				List<Material> listM = pageD.getList();
 				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
 				// System.out.println("listM" + listM);
@@ -332,8 +325,8 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/wrapSearchFile")
-	public @ResponseBody PageResultData<MaterialDto> wrapSearchFile(Model model, String terminalIdStr, String param,
-			String dateTime, int page, int limit) throws ParseException {
+	public @ResponseBody PageResultData<MaterialDto> wrapSearchFile(Model model, String terminalIdStr, String param, String dateTime, int page, int limit)
+			throws ParseException {
 		if (StringUtil.isEmpty(terminalIdStr)) {
 			return searchFile(model, param, dateTime, page, limit);
 		}
@@ -359,15 +352,13 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/wrapSearchBroadItem")
-	public @ResponseBody PageResultData<ItemsDto> wrapSearchBroadItem(String terminalIdStr, String params,
-			String dateTime, int page, int limit) {
+	public @ResponseBody PageResultData<ItemsDto> wrapSearchBroadItem(String terminalIdStr, String params, String dateTime, int page, int limit) {
 
 		if (!StringUtil.isEmpty(dateTime)) {
 			String[] time = dateTime.split(" ");
 			String startDate = time[0];
 			String endDate = time[2];
-			dateTime = " and str_to_date(startDate, '%Y-%m-%d') >= '" + startDate
-					+ "' and str_to_date(endDate, '%Y-%m-%d') <= '" + endDate + "'";
+			dateTime = " and str_to_date(startDate, '%Y-%m-%d') >= '" + startDate + "' and str_to_date(endDate, '%Y-%m-%d') <= '" + endDate + "'";
 		} else {
 			dateTime = null;
 		}
@@ -433,8 +424,7 @@ public class MaterialController {
 			String endDate = time[2];
 
 			try {
-				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, param, page, limit, "Items",
-						"createTime desc", null);
+				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, param, page, limit, "Items", "createTime desc", null);
 				List<Items> listM = pageD.getList();
 				List<ItemsDto> listDto = EntityUtil.getItemsDto(listM, listPeriod);
 				PageResultData<ItemsDto> pageResult = new PageResultData<ItemsDto>();
@@ -457,7 +447,8 @@ public class MaterialController {
 	// @RequestMapping(value = "/searchBroadFile")
 	// public @ResponseBody PageResultData<MaterialDto> searchBroadFile(String[]
 	// params,String materialName, String terminalId,
-	// String info, String dateTime, int page, int limit) throws ParseException {
+	// String info, String dateTime, int page, int limit) throws ParseException
+	// {
 	// System.out.println("dateTime=" + dateTime);
 	// String[] param = initParamInfo(materialName, terminalId, info);
 	// List<Terminal> list = commonService.getAllTerminal();
@@ -468,7 +459,8 @@ public class MaterialController {
 	// List<Material> listM = pageD.getList();
 	// List<MaterialDto> listDto = EntityUtil.materialChange(list, listM,
 	// listPeriod);
-	// PageResultData<MaterialDto> pageResult = new PageResultData<MaterialDto>();
+	// PageResultData<MaterialDto> pageResult = new
+	// PageResultData<MaterialDto>();
 	// pageResult.setCount(pageD.getTotalRecord());
 	// pageResult.setCode(0);
 	// pageResult.setMsg("");
@@ -480,12 +472,14 @@ public class MaterialController {
 	// String endDate = time[2];
 	//
 	// try {
-	// Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, param,
+	// Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate,
+	// param,
 	// page, limit, "Material", "uploadTime desc", null);
 	// List<Material> listM = pageD.getList();
 	// List<MaterialDto> listDto = EntityUtil.materialChange(list, listM,
 	// listPeriod);
-	// PageResultData<MaterialDto> pageResult = new PageResultData<MaterialDto>();
+	// PageResultData<MaterialDto> pageResult = new
+	// PageResultData<MaterialDto>();
 	// pageResult.setCount(pageD.getTotalRecord());
 	// pageResult.setCode(0);
 	// pageResult.setMsg("");
@@ -493,7 +487,8 @@ public class MaterialController {
 	// return pageResult;
 	// } catch (Exception e) {
 	// e.printStackTrace();
-	// PageResultData<MaterialDto> pageResult1 = new PageResultData<MaterialDto>();
+	// PageResultData<MaterialDto> pageResult1 = new
+	// PageResultData<MaterialDto>();
 	// pageResult1.setCount(0);
 	// pageResult1.setCode(0);
 	// pageResult1.setMsg("");
@@ -593,8 +588,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/searchMaterial")
-	public @ResponseBody Result searchMaterial(String[] params, String startDate, String endDate, int currentPage,
-			int pageSize) throws ParseException {
+	public @ResponseBody Result searchMaterial(String[] params, String startDate, String endDate, int currentPage, int pageSize) throws ParseException {
 		// System.out.println(params.length);
 		// for(String s:params) {
 		// System.out.print(" " + s + " ");
@@ -618,8 +612,7 @@ public class MaterialController {
 			}
 		}
 		try {
-			Page page = commonService.pageSearchByTemplateHQL(startDate, endDate, params, currentPage, pageSize,
-					"Material", "uploadTime desc", null);
+			Page page = commonService.pageSearchByTemplateHQL(startDate, endDate, params, currentPage, pageSize, "Material", "uploadTime desc", null);
 			return new Result(true, page);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -628,11 +621,13 @@ public class MaterialController {
 	}
 
 	// @RequestMapping(value = "/searchMaterialByPid")
-	// public @ResponseBody PageResultData<MaterialDto> searchMaterialByPid(String
+	// public @ResponseBody PageResultData<MaterialDto>
+	// searchMaterialByPid(String
 	// pid, int page, int limit) {
 	//
 	// if("".equals(pid) || pid == null) {
-	// PageResultData<MaterialDto> pageResult1 = new PageResultData<MaterialDto>();
+	// PageResultData<MaterialDto> pageResult1 = new
+	// PageResultData<MaterialDto>();
 	// pageResult1.setCount(0);
 	// pageResult1.setCode(0);
 	// pageResult1.setFail(1);
@@ -646,7 +641,8 @@ public class MaterialController {
 	// List<Material> listM = pageD.getList();
 	// List<MaterialDto> listDto = EntityUtil.materialChange(list, listM,
 	// listPeriod);
-	// PageResultData<MaterialDto> pageResult = new PageResultData<MaterialDto>();
+	// PageResultData<MaterialDto> pageResult = new
+	// PageResultData<MaterialDto>();
 	// pageResult.setCount(pageD.getTotalRecord());
 	// pageResult.setCode(0);
 	// pageResult.setMsg("");
@@ -654,7 +650,8 @@ public class MaterialController {
 	// return pageResult;
 	// } catch (Exception e) {
 	// e.printStackTrace();
-	// PageResultData<MaterialDto> pageResult1 = new PageResultData<MaterialDto>();
+	// PageResultData<MaterialDto> pageResult1 = new
+	// PageResultData<MaterialDto>();
 	// pageResult1.setCount(0);
 	// pageResult1.setCode(0);
 	// pageResult1.setMsg("");
@@ -746,7 +743,8 @@ public class MaterialController {
 			System.out.println(tid);
 			// Terminal terminal = materialService.getTerminalInfo(tid);
 			try {
-				// Page pageD = commonService.pageSearchByTemplateHQL(params1, page, limit,
+				// Page pageD = commonService.pageSearchByTemplateHQL(params1,
+				// page, limit,
 				// "Material", "uploadTime desc", null);
 				Page pageD = commonService.pageSearchByTid(tid, page, limit);
 				List<Material> listM = pageD.getList();
@@ -777,9 +775,9 @@ public class MaterialController {
 	@RequestMapping(value = "/treeDate")
 	@ResponseBody
 	public List<TreeDate> getTreeData() {
-//		System.out.println(1111);
+		// System.out.println(1111);
 		List<TreeDate> list = materialService.getAllTreeData();
-//		System.out.println(list);
+		// System.out.println(list);
 		return list;
 	}
 
@@ -880,8 +878,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping("/notifyFile")
-	public void notifyFile(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
+	public void notifyFile(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		// int num = materialService.getAllRecord("1");
 		int num = materialService.getAllRecord2("1");
 		// int num = userDao.getAccountRecord(1);
@@ -913,8 +910,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping("/notifyBroad")
-	public void notifyBroad(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
+	public void notifyBroad(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		int num = materialService.getExcepTaable();
 		String oldNumStr = "";
 		int oldNum = 0;
@@ -944,8 +940,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping("/notifyExcep")
-	public void notifyExcep(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
+	public void notifyExcep(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		int num = materialService.getExcepTaableMaterial();
 		String oldNumStr = "";
 		int oldNum = 0;
@@ -975,8 +970,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping("/notifyFirstCheckTable")
-	public void notifyFirstCheckTable(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
+	public void notifyFirstCheckTable(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		int num = materialService.getFirstCheckTable();
 		String oldNumStr = "";
 		int oldNum = 0;
@@ -1006,8 +1000,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping("/notifySecondCheckTable")
-	public void notifySecondCheckTable(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
+	public void notifySecondCheckTable(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		int num = materialService.getSecondCheckTable();
 		String oldNumStr = "";
 		int oldNum = 0;
@@ -1037,14 +1030,14 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/searchCheckFile")
-	public @ResponseBody PageResultData<Material> searchCheckFile(Model model, HttpServletRequest request,
-			String materialName, String fileType, String statusId, int page, int limit) {
+	public @ResponseBody PageResultData<Material> searchCheckFile(Model model, HttpServletRequest request, String materialName, String fileType,
+			String statusId, int page, int limit) {
 		String[] param = initParam(materialName, fileType, statusId);
 		try {
-			// Page page = commonService.pageSearchByTemplateHQL(params, currentPage,
+			// Page page = commonService.pageSearchByTemplateHQL(params,
+			// currentPage,
 			// pageSize, "File", "uploadTime desc", null);
-			Page pageD = commonService.pageSearchCheckByTemplateHQL(param, page, limit, "Material", "uploadTime desc",
-					null);
+			Page pageD = commonService.pageSearchCheckByTemplateHQL(param, page, limit, "Material", "uploadTime desc", null);
 			List<Material> listM = pageD.getList();
 			PageResultData<Material> pageResult = new PageResultData<Material>();
 			pageResult.setCount(pageD.getTotalRecord());
@@ -1064,8 +1057,7 @@ public class MaterialController {
 
 	@RequestMapping(value = "/upload")
 	@ResponseBody
-	public void upload(@RequestParam("file") CommonsMultipartFile file, HttpServletRequest request,
-			HttpServletResponse response, String tid) throws Exception {
+	public void upload(@RequestParam("file") CommonsMultipartFile file, HttpServletRequest request, HttpServletResponse response, String tid) throws Exception {
 		String ffmpegPath;
 		String upFilePath;
 		String codcFilePath;
@@ -1091,29 +1083,33 @@ public class MaterialController {
 				// Calendar ca = Calendar.getInstance();
 				// String year = "" + ca.get(Calendar.YEAR);
 				// String savePath = "D:/materialFile/" + year;
-				 type = fileName.substring(fileName.lastIndexOf(".") + 1);
+				type = fileName.substring(fileName.lastIndexOf(".") + 1);
 				String fName = System.currentTimeMillis() + "." + type;
 
 				// String rootPath =
-				// this.getClass().getResource("/").getPath().replaceAll("%20", " ");
-				// rootPath = rootPath.substring(0, rootPath.indexOf("WEB-INF")) + "media/" +
+				// this.getClass().getResource("/").getPath().replaceAll("%20",
+				// " ");
+				// rootPath = rootPath.substring(0, rootPath.indexOf("WEB-INF"))
+				// + "media/" +
 				// year;
-				String rootPath = Constant.UploadDirecory;
+				String rootPath = Constant.UPLOADDIRECORY;
 				File ff = new File(rootPath);
 				if (!ff.exists()) {
 					ff.mkdir();
 				}
-				rootPath = rootPath + "/" + fName;
+				rootPath = rootPath + fName;
 				// String path = savePath + "/" + fName;
-				
-				 ffmpegPath=Constant.UploadDirecory+"/ffmpeg.exe";
-				 upFilePath=rootPath;
-				 codcFilePath=Constant.UploadDirecory+"/"+fName.substring(0, fName.lastIndexOf("."))+".mp4";
+
+				ffmpegPath = Constant.UPLOADDIRECORY + "ffmpeg.exe";
+				upFilePath = rootPath;
+				codcFilePath = Constant.UPLOADDIRECORY + fName.substring(0, fName.lastIndexOf(".")) + ".mp4";
 				try {
 					// 方式1
 					// File f = new File(rootPath);
-					// BufferedInputStream in = new BufferedInputStream(file.getInputStream());
-					// BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f));
+					// BufferedInputStream in = new
+					// BufferedInputStream(file.getInputStream());
+					// BufferedOutputStream out = new BufferedOutputStream(new
+					// FileOutputStream(f));
 					// byte[] bb = new byte[1024*1024*10];// 用来存储每次读取到的字节数组
 					// int n = 0;// 每次读取到的字节数组的长度
 					// while ((n = in.read(bb)) != -1) {
@@ -1123,7 +1119,8 @@ public class MaterialController {
 					// out.close();// 关闭流
 					// in.close();
 
-					// FileInputStream is = (FileInputStream) file.getInputStream();
+					// FileInputStream is = (FileInputStream)
+					// file.getInputStream();
 					// FileOutputStream fos = new FileOutputStream(f);
 					// byte[] by = new byte[1024*1024*10];
 					// int leng = 0;
@@ -1151,7 +1148,7 @@ public class MaterialController {
 					// 方式3
 					File f = new File(rootPath);
 					file.transferTo(f);
-					
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -1160,16 +1157,15 @@ public class MaterialController {
 				}
 				Material material = setMaterialParameter(fileName, fName, name, request, tid);
 				materialService.saveFile(material);
-				
-				//判断如果不是MP4格式视频调用ffmpeg转码成mp4
-				if(!"mp4".equals(type))
-				{
+
+				// 判断如果不是MP4格式视频调用ffmpeg转码成mp4
+				if (!"mp4".equals(type)) {
 					long startConvertFormat = System.currentTimeMillis();
 					executeCodecs(ffmpegPath, upFilePath, codcFilePath);
 					long endConvertFormat = System.currentTimeMillis();
-					System.out.println("格式转换用时：" + (endConvertFormat - startConvertFormat)/1000 + "秒！");
+					System.out.println("格式转换用时：" + (endConvertFormat - startConvertFormat) / 1000 + "秒！");
 				}
-				
+
 				PrintWriter out = response.getWriter();
 				out.print("true");
 				out.flush();
@@ -1178,8 +1174,7 @@ public class MaterialController {
 		}
 	}
 
-	public Material setMaterialParameter(String fileName, String fName, String name, HttpServletRequest request,
-			String tid) throws IOException {
+	public Material setMaterialParameter(String fileName, String fName, String name, HttpServletRequest request, String tid) throws IOException {
 		// Calendar ca = Calendar.getInstance();
 		// String year = "" + ca.get(Calendar.YEAR);
 		// String savePath = "D:/materialFile/" + year;
@@ -1188,15 +1183,16 @@ public class MaterialController {
 
 		// String rootPath =
 		// this.getClass().getResource("/").getPath().replaceAll("%20", " ");
-		// rootPath = rootPath.substring(0, rootPath.indexOf("WEB-INF")) + "media/" +
+		// rootPath = rootPath.substring(0, rootPath.indexOf("WEB-INF")) +
+		// "media/" +
 		// year;
-		String rootPath = Constant.UploadDirecory;
+		String rootPath = Constant.UPLOADDIRECORY;
 		System.out.println("rootPath=" + rootPath);
 		File f = new File(rootPath);
 		if (!f.exists()) {
 			f.mkdir();
 		}
-		rootPath = rootPath + "/" + fName;
+		rootPath = rootPath + fName;
 		// rootPath1 = rootPath;
 		int durTime = 1;
 		BigInteger bigIntMD5 = FileUtil.getMD5(rootPath);
@@ -1248,12 +1244,10 @@ public class MaterialController {
 
 	public int judgeType(String type) {
 		String str = type.toLowerCase();
-		String[] vedio = new String[] { "wmv", "asf", "rm", "rmvb", "mov", "avi", "dat", "mpg", "mpeg", "mp4", "dmv",
-				"amv", "3gp", "mtv", "mkv", "mpe", "m2v", "vob", "divx", "flv", "wmvhd", "3g2", "qt", "ogg", "ogv",
-				"oga", "mod" };
-		String[] picture = new String[] { "jpg", "png", "bmp", "gif", "psd", "jpeg", "ilbm", "iff", "tif", "tiff",
-				"mng", "xpm", "sai", "psp", "ufo", "xcf", "pcx", "ppm", "webp", "wdp", "tga", "tpic", "pct", "pic",
-				"pict", "jp2", "j2c", "ima", "cdr", "ai" };
+		String[] vedio = new String[]{"wmv", "asf", "rm", "rmvb", "mov", "avi", "dat", "mpg", "mpeg", "mp4", "dmv", "amv", "3gp", "mtv", "mkv", "mpe", "m2v",
+				"vob", "divx", "flv", "wmvhd", "3g2", "qt", "ogg", "ogv", "oga", "mod"};
+		String[] picture = new String[]{"jpg", "png", "bmp", "gif", "psd", "jpeg", "ilbm", "iff", "tif", "tiff", "mng", "xpm", "sai", "psp", "ufo", "xcf",
+				"pcx", "ppm", "webp", "wdp", "tga", "tpic", "pct", "pic", "pict", "jp2", "j2c", "ima", "cdr", "ai"};
 		for (String s : vedio) {
 			if (s.equals(str)) {
 				return 0;
@@ -1268,8 +1262,8 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/addMaterial")
-	public void addMaterial(String frequency, String testDate, String periodId, String mid, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public void addMaterial(String frequency, String testDate, String periodId, String mid, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		System.out.println(mid + " " + periodId + " " + frequency + " ");
 		Material material = materialService.getById(mid);
 		System.out.println("material=" + material);
@@ -1314,20 +1308,20 @@ public class MaterialController {
 					item.setDuration(material.getDuration());
 					item.setItemName(material.getMaterialName());
 					System.out.println("item=" + item);
-					//检查是否是已经排播，且在播表范围内
+					// 检查是否是已经排播，且在播表范围内
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 					List<Items> list = materialDao.findItemsByMidBetweenDates(mid, sdf.format(d1), sdf.format(d2));
 					if (list.size() == 0) {
 						materialService.saveItem(item);
 					} else if (list.size() > 0) {
 						PrintWriter out = response.getWriter();
-						//返回字符串，前台回显，素材在选定时间段已经排播，最好返回json数据，提示信息也在后台做
+						// 返回字符串，前台回显，素材在选定时间段已经排播，最好返回json数据，提示信息也在后台做
 						out.print("4");
 						out.flush();
 						out.close();
 						return;
 					}
-					//materialService.saveItem(item);
+					// materialService.saveItem(item);
 					material.setInfo("1"); // 是否排播
 					material.setUsedNum(material.getUsedNum() + 1);
 					materialService.updateMaterial(material);
@@ -1346,8 +1340,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/delMaterial")
-	public @ResponseBody String delMaterial(String[] mid, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public @ResponseBody String delMaterial(String[] mid, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String rid = (String) request.getSession().getAttribute("rId");
 		if (rid.equals(Constant.adminValue)) { // 是系统管理员的话
 			materialService.delFile(mid); // 直接逻辑删除
@@ -1384,8 +1377,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/editMaterial")
-	public void editFile(String mid, String materialName, String newTerminalId, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public void editFile(String mid, String materialName, String newTerminalId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println(mid + "=" + materialName);
 		if ("".equals(mid) || mid == null) {
 			PrintWriter out = response.getWriter();
@@ -1439,8 +1431,8 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/editFile")
-	public void editFile(String mid, String frequency, String testDate, String periodId, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public void editFile(String mid, String frequency, String testDate, String periodId, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		System.out.println("===" + mid + "=" + frequency + "=" + periodId + "=" + testDate);
 		String startTime = "";
 		String endTime = "";
@@ -1489,17 +1481,15 @@ public class MaterialController {
 			}
 		}
 	}
-	
-	//7.16
+
+	// 7.16
 	@RequestMapping("/getPidMaterialInfo")
 	@ResponseBody
-	public PageResultData<Material> getPidMaterialInfo(String param,String alreadymid, int page, int limit, Model model,
-			HttpServletRequest request) {
+	public PageResultData<Material> getPidMaterialInfo(String param, String alreadymid, int page, int limit, Model model, HttpServletRequest request) {
 		System.out.println(param);
 		String[] params = param.split(",");
 		try {
-			Page pageD = commonService.pageSearchByTemplateHQL(params, alreadymid,page, limit, "Material", "uploadTime desc",
-					null);
+			Page pageD = commonService.pageSearchByTemplateHQL(params, alreadymid, page, limit, "Material", "uploadTime desc", null);
 			List<Material> listM = pageD.getList();
 			for (Material m : listM) {
 				System.out.println(m);
@@ -1520,66 +1510,58 @@ public class MaterialController {
 			return pageResult1;
 		}
 	}
-	
-	//2018.8.21
-	public boolean executeCodecs(String ffmpegPath, String upFilePath, String codcFilePath ) {
-        // 创建一个List集合来保存转换视频文件为mp4格式的命令
-        List<String> convert = new ArrayList<String>();
-        convert.add(ffmpegPath); // 添加转换工具路径
-        convert.add("-i"); // 添加参数＂-i＂，该参数指定要转换的文件
-        convert.add(upFilePath); // 添加要转换格式的视频文件的路径
-        
-        convert.add("-y"); // 添加参数＂-y＂，该参数指定将覆盖已存在的文件
-        convert.add(codcFilePath);
 
-        
-        boolean mark = true;
-        ProcessBuilder builder = new ProcessBuilder();
-        try {
-        	Process videoProcess = new ProcessBuilder(convert).redirectErrorStream(true).start();
-            
-            new PrintStream(videoProcess.getErrorStream()).start();
-            
-            new PrintStream(videoProcess.getInputStream()).start();
-            
-            //videoProcess.waitFor();
+	// 2018.8.21
+	public boolean executeCodecs(String ffmpegPath, String upFilePath, String codcFilePath) {
+		//判断系统操作系统
+		String systemOSName = System.getProperty("os.name");
+		// 创建一个List集合来保存转换视频文件为mp4格式的命令
+		List<String> convert = new ArrayList<String>();
+		if("Linux".equalsIgnoreCase(systemOSName)) {
+			convert.add("ffmpeg"); // 添加转换工具路径
+		}else {
+			convert.add(ffmpegPath); // 添加转换工具路径
+		}
+		convert.add("-i"); // 添加参数＂-i＂，该参数指定要转换的文件
+		convert.add(upFilePath); // 添加要转换格式的视频文件的路径
 
-            
-           
-        } catch (Exception e) {
-            mark = false;
-            e.printStackTrace();
-        }
-        return mark;
-    }
-	
-	class PrintStream extends Thread 
-	{
-	    java.io.InputStream __is = null;
-	    public PrintStream(java.io.InputStream is) 
-	    {
-	        __is = is;
-	    } 
-	 
-	    public void run() 
-	    {
-	        try 
-	        {
-	            while(this != null) 
-	            {
-	                int _ch = __is.read();
-	                if(_ch != -1) 
-	                    System.out.print((char)_ch); 
-	                else break;
-	            }
-	        } 
-	        catch (Exception e) 
-	        {
-	            e.printStackTrace();
-	        } 
-	    }
+		convert.add("-y"); // 添加参数＂-y＂，该参数指定将覆盖已存在的文件
+		convert.add(codcFilePath);
+
+		boolean mark = true;
+		ProcessBuilder builder = new ProcessBuilder();
+		try {
+			Process videoProcess = new ProcessBuilder(convert).redirectErrorStream(true).start();
+			
+			new PrintStream(videoProcess.getErrorStream()).start();
+			new PrintStream(videoProcess.getInputStream()).start();
+			// videoProcess.waitFor();
+		} catch (Exception e) {
+			mark = false;
+			e.printStackTrace();
+		}
+		return mark;
 	}
 
+	class PrintStream extends Thread {
+		java.io.InputStream __is = null;
+		public PrintStream(java.io.InputStream is) {
+			__is = is;
+		}
 
+		public void run() {
+			try {
+				while (this != null) {
+					int _ch = __is.read();
+					if (_ch != -1)
+						System.out.print((char) _ch);
+					else
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }
