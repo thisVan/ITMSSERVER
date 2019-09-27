@@ -47,6 +47,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.EncodingAttributes;
+import ws.schild.jave.InputFormatException;
+import ws.schild.jave.MultimediaInfo;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.VideoAttributes;
+
 /**
  * @author jan
  * @date 2017年12月16日 下午11:53:46
@@ -94,6 +102,8 @@ public class MaterialController {
 
 	@RequestMapping("/getMaterialInfo")
 	public String queryMaterial(Model model, HttpServletRequest request) {
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminals", listTerminal);
 		return "file/queryMaterial";
 	}
 
@@ -1104,46 +1114,6 @@ public class MaterialController {
 				upFilePath = rootPath;
 				codcFilePath = Constant.UPLOADDIRECORY + fName.substring(0, fName.lastIndexOf(".")) + ".mp4";
 				try {
-					// 方式1
-					// File f = new File(rootPath);
-					// BufferedInputStream in = new
-					// BufferedInputStream(file.getInputStream());
-					// BufferedOutputStream out = new BufferedOutputStream(new
-					// FileOutputStream(f));
-					// byte[] bb = new byte[1024*1024*10];// 用来存储每次读取到的字节数组
-					// int n = 0;// 每次读取到的字节数组的长度
-					// while ((n = in.read(bb)) != -1) {
-					// out.write(bb, 0, n);// 写入到输出流
-					// out.flush();
-					// }
-					// out.close();// 关闭流
-					// in.close();
-
-					// FileInputStream is = (FileInputStream)
-					// file.getInputStream();
-					// FileOutputStream fos = new FileOutputStream(f);
-					// byte[] by = new byte[1024*1024*10];
-					// int leng = 0;
-					// while((leng = is.read(by))>0){
-					// fos.write(by, 0, leng);
-					// }
-					// fos.flush();
-					// fos.close();
-					// is.close();
-
-					// 方式2
-					// File f = new File(rootPath);
-					// FileOutputStream fos = new FileOutputStream(f);
-					// InputStream is = file.getInputStream();
-					// byte[] bts = new byte[1024*1024];
-					// //一个一个字节的读取并写入
-					// while(is.read(bts)!=-1)
-					// {
-					// fos.write(bts);
-					// }
-					// fos.flush();
-					// fos.close();
-					// is.close();
 
 					// 方式3
 					File f = new File(rootPath);
@@ -1162,6 +1132,7 @@ public class MaterialController {
 				if (!"mp4".equals(type)) {
 					long startConvertFormat = System.currentTimeMillis();
 					executeCodecs(ffmpegPath, upFilePath, codcFilePath);
+//					multiThreadconversion(upFilePath, codcFilePath);
 					long endConvertFormat = System.currentTimeMillis();
 					System.out.println("格式转换用时：" + (endConvertFormat - startConvertFormat) / 1000 + "秒！");
 				}
@@ -1510,6 +1481,56 @@ public class MaterialController {
 			return pageResult1;
 		}
 	}
+	/**
+	 * author zhou 20190926
+	 * @param source_wvm 原wvn文件
+	 * @param target_mp4 转码后的mp4文件
+	 */
+	public void multiThreadconversion(String source_wvm,String target_mp4) {
+		File source = new File(source_wvm);
+		File target = new File(target_mp4);
+		if(target.exists()) {
+			target.delete();
+		}
+		MultimediaObject multimediaObjedt = new MultimediaObject(source);
+		MultimediaInfo info;
+		try {
+			info = multimediaObjedt.getInfo();
+			Integer bitRate = info.getVideo().getBitRate();
+			Integer frameRate = (int) info.getVideo().getFrameRate();
+			
+	        VideoAttributes videoAttr = new VideoAttributes();
+	        EncodingAttributes encodingAttr = new EncodingAttributes();
+	        
+	        videoAttr.setBitRate(bitRate);
+	        videoAttr.setCodec("mpeg4");
+	        videoAttr.setFrameRate(frameRate);
+	        encodingAttr.setFormat("mp4");
+	        encodingAttr.setVideoAttributes(videoAttr);
+	        
+			Encoder encoder = new Encoder();
+			Runnable task = ()->{
+				try {
+					System.out.println("convert begin");
+					encoder.encode(new MultimediaObject(source), target, encodingAttr);
+					System.out.println("convert end");
+				} catch (Exception e) {
+					System.out.println("转码失败");
+					e.printStackTrace();
+				}
+			};
+			
+			Thread thread = new Thread(task);
+			thread.start();
+			
+		} catch (InputFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EncoderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	// 2018.8.21
 	public boolean executeCodecs(String ffmpegPath, String upFilePath, String codcFilePath) {
@@ -1519,7 +1540,10 @@ public class MaterialController {
 		List<String> convert = new ArrayList<String>();
 		if("Linux".equalsIgnoreCase(systemOSName)) {
 			convert.add("ffmpeg"); // 添加转换工具路径
-		}else {
+		}else if ("Mac OS X".equals(systemOSName)) {
+			convert.add("/usr/local/bin/ffmpeg"); // 添加mac转换工具
+		}
+		else {
 			convert.add(ffmpegPath); // 添加转换工具路径
 		}
 		convert.add("-i"); // 添加参数＂-i＂，该参数指定要转换的文件
@@ -1529,17 +1553,20 @@ public class MaterialController {
 		convert.add(codcFilePath);
 
 		boolean mark = true;
-		ProcessBuilder builder = new ProcessBuilder();
-		try {
-			Process videoProcess = new ProcessBuilder(convert).redirectErrorStream(true).start();
-			
-			new PrintStream(videoProcess.getErrorStream()).start();
-			new PrintStream(videoProcess.getInputStream()).start();
-			// videoProcess.waitFor();
-		} catch (Exception e) {
-			mark = false;
-			e.printStackTrace();
-		}
+
+		Runnable task=() ->{
+			try {
+				Process videoProcess = new ProcessBuilder(convert).redirectErrorStream(true).start();
+				
+				new PrintStream(videoProcess.getErrorStream()).start();
+				new PrintStream(videoProcess.getInputStream()).start();
+				// videoProcess.waitFor();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
+		Thread thread = new Thread(task);
+		thread.start();
 		return mark;
 	}
 

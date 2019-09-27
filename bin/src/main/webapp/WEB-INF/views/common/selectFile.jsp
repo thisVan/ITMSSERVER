@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -152,6 +153,12 @@
 	    
 	     	<span>素材名称:</span>
 			<input id="searchFileName" name="fileName" type="text" value="">
+			<span>终端：</span>
+			<select name="terminal" id="terminal" lay-verify="required" lay-search="" style="width: 140px; height: 35px;">
+				<c:forEach items="${terminals}" var = "terminal" varStatus = "status">
+                	<option value="${terminal.terminalId}">${terminal.terminalName}</option>
+               	</c:forEach>
+			</select>
 <!-- 			<span>文件类型:</span>
 		    <select id="searchFileTypeSelect" name="fileType">
 					   <option value=""></option>

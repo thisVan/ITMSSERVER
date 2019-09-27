@@ -568,7 +568,7 @@
 								</div>
 							</div>
 							
-							 <!--  
+	                        <%-- 						 
 							<div class="layui-inline" id="tName">
 								<label class="layui-form-mid">终端：</label>
 								<div class="layui-input-inline"
@@ -581,7 +581,8 @@
 									</select>
 								</div>
 							</div>
-							-->
+							 --%>
+							
 							
 							<div class="layui-inline" id="uploadDate">
 			                    <label class="layui-form-mid">上传日期范围：</label>

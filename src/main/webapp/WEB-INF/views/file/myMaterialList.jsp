@@ -426,7 +426,7 @@
 								</div>
 							</div>
 							
-<!-- 							<div class="layui-inline">
+						<div class="layui-inline">
 								<label class="layui-form-mid">类型：</label>
 								<div class="layui-input-inline"
 									style="width: 90px; height: 35px;">
@@ -437,7 +437,7 @@
 										<option value="other">其他</option>
 									</select>
 								</div>
-							</div> -->
+							</div>
 							
 							<div class="layui-inline">
 								<label class="layui-form-mid">终端确定与否：</label>

@@ -14,9 +14,11 @@ public class TestUtil {
 	@Test
 	public void testFileUtil() {
 		long start=System.currentTimeMillis();   //获取开始时间  
-		FileUtil.getSize("D:/迅雷下载/[暴走大事件][第五季]第02集_bd.mp4");  //测试的代码段  
-		long end=System.currentTimeMillis(); //获取结束时间  
-		System.out.println("程序运行时间： "+(end-start)+"ms");
+//		FileUtil.getSize("D:/迅雷下载/[暴走大事件][第五季]第02集_bd.mp4");  //测试的代码段
+		int length = FileUtil.getDurTime("/dataCenter/itmsServer/1569463875285.mp4");
+//		long end=System.currentTimeMillis(); //获取结束时间  
+//		System.out.println("程序运行时间： "+(end-start)+"ms");
+		System.out.println("文件时长："+length);
 		
 		long start1=System.currentTimeMillis();   //获取开始时间  
 		//String s = FileUtil.getResolution("C:/Users/MrLiao/Desktop/南方/视频/1024 (5).mp4"); //测试的代码段  
@@ -56,12 +58,4 @@ public class TestUtil {
 		System.out.println(str1.toString());
 		System.out.println(str1.trim().toString());
 	}
-	
-	@Test
-	public void oracleConnectionTest() {
-		OracleDBUtil orclDB = new OracleDBUtil();
-		orclDB.getConnection();
-		orclDB.releaseResource();
-	}
-
 }

@@ -17,8 +17,8 @@ import java.text.DecimalFormat;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.MultimediaInfo;
+import ws.schild.jave.MultimediaInfo;
+import ws.schild.jave.MultimediaObject;
 
 /**
  * @author: yezilong
@@ -230,13 +230,31 @@ public class FileUtil {
 	    }
 	}
 	
+	public static String getResolution(String path) {
+		int width = 0;
+		int height = 0;
+		File source = new File(path);
+        try {
+        	MultimediaObject multimediaObjedt = new MultimediaObject(source); 
+        	MultimediaInfo multimediaInfo = multimediaObjedt.getInfo();
+            height = multimediaInfo.getVideo().getSize().getHeight();
+            width = multimediaInfo.getVideo().getSize().getWidth();
+            System.out.println("==" + multimediaInfo.getVideo().getSize());
+            System.out.println(height + "---" + width);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return "" + width + "X" + height;
+	}
+	
 	public static int getDurTime(String path) {
 		int  time = 1;
         try {
         	File file = new File(path);
-        	Encoder encoder = new Encoder();
-            MultimediaInfo m = encoder.getInfo(file);
-            long ls = m.getDuration();
+        	MultimediaObject multimediaObject=new MultimediaObject(file);
+        	MultimediaInfo info = multimediaObject.getInfo();
+            long ls = info.getDuration();
             System.out.println("ls=" + ls);
             System.out.println("此视频时长为:" + ls / 60000 + "分" + ls / 1000 + "秒！");
             time = (int)ls/1000;
@@ -266,25 +284,7 @@ public class FileUtil {
         return bigIntMD5;
 	}
 	
-	public static String getResolution(String path) {
-		int width = 0;
-		int height = 0;
-		File source = new File(path);
-        Encoder encoder = new Encoder();
-        try {
-            MultimediaInfo m = encoder.getInfo(source);
-            //long ls = m.getDuration();
-            height = m.getVideo().getSize().getHeight();
-            width = m.getVideo().getSize().getWidth();
-            System.out.println("==" + m.getVideo().getSize());
-            System.out.println(height + "---" + width);
-            //System.out.println("此视频时长为:" + ls / 60000 + "分" + ls / 1000 + "秒！");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return "" + width + "X" + height;
-	}
+
 	
 	public static String getSize(String path) {
 		String size = "0MB";

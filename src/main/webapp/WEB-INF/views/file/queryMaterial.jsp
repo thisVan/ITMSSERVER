@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,14 +20,18 @@
     	  var params = "";
     	  
     	  var value;
+    	  var terminalvalue;
     	  
     	  value = $("#materialName").val();
+    	  terminalvalue = $("#terminal").val();
 		   if(value != "") {
 			   params = params + "materialName" + ",like,%" + value + "%,";
 		   }
+		   if(terminalvalue!=""){
+			   params = params +"terminal_id" + ",=,"+terminalvalue+",";
+		   }
 		   
 		   params = params + "statusId" + ",=," + "3" + ",";
-    	  
     	  layui.use('table', function(){
     		  var table = layui.table;
     		  table.render({
@@ -117,6 +122,18 @@
 									<input type="tel" id="materialName" name="materialName" autocomplete="off"
 										style="width: 100px; height: 35px;" placeholder="素材名"
 										class="layui-input input-text" />
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-mid">终端：</label>
+								<div class="layui-input-inline"
+									style="width: 150px; height: 35px;">
+									<select name="terminal" id="terminal" lay-verify="required" lay-search="" style="width: 140px; height: 35px;">
+										<option value="">直接选择或搜索</option>
+										<c:forEach items="${terminals}" var = "terminal" varStatus = "status">
+                                        <option value="${terminal.terminalId}">${terminal.terminalName}</option>
+                                        </c:forEach>
+									</select>
 								</div>
 							</div>
 							
