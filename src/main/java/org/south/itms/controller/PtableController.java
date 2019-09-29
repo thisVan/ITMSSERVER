@@ -1403,7 +1403,7 @@ public class PtableController {
 				if (itmsList.size() > 0) {
 					terminalId = itmsList.get(0).getTerminalId();
 				}
-				Set<Items> itemSet = new HashSet<Items>();
+				List<Items> itemSet = new ArrayList<Items>();
 				for (Items items : itmsList) {
 					System.out.println(items.toString());
 					//2019.9.22修复添加节目到播表时，播表时间计算错误
@@ -1473,6 +1473,7 @@ public class PtableController {
 					}
 				}
 				String allTimeStr = allTime/60 + "分" + allTime%60 +"秒";
+				System.out.println("播表总时长"+allTimeStr);
 				Terminal terminal = terminalService.get(terminalId);
 				double fullScreenRate = (double)allTime * 1000 / (terminal.getRunEndTime().getTime() - terminal.getRunStartTime().getTime());
 				ptableService.updatePlayTableAllTime(ppid, allTimeStr, new DecimalFormat("#.##%").format(fullScreenRate));

@@ -80,6 +80,7 @@
 		</div>
 </div>
 <script type="text/javascript">
+	
 	layui.use(['layer','form','laydate'], function(){
 	    var layer = layui.layer
 	    ,form = layui.form
@@ -90,11 +91,11 @@
 			,range: true
 	    }); */
 	}); 
-
    function closeWind(){
 	   var index = parent.layer.getFrameIndex(window.name);
 	   parent.layer.closeAll();
    }
+   
    
    function addMaterial(){
 	   var mid = $("#mid").val();
@@ -159,9 +160,9 @@
 						parent.layer.closeAll();
 						parent.layer.msg('添加成功!',{icon:6,time:2000});
 						parent.initTable();
+						parent.reloadhtml();
 						//parent.refresh();
-						parent.location.reload();
-						
+						window.close();
 						//window.parent.location.reload(); //刷新父页面
 				  }else if(value=="false"){
 					  layer.msg('存在同名文件，请重新输入!!!',{icon:5,time:2000});
@@ -175,6 +176,7 @@
 				     }
 				}
 			});
+		 
 	   }
 	 }
    

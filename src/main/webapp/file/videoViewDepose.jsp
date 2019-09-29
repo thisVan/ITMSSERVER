@@ -10,11 +10,14 @@
 <head>
    <meta charset="UTF-8">
  
-<title>Insert title here</title>
+<title>预览视频</title>
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
    <script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
    <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function () {
+	   getMedia();
+	   });
 
 function depose(){
 	   var materialId = document.getElementById("mid").value;
@@ -41,9 +44,6 @@ function depose(){
 	       $("#div2").hide();
 	       return;
 	    } 
-	
-	
-//		window.opener.document.getElementById('adName').value='123123123';
 		var myDate = new Date();
 		var year = myDate.getFullYear();
 		var origanname=window.opener.document.getElementById("videoView").value; 
@@ -52,45 +52,15 @@ function depose(){
 			var aa=document.getElementById('mp4video');
 			aa.style.display='block';
 			var video = document.getElementById("video1");
-	        video.addEventListener('ended', play);
 	        play();
-	        function play() {
-	            var video = document.getElementById("video1");
-	            //video.src = "/ITMS/media/" + year + "/" + filename;
-	            video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
-	            video.load(); //如果短的话，可以加载完成之后再播放，监听 canplaythrough 事件即可
-	            video.play();
-	/*             curr++;
-	            if (curr >= vLen)
-	                curr = 0; // 播放完了，重新播放 */
-	        }
-		
-		
-		
-		
-		
-		
-/* 		// fileObj.files[0]代表文件选择框选择的第一个文件  
-		var src = '/ITMS/media/' + filename;  
-		var vdo = document.createElement('video');  
-		vdo.src = src;  
-//		vdo.controls = "controls";
-		vdo.autoplay = "autoplay";
-		vdo.width="650";
-		vdo.height="450";
-//		vdo.loop = "loop";
-		document.getElementById('media').appendChild(vdo); */
-       
+			 function play() {
+		         var video = document.getElementById("video1");
+		         video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
 	}
+ }
 </script>
 </head>
-<body onLoad="getMedia()">
-<!--      <input type="button" value="aaaa" onclick = "get()">
-     <input type="text" id="val" value=''>
-    <video width="320" height="240" controls="controls" autoplay="autoplay">
-  <source src="file:///C:/Users/MrLiao/Desktop/code/media/movie.ogg" type="video/ogg">
-  <source src="file:///C:/Users/MrLiao/Desktop/code/media/movie.ogg" type="video/ogg">
-</video>  -->
+<body>
 <input type="hidden" id="mid" value="<%=session.getAttribute("materialIdThree")%>">
 <input type="hidden" id="vdo">
 
@@ -99,7 +69,7 @@ function depose(){
      <div id="div2">
      <div id="showwmv" align="center"></div>
      <div id="mp4video" align="center" style="display:none">
-		        <video width="650" height="450" id="video1" class="indexBanner" controls="controls" autoplay>
+		        <video width="650" height="450" id="video1" class="indexBanner" controls="controls" preload="auto" autoplay="autoplay" loop="loop">
 		           <source src="" type="video/mp4" />
 		        </video>
 		      </div>

@@ -16,6 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -154,20 +155,40 @@ public class DownloadController {
     }
 	
     //下载文件
-    public void downloadFile(File file,HttpServletResponse response,boolean isDelete) throws Exception {
+    public void downloadFile(File file,HttpServletResponse response,boolean isDelete){
             // 以流的形式下载文件。
-            BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file.getPath()));
-            byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
-            // 清空response
-            response.reset();
-            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().getBytes("UTF-8"),"ISO-8859-1"));
-            toClient.write(buffer);
-            toClient.flush();
-            toClient.close();
+    	   FileInputStream fis = null;
+    	   ServletOutputStream toClient = null;
+    		try {
+    			// 清空response
+    		   response.reset();
+    		   response.setContentType("application/octet-stream");
+    		   response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().getBytes("UTF-8"),"ISO-8859-1"));
+    		   response.setContentType("multipart/form-data");
+    		   fis = new FileInputStream(file.getPath());
+    		   byte[] buffer = new byte[fis.available()];
+    		   System.out.println("file size:"+fis.available());
+    		   toClient = response.getOutputStream();
+    		   int length = 0;
+    		   while((length = fis.read(buffer))>0) {
+    			   toClient.write(buffer, 0, length);
+    		   }
+
+    		}catch (IOException e) {
+    			System.out.println("reason:"+e.getMessage());
+//				e.printStackTrace();
+			}finally {
+				try {
+					if(fis!=null)
+					  fis.close();
+					if(toClient!=null) {
+			    		toClient.flush();
+			    		toClient.close();
+					}
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
             if(isDelete)
             {
                 file.delete();        //是否将生成的服务器端文件删除
@@ -187,6 +208,7 @@ public class DownloadController {
 
 			if (!file.exists())
 				return;
+			System.out.println("response once");
 			downloadFile(file, response, false);
 		} catch (Exception e) {
 			e.printStackTrace();

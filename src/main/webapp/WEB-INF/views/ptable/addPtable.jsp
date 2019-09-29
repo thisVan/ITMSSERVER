@@ -228,6 +228,7 @@
 									time : 1500
 								});
 								initTable();
+								reloadhtml();
 							} else {
 								layer.msg(msg.toString(), {
 									icon : 5,
@@ -261,6 +262,7 @@
 										time : 1500
 									});
 									initTable();
+									reloadhtml();
 								} else {
 									layer.msg(msg.toString(), {
 										icon : 5,
@@ -275,6 +277,10 @@
 
 			});
 		});
+	}
+	
+	function reloadhtml(){
+		window.location.reload();
 	}
 
 	function goBack() {
