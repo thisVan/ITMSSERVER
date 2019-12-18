@@ -10,6 +10,7 @@ import org.south.itms.entity.Period;
 import org.south.itms.service.impl.PeriodServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+//时段切面
 public class PeriodOperationAspect {
 	
 	//时段操作
@@ -22,7 +23,6 @@ public class PeriodOperationAspect {
 	//注入切面公共方法
 	@Autowired
 	private AspectCommonMethod aspectCommonMethod;
-	
 	
 	//时段则增加切面
 	public void completePeriodAdd(JoinPoint joinPoint) {
