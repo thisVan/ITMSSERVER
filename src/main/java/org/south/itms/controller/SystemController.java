@@ -390,6 +390,7 @@ public class SystemController {
 		  paramMap.put("role.roleId", user.getRole().getRoleId());
 		  paramMap.put("cellphone", user.getCellphone());
 		  paramMap.put("email", user.getEmail());
+		  paramMap.put("userPassword", user.getUserPassword());
 		  //更新的where条件
 		  Map<String, String> whereMap = new HashMap<String, String>();
 		  whereMap.put("userId", user.getUserId());

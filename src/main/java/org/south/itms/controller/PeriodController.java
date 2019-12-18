@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.south.itms.dto.MaterialDto;
 import org.south.itms.dto.Page;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author jan
@@ -167,6 +170,14 @@ public class PeriodController {
 					period.setTerminalName(terminalName);
 					periodService.save(period);
 					PrintWriter out = response.getWriter();
+					
+					//modify by bobo 2019/11/3
+					//传出新增的时段来
+					ServletRequestAttributes attr = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
+					HttpSession session=attr.getRequest().getSession(true);
+					session.setAttribute("newPeriod", period);
+					session.setAttribute("completePeriodAdd",true);
+					
 					out.print("true");
 					out.flush();
 					out.close();

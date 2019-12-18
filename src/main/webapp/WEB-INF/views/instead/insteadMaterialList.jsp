@@ -124,7 +124,7 @@
     		    	  }
     		      }
     		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
-    		      ,{fixed: 'right', width:155, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
+    		      ,{fixed: 'right', width:200, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
     		    ,where: {"param": param,"dateTime":dateTime}

@@ -253,6 +253,126 @@ public class Terminal implements java.io.Serializable{// 终端类
 	public void setConnectPassword(String connectPassword) {
 		this.connectPassword = connectPassword;
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((areaCode == null) ? 0 : areaCode.hashCode());
+		result = prime * result + ((areaName == null) ? 0 : areaName.hashCode());
+		result = prime * result + ((connectPassword == null) ? 0 : connectPassword.hashCode());
+		result = prime * result + deleted;
+		result = prime * result + ((detailAddress == null) ? 0 : detailAddress.hashCode());
+		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+		result = prime * result + ledLength;
+		result = prime * result + ledWidth;
+		result = prime * result + ((macAddr == null) ? 0 : macAddr.hashCode());
+		result = prime * result + resolutionLength;
+		result = prime * result + resolutionWidth;
+		result = prime * result + ((runEndTime == null) ? 0 : runEndTime.hashCode());
+		result = prime * result + ((runStartTime == null) ? 0 : runStartTime.hashCode());
+		result = prime * result + ((serialNumber == null) ? 0 : serialNumber.hashCode());
+		result = prime * result + startSpotLeft;
+		result = prime * result + startSpotTop;
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((terminalDescribe == null) ? 0 : terminalDescribe.hashCode());
+		result = prime * result + ((terminalId == null) ? 0 : terminalId.hashCode());
+		result = prime * result + ((terminalName == null) ? 0 : terminalName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Terminal other = (Terminal) obj;
+		if (areaCode == null) {
+			if (other.areaCode != null)
+				return false;
+		} else if (!areaCode.equals(other.areaCode))
+			return false;
+		if (areaName == null) {
+			if (other.areaName != null)
+				return false;
+		} else if (!areaName.equals(other.areaName))
+			return false;
+		if (connectPassword == null) {
+			if (other.connectPassword != null)
+				return false;
+		} else if (!connectPassword.equals(other.connectPassword))
+			return false;
+		if (deleted != other.deleted)
+			return false;
+		if (detailAddress == null) {
+			if (other.detailAddress != null)
+				return false;
+		} else if (!detailAddress.equals(other.detailAddress))
+			return false;
+		if (ip == null) {
+			if (other.ip != null)
+				return false;
+		} else if (!ip.equals(other.ip))
+			return false;
+		if (ledLength != other.ledLength)
+			return false;
+		if (ledWidth != other.ledWidth)
+			return false;
+		if (macAddr == null) {
+			if (other.macAddr != null)
+				return false;
+		} else if (!macAddr.equals(other.macAddr))
+			return false;
+		if (resolutionLength != other.resolutionLength)
+			return false;
+		if (resolutionWidth != other.resolutionWidth)
+			return false;
+		if (runEndTime == null) {
+			if (other.runEndTime != null)
+				return false;
+		} else if (!runEndTime.equals(other.runEndTime))
+			return false;
+		if (runStartTime == null) {
+			if (other.runStartTime != null)
+				return false;
+		} else if (!runStartTime.equals(other.runStartTime))
+			return false;
+		if (serialNumber == null) {
+			if (other.serialNumber != null)
+				return false;
+		} else if (!serialNumber.equals(other.serialNumber))
+			return false;
+		if (startSpotLeft != other.startSpotLeft)
+			return false;
+		if (startSpotTop != other.startSpotTop)
+			return false;
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		if (terminalDescribe == null) {
+			if (other.terminalDescribe != null)
+				return false;
+		} else if (!terminalDescribe.equals(other.terminalDescribe))
+			return false;
+		if (terminalId == null) {
+			if (other.terminalId != null)
+				return false;
+		} else if (!terminalId.equals(other.terminalId))
+			return false;
+		if (terminalName == null) {
+			if (other.terminalName != null)
+				return false;
+		} else if (!terminalName.equals(other.terminalName))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {

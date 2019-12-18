@@ -178,6 +178,96 @@ public class Items implements java.io.Serializable {
 	public Items() {
 		super();
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((createName == null) ? 0 : createName.hashCode());
+		result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
+		result = prime * result + deleted;
+		result = prime * result + duration;
+		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+		result = prime * result + frequency;
+		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
+		result = prime * result + ((itemName == null) ? 0 : itemName.hashCode());
+		result = prime * result + ((material == null) ? 0 : material.hashCode());
+		result = prime * result + ((materialName == null) ? 0 : materialName.hashCode());
+		result = prime * result + ((periodId == null) ? 0 : periodId.hashCode());
+		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+		result = prime * result + ((terminalId == null) ? 0 : terminalId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Items other = (Items) obj;
+		if (createName == null) {
+			if (other.createName != null)
+				return false;
+		} else if (!createName.equals(other.createName))
+			return false;
+		if (createTime == null) {
+			if (other.createTime != null)
+				return false;
+		} else if (!createTime.equals(other.createTime))
+			return false;
+		if (deleted != other.deleted)
+			return false;
+		if (duration != other.duration)
+			return false;
+		if (endDate == null) {
+			if (other.endDate != null)
+				return false;
+		} else if (!endDate.equals(other.endDate))
+			return false;
+		if (frequency != other.frequency)
+			return false;
+		if (itemId == null) {
+			if (other.itemId != null)
+				return false;
+		} else if (!itemId.equals(other.itemId))
+			return false;
+		if (itemName == null) {
+			if (other.itemName != null)
+				return false;
+		} else if (!itemName.equals(other.itemName))
+			return false;
+		if (material == null) {
+			if (other.material != null)
+				return false;
+		} else if (!material.equals(other.material))
+			return false;
+		if (materialName == null) {
+			if (other.materialName != null)
+				return false;
+		} else if (!materialName.equals(other.materialName))
+			return false;
+		if (periodId == null) {
+			if (other.periodId != null)
+				return false;
+		} else if (!periodId.equals(other.periodId))
+			return false;
+		if (startDate == null) {
+			if (other.startDate != null)
+				return false;
+		} else if (!startDate.equals(other.startDate))
+			return false;
+		if (terminalId == null) {
+			if (other.terminalId != null)
+				return false;
+		} else if (!terminalId.equals(other.terminalId))
+			return false;
+		return true;
+	}
 
 	public Items(String itemId, String periodId, String materialName, String itemName, Date startDate,
 			Date endDate, int duration, int frequency, Date createTime, String createName, int deleted, Material material) {

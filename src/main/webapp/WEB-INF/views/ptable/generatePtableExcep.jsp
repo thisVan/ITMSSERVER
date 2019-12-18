@@ -306,7 +306,7 @@ function generateTable(id){
 	formData.append("periodId", id);
 	  var layer = layui.layer;
 	  //layer.msg('Hello World');
-	  layer.confirm('确定生成播表!?', function(index){
+	  layer.confirm('确定生成播表?', function(index){
 		  //do something
 			//var tid = document.getElementById("treeId").value;
 			//if(tid == null || tid == ''){

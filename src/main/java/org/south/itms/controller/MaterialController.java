@@ -1,5 +1,6 @@
 package org.south.itms.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,12 +13,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.south.itms.dao.impl.MaterialDao;
 import org.south.itms.dto.ItemsDto;
+import org.south.itms.dto.MarqueeDto;
 import org.south.itms.dto.MaterialDto;
 import org.south.itms.dto.Page;
 import org.south.itms.dto.PageResult;
@@ -25,10 +28,12 @@ import org.south.itms.dto.PageResultData;
 import org.south.itms.dto.Result;
 import org.south.itms.dto.TreeDate;
 import org.south.itms.entity.Items;
+import org.south.itms.entity.Marquee;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.Period;
 import org.south.itms.entity.Terminal;
 import org.south.itms.service.impl.CommonService;
+import org.south.itms.service.impl.MarqueeService;
 import org.south.itms.service.impl.MaterialService;
 import org.south.itms.util.Constant;
 import org.south.itms.util.EntityUtil;
@@ -44,6 +49,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -71,6 +78,9 @@ public class MaterialController {
 
 	@Autowired
 	private CommonService commonService;
+	
+	@Autowired
+	private MarqueeService marqueeService;
 
 	@Autowired
 	private MaterialDao materialDao;
@@ -101,10 +111,21 @@ public class MaterialController {
 	}
 
 	@RequestMapping("/getMaterialInfo")
-	public String queryMaterial(Model model, HttpServletRequest request) {
+	public String queryMaterial(HttpServletRequest request,Model model) {
 		List<Terminal> listTerminal = commonService.getAllTerminal();
+		String terminalId = request.getParameter("terminalId");
+		model.addAttribute("terminalId",terminalId);
 		model.addAttribute("terminals", listTerminal);
 		return "file/queryMaterial";
+	}
+	
+	@RequestMapping("/getLogoInfo")
+	public String queryPicture(Model model,HttpServletRequest request) {
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		String terminalId = request.getParameter("terminalId");
+		model.addAttribute("terminalId",terminalId);
+		model.addAttribute("terminals", listTerminal);
+		return "file/queryLogo";
 	}
 
 	// 7.16
@@ -360,6 +381,104 @@ public class MaterialController {
 			return pageResult;
 		}
 	}
+	/**
+	 * 
+	 * @param model
+	 * @param terminalIdStr 需要查询的终端
+	 * @param param         筛选参数
+	 * @param dateTime      日期条件
+	 * @param page          分页
+	 * @param limit          
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/wrapSearchMarquee")
+	public @ResponseBody PageResultData<MarqueeDto> wrapSearchMarquee(Model model, String terminalIdStr, String param, String dateTime, int page, int limit)
+			throws ParseException {
+		if (StringUtil.isEmpty(terminalIdStr)) { //查询所有
+			PageResultData<MarqueeDto> resultData = searchMarquee(model, param, dateTime, page, limit);
+			System.out.println("result list:"+resultData.getData()+"total count:"+ resultData.getCount());
+			return searchMarquee(model, param, dateTime, page, limit);
+		}
+		String[] terminalIds = terminalIdStr.split(",");
+		if (terminalIds.length == 1) { //查询一个终端
+			return searchMarquee(model, param + "terminalId" + ",=," + terminalIds[0] + ",", dateTime, page, limit);
+		} else { //查询多个终端
+			List<MarqueeDto> listDto = new ArrayList<MarqueeDto>();
+			PageResultData<MarqueeDto> pageResult = searchMarquee(model, param, dateTime, page, limit);
+			for (MarqueeDto itemsDto : pageResult.getData()) {
+				for (String terminalId : terminalIds) {
+					if (itemsDto.getTerminalId().equals(terminalId)) {
+						listDto.add(itemsDto);
+						break;
+					}
+
+				}
+			}
+			pageResult.setData(listDto);
+			pageResult.setCount(listDto.size());
+			return pageResult;
+		}
+	}
+
+	private PageResultData<MarqueeDto> searchMarquee(Model model, String param, String dateTime, int page, int limit) {
+//		return null;
+		System.out.println("param=" + param + " dateTime=" + dateTime+"page"+page+"limit"+limit);
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		List<Period> listPeriod = commonService.getAllPeriod();
+		model.addAttribute("listTerminal", listTerminal);
+		String[] params = param.split(",");
+		if (dateTime == null || "".equals(dateTime)) {
+			try {
+				Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Marquee", "createTime desc", null);
+				List<Marquee> listM = pageD.getList();
+				System.out.println("listM======="+listM);
+				List<MarqueeDto> list = EntityUtil.getMarqueeDtoInfo(listM, listTerminal,listPeriod);
+				System.out.println("list++++"+list);
+				PageResultData<MarqueeDto> pageResult = new PageResultData<MarqueeDto>();
+				pageResult.setCount(pageD.getTotalRecord());
+				pageResult.setCode(0);
+				pageResult.setMsg("");
+				pageResult.setData(list);
+				return pageResult;
+			} catch (Exception e) {
+				e.printStackTrace();
+				PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("查询异常");
+				pageResult1.setFail(1);
+				return pageResult1;
+			}
+		} else {
+			// List<Terminal> listTerminal1 = commonService.getAllTerminal();
+			String[] time = dateTime.split(" - ");
+			String startDate = time[0];
+			String endDate = time[1];
+
+			try {
+				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Marquee", "createTime desc", null);
+				List<Marquee> listM = pageD.getList();
+				List<MarqueeDto> list = EntityUtil.getMarqueeDtoInfo(listM, listTerminal,listPeriod);
+				// System.out.println("listM" + listM);
+				// System.out.println("size=" + pageD.getTotalRecord());
+				PageResultData<MarqueeDto> pageResult = new PageResultData<MarqueeDto>();
+				pageResult.setCount(pageD.getTotalRecord());
+				pageResult.setCode(0);
+				pageResult.setMsg("");
+				pageResult.setData(list);
+				return pageResult;
+			} catch (Exception e) {
+				e.printStackTrace();
+				PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("查询异常");
+				pageResult1.setFail(1);
+				return pageResult1;
+			}
+		}
+	}
 
 	@RequestMapping(value = "/wrapSearchBroadItem")
 	public @ResponseBody PageResultData<ItemsDto> wrapSearchBroadItem(String terminalIdStr, String params, String dateTime, int page, int limit) {
@@ -403,6 +522,7 @@ public class MaterialController {
 		List<Period> listPeriod = commonService.getAllPeriod();
 		Page pageD = commonService.pageSearchByTemplateHQL(param, page, limit, "Items", "createTime desc", whereSuffix);
 		List<Items> listM = pageD.getList();
+		System.out.println("item listDto"+listM);
 		List<ItemsDto> listDto = EntityUtil.getItemsDto(listM, listPeriod);
 		PageResultData<ItemsDto> pageResult = new PageResultData<ItemsDto>();
 		pageResult.setCount(pageD.getTotalRecord());
@@ -422,6 +542,7 @@ public class MaterialController {
 			Page pageD = commonService.pageSearchByTemplateHQL(param, page, limit, "Items", "createTime desc", null);
 			List<Items> listM = pageD.getList();
 			List<ItemsDto> listDto = EntityUtil.getItemsDto(listM, listPeriod);
+			System.out.println("item listDto"+listDto);
 			PageResultData<ItemsDto> pageResult = new PageResultData<ItemsDto>();
 			pageResult.setCount(pageD.getTotalRecord());
 			pageResult.setCode(0);
@@ -809,7 +930,12 @@ public class MaterialController {
 			request.getSession().setAttribute("materialIdOnce", material.getMid());
 			request.getSession().setAttribute("materialNameOnce", material.getMaterialName());
 			request.getSession().setAttribute("terminalNameOnce", terminal.getTerminalName());
-			request.getSession().setAttribute("typeOnce", material.getFileType() + "/mp4");
+			String materialType = material.getFileType();
+			if (materialType.equals("vedio")) {
+				request.getSession().setAttribute("typeOnce", material.getFileType() + "/mp4");
+			}else {
+				request.getSession().setAttribute("typeOnce",material.getFileType() +"/image");
+			}
 			request.getSession().setAttribute("resolutionOnce", material.getResolution());
 			request.getSession().setAttribute("durationOnce", material.getDuration());
 			request.getSession().setAttribute("terminalLWOnce", terminal.getLedLength() + "X" + terminal.getLedWidth());
@@ -826,7 +952,9 @@ public class MaterialController {
 	@ResponseBody
 	public String deposeMaterial(String mid, HttpServletRequest request) {
 		try {
+			System.out.println(mid);
 			Material material = materialService.getById(mid);
+			
 			File file = new File(material.getFilePath());
 			if (!file.exists()) {
 				request.getSession().setAttribute("materialExist", "false");
@@ -1127,16 +1255,17 @@ public class MaterialController {
 				}
 				Material material = setMaterialParameter(fileName, fName, name, request, tid);
 				materialService.saveFile(material);
-
+				if("picture".equals(material.getFileType())) {
+					
+				}
 				// 判断如果不是MP4格式视频调用ffmpeg转码成mp4
-				if (!"mp4".equals(type)) {
+				else if (!"mp4".equals(type)) {
 					long startConvertFormat = System.currentTimeMillis();
 					executeCodecs(ffmpegPath, upFilePath, codcFilePath);
 //					multiThreadconversion(upFilePath, codcFilePath);
 					long endConvertFormat = System.currentTimeMillis();
 					System.out.println("格式转换用时：" + (endConvertFormat - startConvertFormat) / 1000 + "秒！");
 				}
-
 				PrintWriter out = response.getWriter();
 				out.print("true");
 				out.flush();
@@ -1201,8 +1330,13 @@ public class MaterialController {
 			material.setDuration(durTime);
 		} else if (typeId == 1) {
 			material.setFileType("picture");
+			BufferedImage img = ImageIO.read(new File(rootPath));
+			int width = img.getWidth();
+			int height = img.getHeight();
+			resolution =new String(width+"X"+height);
 			material.setDuration(durTime);
 			material.setResolution(resolution);
+			size = FileUtil.getSize(rootPath);
 			material.setSize(size);
 		} else {
 			material.setFileType("other");
@@ -1231,6 +1365,89 @@ public class MaterialController {
 		}
 		return 3;
 	}
+	
+	@RequestMapping(value = "/addMarquee")
+	public void addMarquee(String testDate, String periodId, String mid,String opacity, HttpServletRequest request, HttpServletResponse response)
+	throws Exception{
+		System.out.println(mid+" " + periodId);
+		Material material = materialDao.getById(mid);
+		System.out.println("material"+material);
+		String startTime = "";
+		String endTime = "";
+		if (!"".equals(testDate) && testDate != null) {
+			System.out.println("testdate: "+testDate);
+			String[] date = testDate.split(" / ");
+			startTime = date[0];
+			endTime = date[1];
+			System.out.println("starttime:"+startTime+"endtime:"+endTime);
+		}
+		Marquee marquee = new Marquee();
+		if ("".equals(startTime) || "".equals(endTime)) {
+			PrintWriter out = response.getWriter();
+			out.print("1");
+			out.flush();
+			out.close();
+		} else {
+			Date d1 = TimeUtil.translateDate(startTime);
+			Date d2 = TimeUtil.translateDate(endTime);
+			if (TimeUtil.dateValidate(d1, d2)) {
+				String username = (String) request.getSession().getAttribute("userName");
+				if (username == null || "".equals(username) || request.getSession().getAttribute("userName") == null) {
+					PrintWriter out = response.getWriter();
+					out.print("2");
+					out.flush();
+					out.close();
+				} else {
+					marquee.setCreateTime(new Date());
+					marquee.setStatusId("1");
+					marquee.setDeleted(0);
+					marquee.setFileName(material.getFileName());
+					marquee.setFilePath(material.getFilePath());
+					marquee.setMarqName(material.getMaterialName());
+					marquee.setFileType(material.getFileType());
+					marquee.setTerminalId(material.getTerminal().getTerminalId());
+					marquee.setMaterialId(material.getMid());
+					marquee.setSize(material.getSize());
+					marquee.setMd5(material.getMd5());
+					marquee.setPeriodId(periodId);
+					marquee.setResolution(material.getResolution());
+					marquee.setStartDate(d1);
+					marquee.setEndDate(d2);
+					marquee.setOpacity(Integer.parseInt(opacity));
+					marquee.setUserName(username);
+					//检查该终端是否已经有了一个跑马灯图片，且在有效日期内
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					List<Marquee> list = marqueeService.findMarqueeByTerminalIdBetweenDates(material.getTerminal().getTerminalId(), sdf.format(d1), sdf.format(d2));
+					if (list.size() == 0) {
+//						materialService.saveItem(item);
+						marqueeService.addMarquee(marquee);
+					} else if (list.size() > 0) {
+						PrintWriter out = response.getWriter();
+						// 返回字符串，前台回显，显示该终端已经有跑马灯图片，最好返回json数据，提示信息也在后台做
+						out.print("4");
+						out.flush();
+						out.close();
+						return;
+					}
+					// materialService.saveItem(item);
+					material.setInfo("1"); // 是否排播
+					material.setUsedNum(material.getUsedNum() + 1);
+					materialService.updateMaterial(material);
+					PrintWriter out = response.getWriter();
+					out.print("true");
+					out.flush();
+					out.close();
+				}
+			} else {
+				PrintWriter out = response.getWriter();
+				out.print("1");
+				out.flush();
+				out.close();
+			}
+		}
+		
+	}
+	
 
 	@RequestMapping(value = "/addMaterial")
 	public void addMaterial(String frequency, String testDate, String periodId, String mid, HttpServletRequest request, HttpServletResponse response)
@@ -1240,10 +1457,19 @@ public class MaterialController {
 		System.out.println("material=" + material);
 		String startTime = "";
 		String endTime = "";
+		
+		//modify by bobo 2019 / 11/4
+		//处理添加失败的空指针异常
+		ServletRequestAttributes attr = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
+		HttpSession session=attr.getRequest().getSession(true);
+		session.setAttribute("completeItemAdd",false);
+		session.setAttribute("newItem", null);
+				
 		if (!"".equals(testDate) && testDate != null) {
-			String[] date = testDate.split(" ");
+			System.out.println("testdate: "+testDate);
+			String[] date = testDate.split(" / ");
 			startTime = date[0];
-			endTime = date[2];
+			endTime = date[1];
 		}
 		Items item = new Items();
 		if ("".equals(startTime) || "".equals(endTime)) {
@@ -1284,10 +1510,22 @@ public class MaterialController {
 					List<Items> list = materialDao.findItemsByMidBetweenDates(mid, sdf.format(d1), sdf.format(d2));
 					if (list.size() == 0) {
 						materialService.saveItem(item);
+						
+						
+						//modify by bobo 2019/11/4
+						//传出新增的节目来
+						session.setAttribute("newItem", item);
+						session.setAttribute("completeItemAdd",true);
+						
+						
 					} else if (list.size() > 0) {
+						
+						//直接加入,和复制一样
+						
+						
 						PrintWriter out = response.getWriter();
 						// 返回字符串，前台回显，素材在选定时间段已经排播，最好返回json数据，提示信息也在后台做
-						out.print("4");
+						out.print("true");
 						out.flush();
 						out.close();
 						return;
@@ -1445,6 +1683,77 @@ public class MaterialController {
 				}
 			} else {
 				commonService.updateItem(file);
+				PrintWriter out = response.getWriter();
+				out.print("true");
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
+	
+	@RequestMapping(value = "/delMarquee")
+	public @ResponseBody Result delMarquee(String[] midIds) {
+		System.out.println("delete marquee function!"+midIds);
+		if (midIds == null || midIds.length < 1) {
+			return new Result("删除错误");
+		}
+
+		// 开始更新数据
+		try {
+			for(String mid : midIds)
+				marqueeService.delMarquee2(mid);
+			return new Result(true, "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result("删除错误");
+		}
+
+	}
+	
+	@RequestMapping(value = "/editMarquee")
+	public void editMarquee(String mid, String opacity, String testDate, String periodId, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println("===" + mid + "=" + opacity + "=" + periodId + "=" + testDate);
+		String startTime = "";
+		String endTime = "";
+		if ("".equals(mid) || mid == null) {
+			PrintWriter out = response.getWriter();
+			out.print("1");
+			out.flush();
+			out.close();
+		} else {
+			Marquee marquee = marqueeService.getById(mid);
+			if (!"".equals(opacity)) {
+				marquee.setOpacity(Integer.parseInt(opacity));
+			}
+
+			if (!"".equals(periodId)) {
+				marquee.setPeriodId(periodId);
+			}
+			if (!"".equals(testDate)) {
+				String[] date = testDate.split(" ");
+				startTime = date[0];
+				endTime = date[2];
+				Date d1 = TimeUtil.translateDate(startTime);
+				Date d2 = TimeUtil.translateDate(endTime);
+				if (TimeUtil.dateValidate(d1, d2)) {
+					marquee.setStartDate(d1);
+					marquee.setEndDate(d2);
+					marqueeService.updateMarquee(marquee);
+					PrintWriter out = response.getWriter();
+					out.print("true");
+					out.flush();
+					out.close();
+				} else {
+					marqueeService.updateMarquee(marquee);
+					PrintWriter out = response.getWriter();
+					out.print("1");
+					out.flush();
+					out.close();
+				}
+			} else {
+				marqueeService.updateMarquee(marquee);
 				PrintWriter out = response.getWriter();
 				out.print("true");
 				out.flush();

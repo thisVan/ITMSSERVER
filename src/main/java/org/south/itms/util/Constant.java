@@ -39,9 +39,9 @@ public class Constant {
 	//上传的文件保存的目录
 	public static final String UPLOADDIRECORY = "/dataCenter/itmsServer/";
 	//excel导出的目录
-	public static String EXCELPATH = "/dataCenter/itmsServer/Excel";
+	public static String EXCELPATH = "/dataCenter/Excel";
 	
     // 在服务器端创建打包下载的临时文件
-	public static final String TmpZipPath = "/dataCenter/itmsServer/tmp/";  
+	public static final String TmpZipPath = "/dataCenter/tmp/";  
 	
 }

@@ -24,6 +24,11 @@ public interface CommonService {
 	Page pageSearchByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
 	Page pageSearchPtableByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
 	
+	//add by bobo 
+	//2019/11/20
+	//这个系统中的 HQL模板设计有问题，不够完全抽象，只抽象了部分。在生成HQL模板时，按时间范围的查找很麻烦！所以我只能再添加一个查UserActionLog的
+	Page pageSearchUserActionLogByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize,String className, String orderBy, String whereSuffix);
+	
 	Page pageSearchMaterialByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
 	
 	Page pageSearchByTemplateHQLTree(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);

@@ -232,7 +232,8 @@ public class PlayTableTask extends TimerTask {
 	}
 	
 	//一个终端时段生成多天播表
-	public void generateManyTable(String terminalId, String periodId, String uid, int length) throws ParseException {
+	public int generateManyTable(String terminalId, String periodId, String uid, int length) throws ParseException {
+		int pid = 0;
 		getTableFileMessage(periodId);
 		System.out.println("listFile==" + listFile);
 		if("".equals(periodId)) {
@@ -247,12 +248,13 @@ public class PlayTableTask extends TimerTask {
 			getPlayTable(terminalId, periodId, i);
 			System.out.println("listTable---" + listTable);
 			TableAutoGenerate tag = new TableAutoGenerate();
-			tag.PlayTableGenerate(listTable, uid, i);
+			pid = tag.PlayTableGenerate(listTable, uid, i);
 		}
 		System.out.println(listFile);
 //		for(AutoPlayTable a : listTable) {
 //			System.out.println(a);
 //		}
+		return pid;
 	}
 	
 	public void generateTable() throws ParseException {

@@ -54,7 +54,8 @@
 						field : 'materialName',
 						width : 270,
 						event : 'set1',
-						title : '素材名称'
+						title : '素材名称',
+						sort  : true
 					}
 					, {
 						field : 'frequency',
@@ -174,6 +175,7 @@
 					}
 					
 				//console.log(res.msg);
+				//若已经审核则将复制和删除yin cang
 				if(isUnChecked == false){
 					$("#modifyMaterialSort").hide();
 					$("#addMaterial").hide();
@@ -292,20 +294,22 @@
 	}
 	
 	function showMaterialsSortByName(){
- 		var url = '<%=request.getContextPath()%>/ptable/getDistinctMaterialsByPidSortByName.do?pid='+pid;
+		var url = '<%=request.getContextPath()%>/ptable/getDistinctMaterialsByPidSortByName.do?pid='+pid;
 		$.post(url, {}, function(str){
+			var obj = JSON.parse(str);
 			var contentStr = "";
 			contentStr += "<div style='padding: 1% 5%;'><table class='layui-table'>";
-			for(var i =0; i<str.length;i++){
- 				contentStr += "<tr>";
-				contentStr += "<td>"+str[i].num+"</td>";
-				contentStr += "<td>"+str[i].name+"</td>";
-				contentStr += "<td>"+str[i].frequncy+"</td>";
-				contentStr += "<td>"+str[i].duration+"</td>";
+			for(var i =0; i<obj.length;i++){
+				contentStr += "<tr>";
+				contentStr += "<td>"+obj[i].num+"</td>";
+				contentStr += "<td>"+obj[i].name+"</td>";
+				contentStr += "<td>"+obj[i].frequncy+"</td>";
+				contentStr += "<td>"+obj[i].duration+"</td>";
 				contentStr += "</tr>";
 			}
 			contentStr += "</table></div>";
-			console.log(str.length);
+			console.log(obj.length);
+			
   			layer.open({
     		type: 1,
     		title: "素材列表",
@@ -528,6 +532,10 @@
 								onclick="broadlistmaterialadd()" id="addMaterial">
 								<i class="layui-icon">&#xe642;</i>添加素材
 							</button>
+							<!-- <button class="layui-btn layui-btn-warm" type="button"
+								onclick="broadlistmaterialsave()" id="saveMaterial">
+								<i class="layui-icon">&#xe642;</i>保存
+							</button> -->
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label id="totalMaterial"></label>
 						</div>
 						<br>

@@ -18,4 +18,5 @@ public class DataKey {  //用于从消息的map中获取数据
 	public static final String insertfiles = "insertfiles";
 	public static final String stopTerminal = "stopTerminal";
 	public static final String restartTerminal = "restartTerminal";
+	public static final String MarqueeFiles = "marqueeFile";
 }

@@ -61,4 +61,5 @@ public interface PtableService {
 	List<PlayTable> findInsertPlayTablesByTerminalId(String terminalId);
 	
 	List<Material> findAllMaterialsByPlayTableId(String pid);
+	List<Material> findAllMaterialsByPlayTableIdAndFiletype(String pid,String fileType);
 }  

@@ -48,6 +48,10 @@
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/ptable/searchPtable.do'
     		    ,height: 550
+    		    , initSort: {
+        		      field: 'statusId' //排序字段，对应 cols 设定的各字段名
+        		        ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+        		      }
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[

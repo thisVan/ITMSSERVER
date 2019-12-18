@@ -225,12 +225,11 @@ public class TerminalController {
 	pageResult.setData(pp.getList());
 	return pageResult;
   	
-  }
-  
-  
-  
+  }  
   
 
+  //modify by bobo 2019/11/29
+  //添加了默认查询激活
   private String[] initParam(String terminalName, String ip, String state) {
 	  int k = 0;
       if(!"".equals(terminalName)) {
@@ -239,9 +238,7 @@ public class TerminalController {
       if(!"".equals(ip)) {
     	  k++;
       }
-      if(!"".equals(state)) {
-    	  k++;
-      }
+      k++;
       String[] param = new String[k*3];
 	  int len = 0;
 	  if(!"".equals(terminalName)) {
@@ -260,12 +257,28 @@ public class TerminalController {
 		  param[len] = "%" + ip + "%";
 		  len++;
 	  }
-	  if(!"".equals(state)) {
+	  if("".equals(state)) {
 		  param[len] = "state";
 		  len++;
 		  param[len] = "=";
 		  len++;
-		  param[len] = state;
+		  param[len] = "激活";
+		  len++;
+	  }  
+	  else if ("激活".equals(state)) {
+		  param[len] = "state";
+		  len++;
+		  param[len] = "=";
+		  len++;
+		  param[len] = "激活";
+		  len++;
+	  }
+	  else {
+		  param[len] = "state";
+		  len++;
+		  param[len] = "=";
+		  len++;
+		  param[len] = "禁用";
 		  len++;
 	  }
 	return param;
@@ -398,6 +411,9 @@ public class TerminalController {
 	  paramMap.put("runStartTime", simpleDateFormat.format(terminal.getRunStartTime()));
 	  paramMap.put("runEndTime", simpleDateFormat.format(terminal.getRunEndTime()));
 	
+	  //modify by bobo 2019/11/26
+	  paramMap.put("state", terminal.getState());
+	  
 	  Area area = areaDao.load(terminal.getAreaCode()); //加载出新地区的对象
 	  if(area != null) {
 		  terminal.setAreaName(area.getFullName());

@@ -403,5 +403,19 @@ public class PtableDaoImpl implements PtableDao {
             closeSession(session);
         }
 	}
+
+	@Override
+	public List<Material> findAllMaterialByPlayTableIdAndType(String pid, String file_type) {
+		Session session = openSession();
+		try {
+        	String sql = "select m.* from material m left join ptable_file pf on m.mid = pf.mid where pf.pid = :pid and pf.deleted = 0 and m.deleted = 0 and m.fileType = :file_type";
+        	List<Material> listMaterial = session.createNativeQuery(sql, Material.class).setParameter("pid", pid).setParameter("file_type", file_type).list();
+        	return listMaterial;
+		} finally {
+            closeSession(session);
+        }
+	}
+
+	
 	
 }

@@ -71,7 +71,7 @@
 		<hr class="layui-bg-green" />
 		<div class="layui-form-item">
 			<div class="layui-input-block">
-				<button class="layui-btn" onclick="addMaterial()">
+				<button type="button" class="layui-btn" onclick="addMaterial()">
 					<i class="layui-icon">&#xe642;</i>保存
 				</button>
 				<button type="button" class="layui-btn layui-btn-primary"
@@ -81,16 +81,75 @@
 </div>
 <script type="text/javascript">
 	
-	layui.use(['layer','form','laydate'], function(){
+/* 	layui.use(['layer','form','laydate'], function(){
 	    var layer = layui.layer
 	    ,form = layui.form
 	    ,laydate = layui.laydate;
 	    //执行一个laydate实例
-	    /* laydate.render({
+	    laydate.render({
 	    	elem: '#testDate'
 			,range: true
-	    }); */
-	}); 
+			,type: 'time'
+			,format: 'yyyy/MM/dd'
+	    }); 
+	});  */
+	layui.use(['layer','form'], function(){
+	    var layer = layui.layer
+	    ,form = layui.form;
+	    updateConfig();
+	    //执行一个laydate实例
+	});
+	
+	
+	  function updateConfig() {
+	       $('#testDate').daterangepicker({ 
+	     "autoApply": true,
+		 "locale": {
+		     "direction": "rtl",
+		     "format": "YYYY-MM-DD",
+		     "separator": " / ",
+		     "applyLabel": "确定",
+		     "cancelLabel": "取消",
+		     "fromLabel": "起始时间",
+		     "toLabel": "结束时间",
+		     "customRangeLabel": "自定义",
+		     "daysOfWeek": [
+		         "日",
+		         "一",
+		         "二",
+		         "三",
+		         "四",
+		         "五",
+		         "六"
+		     ],
+		     "monthNames": [
+		         "一月",
+		         "二月",
+		         "三月",
+		         "四月",
+		         "五月",
+		         "六月",
+		         "七月",
+		         "八月",
+		         "九月",
+		         "十月",
+		         "十一月",
+		         "十二月"
+		     ],
+		     "firstDay": 5
+		 },
+		 "alwaysShowCalendars": false,
+		 "startDate": moment(),
+		 "endDate": moment()
+	}, function(start, end) {
+			//layer.alert(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			var datestr = start.format('YYYY-MM-DD') + ' / ' + end.format('YYYY-MM-DD');
+			$("#testDate").value = datestr;
+			layer.msg(datestr);
+		}).click();
+	}
+	
+	
    function closeWind(){
 	   var index = parent.layer.getFrameIndex(window.name);
 	   parent.layer.closeAll();
@@ -154,16 +213,17 @@
 	    						traditional: true,
 	    						dataType : "json",
 	    						success : function(msg){
-	    							
+	    							parent.initTable();
+	    							parent.reloadhtml();
+	    							parent.layer.msg('添加成功!',{icon:6,time:2000});
 	    						}
 	    					});
-						parent.layer.closeAll();
-						parent.layer.msg('添加成功!',{icon:6,time:2000});
-						parent.initTable();
-						parent.reloadhtml();
+						//parent.layer.closeAll();
 						//parent.refresh();
-						window.close();
+						
 						//window.parent.location.reload(); //刷新父页面
+						window.close();
+						
 				  }else if(value=="false"){
 					  layer.msg('存在同名文件，请重新输入!!!',{icon:5,time:2000});
 				  }else if(value=="1"){
@@ -172,7 +232,7 @@
 				    	 layer.msg('登陆超时,重新登陆操作!!!',{icon:5,time:2000});
 				     }
 				  else {
-				    	 layer.msg('添加失败!!!',{icon:5,time:2000});
+				    	 layer.msg('添加失败!!!未知原因！',{icon:5,time:2000});
 				     }
 				}
 			});

@@ -31,6 +31,10 @@
     		    ,height: 550
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
+    		    ,initSort: {
+    		        field: 'statusId' //排序字段，对应 cols 设定的各字段名
+    		            ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+    		          }
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
 				  {checkbox: true, event: 'set1', fixed: true}
@@ -97,8 +101,15 @@
     		    		  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
     		    		  return Y+M+D+h+m+s;
     		    	  }
+        		      },
+        		      {
+    						fixed : 'right',
+    						width : 100,
+    						event : 'set12',
+    						title : '操作',
+    						align : 'center',
+    						toolbar : '#barDemo'
         		      }
-      		     // ,{fixed: 'right', width:100, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
     		    ,where: {"statusId":statusId}
@@ -181,7 +192,12 @@
     			  var tmpdata = obj.data;
     			  var pid = tmpdata.pid;
     			  if(obj.event === 'mediaInfo'){
+    				  if(tmpdata.statusId=="3"){
+    					  layer.msg('该播表已经通过审核!',{icon:6,time:2000});
+    				  }
+    				  else{
     				  document.location = '<%=request.getContextPath()%>/ptable/goCheckPtableFirst/' + pid + '.do';
+    				  }
     			  }
     		  });
     		});
@@ -189,7 +205,6 @@
       
       
    </script>
-   
 </head>
 <body>
 	<input type="hidden" id="videoView" value="">
@@ -206,16 +221,17 @@
 				</div>
 			</div>
 			
+			
 			<div class="layui-btn-container">
 			<button class="layui-btn layui-btn-danger operatorTable" function="getDeleteData" data-type="getDeleteData">
-		        <i class="layui-icon">&#xe6ed;</i>批量审核
+		        <i class="layui-icon">&#xe6ed;</i>批量审核一级
 		    </button>
 			<button class="layui-btn" type="button" onclick="init()">
 				<i class="layui-icon">&#x1002;</i>刷新
 			</button>
 			</div>
 			
-		 <div class="layui-col-md12">
+			<div class="layui-col-md12">
             <table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 			<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-sm" lay-event="mediaInfo">
@@ -225,7 +241,7 @@
  				<a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="md5" >MD5</a>
 			</script>
 	      </div>
-			
+	      
 		</div>
 	</div>
 </body>

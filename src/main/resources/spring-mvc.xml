@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"  
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
     xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
     xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"  
     xsi:schemaLocation="http://www.springframework.org/schema/beans   
@@ -7,7 +8,9 @@
         http://www.springframework.org/schema/context   
         http://www.springframework.org/schema/context/spring-context-4.3.xsd   
         http://www.springframework.org/schema/mvc   
-        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd"> 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+        http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd"> 
   
     <!-- 自动扫描@Controller注入为bean -->  
     <context:component-scan base-package="org.south.itms.controller" />  
@@ -68,8 +71,8 @@
        </mvc:interceptor>  
     </mvc:interceptors>  
  
- 
- 
+    <!-- 加上这行配置，AOP才能对Controller生效 -->
+ 	<aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
  
   
 </beans>  

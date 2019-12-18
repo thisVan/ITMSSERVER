@@ -16,6 +16,9 @@
    <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
+/* 	var origanname=window.opener.document.getElementById("videoView").value;
+	var filetype = origanname.substr(origanname.lastIndexOf(".")+1,origanname.length);
+	alert(filetype); */
 	   getMedia();
 	   });
 
@@ -38,6 +41,7 @@ function depose(){
 }
 	
 	function getMedia(){
+	
 	    var materialExist = '${sessionScope.materialExist}';
 	    if(materialExist == "false") {  //视频不存在的话
 	       $("#tipMsg").show();
@@ -46,16 +50,31 @@ function depose(){
 	    } 
 		var myDate = new Date();
 		var year = myDate.getFullYear();
-		var origanname=window.opener.document.getElementById("videoView").value; 
-		 var filename=origanname.substr(0,origanname.lastIndexOf(".")+1)+'mp4';
+		var origanname=window.opener.document.getElementById("videoView").value;
+		var filetype = origanname.substr(origanname.lastIndexOf(".")+1,origanname.length);
+		if(filetype == "jpg"||filetype == "png"||filetype == "gif"){
+			var aa=document.getElementById('mp4video');
+			aa.style.display='block';
+			var img = document.getElementById("img1");
+			img.style.display='block';
+			show();
+			function show(){
+				var img = document.getElementById("img1");
+				img.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + origanname;
+			}
+			
+		}else{
+		var filename=origanname.substr(0,origanname.lastIndexOf(".")+1)+'mp4';
 		
 			var aa=document.getElementById('mp4video');
 			aa.style.display='block';
 			var video = document.getElementById("video1");
+			video.style.display='block';
 	        play();
 			 function play() {
 		         var video = document.getElementById("video1");
 		         video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
+		}
 	}
  }
 </script>
@@ -69,9 +88,10 @@ function depose(){
      <div id="div2">
      <div id="showwmv" align="center"></div>
      <div id="mp4video" align="center" style="display:none">
-		        <video width="650" height="450" id="video1" class="indexBanner" controls="controls" preload="auto" autoplay="autoplay" loop="loop">
+		        <video width="650" height="450" id="video1" style="display:none" class="indexBanner" controls="controls" preload="auto" autoplay="autoplay" loop="loop">
 		           <source src="" type="video/mp4" />
 		        </video>
+		        <img alt="跑马灯图片" src="" width="650" height="450" id ="img1" style="display:none" >
 		      </div>
 		      
 		      <br>

@@ -8,17 +8,21 @@ import java.util.Map;
 
 import org.south.itms.dao.impl.PtableDao;
 import org.south.itms.dto.ItemsDto;
+import org.south.itms.dto.MarqueeDto;
 import org.south.itms.dto.MaterialDto;
 import org.south.itms.dto.PtableDto;
 import org.south.itms.dto.TreeDate;
 import org.south.itms.dto.UserDto;
 import org.south.itms.entity.Items;
+import org.south.itms.entity.Marquee;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.Period;
 import org.south.itms.entity.PlayTable;
 import org.south.itms.entity.Resource;
 import org.south.itms.entity.Terminal;
 import org.south.itms.entity.User;
+import org.south.itms.service.impl.TerminalService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author jan
@@ -83,7 +87,6 @@ public class EntityUtil {
 //			listDto.add(dto);
 //		}
 //		return listDto;
-//	}
 	
 	//7.16
 	public static List<PtableDto> ptableDto(List<Terminal> list, List<Period> listPeriod, List<User> listUser,
@@ -161,6 +164,47 @@ public class EntityUtil {
 			list.add(dto);
 		}
 		return list;
+	}
+	
+	public static List<MarqueeDto> getMarqueeDtoInfo(List<Marquee> listM,List<Terminal> listTerminal,List<Period> listPeriod){
+		List<MarqueeDto> list = new ArrayList<MarqueeDto>();
+		for(Marquee marquee : listM) {
+			String name = matchNameByid(marquee.getTerminalId(), listTerminal);
+			String playDate = "";
+			if(marquee.getStartDate() != null && marquee.getEndDate() != null) {
+			String start = new SimpleDateFormat("yyyy-MM-dd").format(marquee.getStartDate());
+			String end = new SimpleDateFormat("yyyy-MM-dd").format(marquee.getEndDate());
+			playDate = start + " - " + end;
+		    }
+			String periodName = getPeriodName(marquee.getPeriodId(), listPeriod);
+			MarqueeDto dto = new MarqueeDto(name,playDate,periodName);
+			dto.setCreateTime(marquee.getCreateTime());
+			dto.setFileName(marquee.getFileName());
+			dto.setStatusId(marquee.getStatusId());
+			dto.setSize(marquee.getSize());
+			dto.setDeleted(marquee.getDeleted());
+			dto.setEndDate(marquee.getEndDate());
+			dto.setStartDate(marquee.getStartDate());
+			dto.setFilePath(marquee.getFilePath());
+			dto.setFileType(marquee.getFileType());
+			dto.setMarqName(marquee.getMarqName());
+			dto.setTerminalId(marquee.getTerminalId());
+			dto.setMd5(marquee.getMd5());
+			dto.setMid(marquee.getMid());
+			dto.setMaterialId(marquee.getMaterialId());
+			dto.setOpacity(marquee.getOpacity());
+			dto.setPeriodId(marquee.getPeriodId());
+//			dto.setPlayDate(marquee.getPlayDate());
+			dto.setResolution(marquee.getResolution());
+			dto.setUserName(marquee.getUserName());
+			dto.setPositionX(marquee.getPositionX());
+			dto.setPositionY(marquee.getPositionY());
+			dto.setFirstcheckName(marquee.getFirstcheckName());
+			dto.setSecondcheckName(marquee.getSecondcheckName());
+			list.add(dto);
+		}
+		return list;
+		
 	}
 
 	public static List<MaterialDto> getMaterialDtoInfo(List<Material> listM, List<Terminal> listTerminal) {
@@ -248,7 +292,15 @@ public class EntityUtil {
 		}
 		return listTerminal.get(offset).getTerminalName();
 	}
-
+	private static String matchNameByid(String terminalId,List<Terminal> listTerminal) {
+		String idString= "";
+		for(Terminal terminal : listTerminal) {
+			if(terminal.getTerminalId().equals(terminalId)) idString=terminal.getTerminalName();
+		}
+		return idString;
+		
+	}
+	
 	public static List<ItemsDto> getItemsDto(List<Items> listM, List<Period> listPeriod) {
 		List<ItemsDto> list = new ArrayList<ItemsDto>();
 		for(Items m : listM) {

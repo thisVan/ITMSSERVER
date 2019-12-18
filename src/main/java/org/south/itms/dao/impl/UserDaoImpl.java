@@ -142,6 +142,13 @@ public class UserDaoImpl implements UserDao{
 		SqlUpdate update = new SqlUpdate();
 		update.updateResource(roleId, authorityList);
 	}
+
+	@Override
+	public String getuserNameByid(String id) {
+		String hql = "from User where userId=:userId and deleted = 0";
+		User user =  (User) this.getCurrentSession().createQuery(hql).setParameter("userId", id).uniqueResult();
+		return user.getUserName();
+	}
 	
 	
 }

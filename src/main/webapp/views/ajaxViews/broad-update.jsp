@@ -71,6 +71,7 @@ layui.use(['layer','form','laydate'], function(){
     laydate.render({
     	elem: '#testDate'
 		,range: true
+		,format: 'yyyy-MM-dd'
     });
 });
 

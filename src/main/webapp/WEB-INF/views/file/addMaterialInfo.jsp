@@ -44,7 +44,7 @@
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {checkbox: true, event: 'set1', fixed: true}
+    		      {type: 'radio', event: 'set1', fixed: true}
     		      ,{field:'materialName',width:200, event: 'set2', title: '素材名', fixed: true, sort: true}
     		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){

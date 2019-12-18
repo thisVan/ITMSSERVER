@@ -54,12 +54,14 @@ public class TableAutoGenerate {
 	}
 
 	// 生成同时段多播表
-	public void PlayTableGenerate(List<AutoPlayTable> listTable, String uid, int length) throws ParseException {
+	public int PlayTableGenerate(List<AutoPlayTable> listTable, String uid, int length) throws ParseException {
 		// deleteNewPlayTable(listTable.get(0).getPeriodId());
+		int ptableid = 0;
 		for (AutoPlayTable apt : listTable) {
 			if (apt.getListAd().size() > 1) {
 				writeSqlTable(apt.getTerminalId(), apt.getPeriodId(), apt.getListAd(), uid, length);
 				int pid = getReadSqlTable(apt.getTerminalId(), apt.getPeriodId());
+				ptableid = pid;
 				Ad[] adArray = new Ad[apt.getListAd().size()];
 				int len = 0;
 				for (Ad a : apt.getListAd()) {
@@ -80,6 +82,7 @@ public class TableAutoGenerate {
 			} else if (apt.getListAd().size() == 1) {
 				writeSqlTable(apt.getTerminalId(), apt.getPeriodId(), apt.getListAd(), uid, length);
 				int pid = getReadSqlTable(apt.getTerminalId(), apt.getPeriodId());
+				ptableid = pid;
 				Ad[] d = new Ad[1];
 				d[0] = apt.getListAd().get(0);
 				writeSqlPlayFile(pid, d);
@@ -87,6 +90,7 @@ public class TableAutoGenerate {
 
 			}
 		}
+		return ptableid;
 	}
 
 	/**

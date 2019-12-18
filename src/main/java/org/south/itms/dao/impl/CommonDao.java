@@ -26,7 +26,7 @@ public interface CommonDao {
 	Page pageSearchByTemplateHQL(String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
 	Page pageSearchByTemplateHQL(String start, String end, String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
 	Page pageSearchPtableByTemplateHQL(String start, String end, String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
-	
+	Page pageSearchUserActionLogByTemplateHQL(String start, String end, String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
 	Page pageSearchMaterialByTemplateHQL(String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
 
 	void saveVideoFile(File upload);

@@ -183,7 +183,7 @@
 	    
 	     function artificialGenerated(){
 	    	 //手动生成播表
-	    	 $.messager.confirm('提示框', '你确定要重新生成播表?', function(r) {
+	    	 $.messager.confirm('提示框', '你确定要重新生成播表', function(r) {
 		        if(!r) return;
 		    	 $.ajax({
 						type : "POST",

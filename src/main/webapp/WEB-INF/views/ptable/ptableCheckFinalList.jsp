@@ -32,6 +32,10 @@
     		    ,height: 550
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
+    		    ,initSort: {
+    		        field: 'statusId' //排序字段，对应 cols 设定的各字段名
+    		            ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+    		          }
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
@@ -204,7 +208,7 @@
 			
 			<div class="layui-btn-container">
 			<button class="layui-btn layui-btn-danger operatorTable" function="getDeleteData" data-type="getDeleteData">
-		        <i class="layui-icon">&#xe6ed;</i>批量审核
+		        <i class="layui-icon">&#xe6ed;</i>批量审核二级
 		    </button>
 			<button class="layui-btn" type="button" onclick="init()">
 				<i class="layui-icon">&#x1002;</i>刷新

@@ -16,11 +16,13 @@
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/layui/css/fs.css?v=1.6.3" media="all"/>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/plugins/frame/js/fsDict.js?v=1.6.3"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/plugins/frame/js/fs.js?v=1.6.3"></script>
-	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/layui/saveSvgAsPng.js"></script> --%>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/html2canvas.min.js"></script>
-	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/layui/plugins/frame/js/main.js?v=1.6.3"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/frame/js/fsMenu.js?v=1.6.3"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/frame/js/fsConfig.js?v=1.6.3"></script> --%>
+	
+	<link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath()%>/layui/css/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/layui/daterangepicker.js"></script>
+    
  <script type="text/javascript">
     function easyuiDateFormat(value) {
             var date = new Date(value);

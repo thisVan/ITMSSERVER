@@ -25,9 +25,10 @@
 	<div id="div2">
 
 		<div align="center">
-			<video width="650" height="350" id="video" class="indexBanner">
+			<video width="650" height="350" id="video" class="indexBanner" style="display:none">
 				<source src="" type="video/mp4" />
 			</video>
+			<img alt="跑马灯图片" src="" width="650" height="450" id ="img1" style="display:none" >
 		</div>
 		<div id="duration">
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>总时长:</label>
@@ -140,9 +141,22 @@
 		
 		$("#accessMaterial").hide();
 		var origanname = window.opener.document.getElementById("videoView").value;
+		var filetype = origanname.substr(origanname.lastIndexOf(".")+1,origanname.length);
+		if(filetype == "jpg"||filetype == "png"||filetype == "gif"){
+/* 			var aa=document.getElementById('mp4video');
+			aa.style.display='block'; */
+			var img = document.getElementById("img1");
+			img.style.display='block';
+			show();
+			$("#accessMaterial").show();
+			function show(){
+				var img = document.getElementById("img1");
+				img.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + origanname;
+			}
+		}else{
 		var filename = origanname.substr(0, origanname.lastIndexOf(".") + 1) + 'mp4';
 		var video = document.getElementById("video");
-		
+		video.style.display='block';
 		video.addEventListener('ended', play);
 		//video.src = "/ITMS/media/" + year + "/" + filename;
 		video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
@@ -157,6 +171,7 @@
 			var video = document.getElementById("video");
 			$("#accessMaterial").show();
 		}
+	}
 	}
 </script>
 </html>

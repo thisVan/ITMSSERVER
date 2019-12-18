@@ -123,5 +123,10 @@ public class PtableServiceImpl implements PtableService {
 	public List<Material> findAllMaterialsByPlayTableId(String pid){
 		return ptableDao.findAllMaterialByPlayTableId(pid);
 	}
+
+	@Override
+	public List<Material> findAllMaterialsByPlayTableIdAndFiletype(String pid, String fileType) {
+		return ptableDao.findAllMaterialByPlayTableIdAndType(pid, fileType);
+	}
 	
 }

@@ -510,15 +510,15 @@
 			<div class="layui-btn-container">
 				<button class="layui-btn layui-btn-danger operatorTable"
 					function="getBatchAudit" data-type="getBatchAudit">
-					<i class="layui-icon">&#xe6ed;</i>批量审核
+					<i class="layui-icon">&#xe6ed;</i>批量审核 普通用户
 				</button>
 				<button class="layui-btn" type="button" onclick="init()">
 					<i class="layui-icon">&#x1002;</i>刷新
 				</button>
 			</div>
-
+			
 			<div class="layui-col-md12">
-				<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
+            <table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 			<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-sm" lay-event="mediaInfo">
                 <i class="layui-icon">&#xe6ed;</i>审核</a>
@@ -526,7 +526,7 @@
 			<script type="text/html" id="barDemo1">
  				<a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="md5" >MD5</a>
 			</script>
-			</div>
+	      </div>
 		</div>
 	</div>
 </body>

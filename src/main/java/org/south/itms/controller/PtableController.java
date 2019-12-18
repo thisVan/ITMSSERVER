@@ -35,9 +35,11 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.south.itms.dao.impl.FileDao;
+import org.south.itms.dao.impl.MarqueeDao;
 import org.south.itms.dao.impl.MaterialDao;
 import org.south.itms.dao.impl.PtableDao;
 import org.south.itms.dao.impl.UserDao;
+import org.south.itms.dto.MarqueeDto;
 import org.south.itms.dto.MaterialDto;
 import org.south.itms.dto.Page;
 import org.south.itms.dto.PageResultData;
@@ -46,6 +48,7 @@ import org.south.itms.dto.Result;
 //import org.south.itms.entity.File;
 import org.south.itms.entity.IPTable;
 import org.south.itms.entity.Items;
+import org.south.itms.entity.Marquee;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.Period;
 import org.south.itms.entity.PlayTable;
@@ -53,6 +56,8 @@ import org.south.itms.entity.Terminal;
 import org.south.itms.entity.User;
 import org.south.itms.service.impl.AcctUserService;
 import org.south.itms.service.impl.CommonService;
+import org.south.itms.service.impl.MarqueeService;
+import org.south.itms.service.impl.MaterialService;
 import org.south.itms.service.impl.PtableService;
 import org.south.itms.service.impl.TerminalService;
 import org.south.itms.util.Constant;
@@ -66,6 +71,7 @@ import org.south.netty.msg.DataKey;
 import org.south.netty.msg.FileDto;
 import org.south.netty.msg.FileInfoDto;
 import org.south.netty.msg.InsertDto;
+import org.south.netty.msg.MarqueeInfoDto;
 import org.south.netty.msg.MsgType;
 import org.south.netty.msg.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +118,12 @@ public class PtableController {
 
 	@Autowired
 	private MaterialDao materialDao;
+	
+	@Autowired
+	private MaterialService materialService;
+	
+	@Autowired
+	private MarqueeService marqueeService;
 	
 	//配置Log4j日志记录
 	private static Logger logger = Logger.getLogger(PtableController.class);
@@ -168,6 +180,13 @@ public class PtableController {
 		List<Terminal> listTerminal = commonService.getAllTerminal();
 		model.addAttribute("terminalPtable", listTerminal);
 		return "instead/insteadPtableList";
+	}
+	
+	@RequestMapping("/insteadMarquee")
+	public String insteadMarquee(Model model, HttpServletRequest request) {
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminalPtable", listTerminal);
+		return "instead/insteadMarqueeList";
 	}
 
 	/*	@RequestMapping("/addInsertMaterial")
@@ -282,6 +301,14 @@ public class PtableController {
 		commonService.resetPtableState(pid);
 		return "true";
 	}
+	@RequestMapping("/resetMarqueeState")
+	@ResponseBody
+	public String resetMarqueeState(String mid, HttpServletRequest request) {
+		System.out.println("pid=" + mid);
+		//commonService.resetPtableState(mid);
+		marqueeService.updateMarqueeStatus(mid, "", "", "1");
+		return "true";
+	}
 
 	/*@RequestMapping("/ptableCheckFirstList")
 	public String ptableCheckFirstList(Model model, HttpServletRequest request) {
@@ -320,6 +347,28 @@ public class PtableController {
 			return "ptable/ptableCheckFinalListAdmin";
 		}
 		return "ptable/ptableCheckList";
+	}
+	
+	@RequestMapping("/MqrqueeCheckFirstList")
+	public String MarqueeCheckFirstList(Model model, HttpServletRequest request) {
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = userService.getAllUser();
+		request.getSession().setAttribute("periodList", listPeriod);
+		model.addAttribute("periodL", listPeriod);
+		model.addAttribute("userL", listUser);
+		return "ptable/marqueeCheckList";
+	}
+	@RequestMapping("/MarqueeCheckSecondList")
+	public String marqueeCheckSecondList(Model model, HttpServletRequest request) {
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = userService.getAllUser();
+		request.getSession().setAttribute("periodList", listPeriod);
+		model.addAttribute("periodL", listPeriod);
+		model.addAttribute("userL", listUser);
+		/* if((Constant.adminValue).equals((String)request.getSession().getAttribute("rId"))) {
+			return "ptable/ptableCheckFinalListAdmin";
+		}*/
+		return "ptable/marqueeCheckFinalList";
 	}
 
 	@RequestMapping("/ptableCheckSecondList")
@@ -526,6 +575,61 @@ public class PtableController {
 		// return new Result("查询失败");
 		// }
 	}
+	
+	@RequestMapping(value = "/searchMarquee")
+	public @ResponseBody PageResultData<MarqueeDto> searchMarquee(String terminalId, String statusId, String startDate,
+			String endDate, int page, int limit) throws ParseException {
+		String[] param = initParam(terminalId, statusId);
+		List<Terminal> list = commonService.getAllTerminal();
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = commonService.getAllUser();
+		if (!"".equals(startDate) && !"".equals(endDate)) {
+			Date d1 = TimeUtil.translateDate(startDate);
+			Date d2 = TimeUtil.translateDate(endDate);
+			if (!TimeUtil.dateValidate(d1, d2)) {
+				PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
+				pageResult1.setCount(0);
+				pageResult1.setFail(1);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("时间前后有误!!");
+				return pageResult1;
+			}
+		}
+		try {
+//			Page pageD = commonService.pageSearchPtableByTemplateHQL(startDate, endDate, param, page, limit,
+//					"Marquee", "play_date desc", null);
+			Page pageD = commonService.pageSearchFirstByTemplateHQL(param, page, limit, "Marquee", "create_time desc", null);
+			List<Marquee> listMaquee = pageD.getList();
+			//List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+			List<MarqueeDto> listDto = EntityUtil.getMarqueeDtoInfo(listMaquee, list, listPeriod);
+			System.out.println("MarqueeDto:"+listDto);
+			PageResultData<MarqueeDto> pageResult = new PageResultData<MarqueeDto>();
+			//List<Marquee> listPtable = pageD.getList();
+			//List<MarqueeDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+			//PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
+			pageResult.setCount(pageD.getTotalRecord());
+			pageResult.setCode(0);
+			pageResult.setMsg("");
+			pageResult.setData(listDto);
+			return pageResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+			PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setFail(1);
+			pageResult1.setMsg("查询失败");
+			return pageResult1;
+		}
+		// try {
+		// Page page = commonService.pageSearchByTemplateHQL(params, currentPage,
+		// pageSize, "PlayTable", "pid asc", null);
+		// return new Result(true, page);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// return new Result("查询失败");
+		// }
+	}
 
 	private String[] initParam(String terminalId, String statusId) {
 		int k = 0;
@@ -579,6 +683,39 @@ public class PtableController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			PageResultData<PtableDto> pageResult1 = new PageResultData<PtableDto>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setFail(1);
+			pageResult1.setMsg("查询失败");
+			return pageResult1;
+		}
+	}
+	
+	@RequestMapping(value = "/searchUnckeckFirstMarquee")
+	public @ResponseBody PageResultData<MarqueeDto> searchUnckeckFirstMarquee(String statusId, int page, int limit, String sortName, String sortBy) {
+		String[] param = initUncheckParam(statusId);
+		List<Terminal> list = commonService.getAllTerminal();
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = commonService.getAllUser();
+		String sortString = "createTime desc";
+		if (sortName != null && sortBy != null) {
+			sortString = sortName + " " + sortBy;
+		}
+		try {
+			Page pageD = commonService.pageSearchFirstByTemplateHQL(param, page, limit, "Marquee", sortString, null);
+			List<Marquee> listMaquee = pageD.getList();
+			System.out.println(listMaquee);
+			//List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+			List<MarqueeDto> listDto = EntityUtil.getMarqueeDtoInfo(listMaquee, list, listPeriod);
+			PageResultData<MarqueeDto> pageResult = new PageResultData<MarqueeDto>();
+			pageResult.setCount(pageD.getTotalRecord());
+			pageResult.setCode(0);
+			pageResult.setMsg("");
+			pageResult.setData(listDto);
+			return pageResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+			PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
 			pageResult1.setCount(0);
 			pageResult1.setCode(0);
 			pageResult1.setFail(1);
@@ -797,6 +934,14 @@ public class PtableController {
 		request.getSession().setAttribute("modifyPid", pid);
 		return "ptable/checkPtable";
 	}
+	@RequestMapping(value = "/goCheckMarqueeFirst/{mid}")
+	public String goCheckMarquee(@PathVariable String mid, ModelMap modelMap, HttpServletRequest request) {
+		modelMap.addAttribute("mid", mid);
+		Material files = materialDao.getById(mid);
+		request.getSession().setAttribute("tableFirst", files);
+		request.getSession().setAttribute("modifyMid", mid);
+		return "ptable/checkMarquee";
+	}
 
 	@RequestMapping(value = "/goCheckPtablesFirst/{pids}")
 	public String goCheckPtables(@PathVariable String pids, ModelMap modelMap, HttpServletRequest request) {
@@ -831,6 +976,15 @@ public class PtableController {
 		request.getSession().setAttribute("modifyPid", pids);
 		return "ptable/checkPtableFinal";
 	}
+	
+	@RequestMapping(value = "/goCheckMarqueeFinal/{mid}")
+	public String goCheckMarqueeFinal(@PathVariable String mid, ModelMap modelMap, HttpServletRequest request) {
+		modelMap.addAttribute("mid", mid);
+		Material files = materialDao.getById(mid);
+		request.getSession().setAttribute("tableFirst", files);
+		request.getSession().setAttribute("modifyMid", mid);
+		return "ptable/checkMarqueeFinal";
+	}
 
 	@RequestMapping(value = "/getTableSortNum")
 	public void getTableSortNum(String ppid, ModelMap modelMap, HttpServletRequest request,
@@ -844,6 +998,61 @@ public class PtableController {
 		out.print("true");
 		out.flush();
 		out.close();
+	}
+	
+	@RequestMapping(value="/getMarqueeById")
+	public @ResponseBody PageResultData<MarqueeDto> getMarqueeById(HttpServletRequest request,String mid){
+		if (StringUtil.isEmpty(mid)) {
+			PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setFail(1);
+			pageResult1.setMsg("获取失败, 没有传入参数");
+			return pageResult1;
+		}
+		try {
+			System.out.println(mid);
+			// PlayTable playTable = ptableDao.get(pid);
+			Marquee marquee = marqueeService.getById(mid);
+			System.out.println(marquee.getMarqName());
+			List<Marquee> listM = new ArrayList<Marquee>();
+			listM.add(marquee);
+			String name = marquee.getMarqName();
+			if (marquee.getFileType().equals("picture")) {
+//				List<Items> files = materialDao.findByPtable(mid);
+				request.getSession().setAttribute("modifyMid", mid);
+//				System.out.println(files);
+				
+				List<Terminal> listTerminal = commonService.getAllTerminal();
+				List<Period> listPeriod = commonService.getAllPeriod();
+				List<MarqueeDto> files = EntityUtil.getMarqueeDtoInfo(listM, listTerminal, listPeriod);
+				System.out.println(files);
+				Map<String, Object> map = new HashMap<String, Object>();
+//				map.put("playTable", playTable);
+				map.put("files", files);
+				PageResultData<MarqueeDto> pageResult = new PageResultData<>();
+				pageResult.setCount(files.size());
+				pageResult.setCode(0);
+				pageResult.setMsg(name);
+				pageResult.setFail(0);
+				pageResult.setData(files);
+				return pageResult;
+			} else {
+				PageResultData<MarqueeDto> pageResult1 = new PageResultData<>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("");
+				return pageResult1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			PageResultData<MarqueeDto> pageResult1 = new PageResultData<MarqueeDto>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setFail(1);
+			pageResult1.setMsg("获取失败");
+			return pageResult1;
+		}
 	}
 
 	@RequestMapping(value = "/getPtableById")
@@ -877,7 +1086,7 @@ public class PtableController {
 				pageResult.setData(files);
 				return pageResult;
 			} else if (playTable.getInsertFlag() == 1) {
-				List<Material> files = materialDao.findMaterialByPtable(pid);
+				List<Material> files = materialDao.findMaterialByPtable(pid); //插播查看审核 异常
 				List<Items> files1 = EntityUtil.createNewItems(files, playTable);
 				request.getSession().setAttribute("modifyPid", pid);
 				System.out.println(files);
@@ -924,7 +1133,7 @@ public class PtableController {
 			return;
 		}
 		try {
-			System.out.println(pid);
+			System.out.println("pid:"+pid);
 			PlayTable playTable = ptableDao.getById(pid);
 			System.out.println(playTable.getPtableName());
 			String name = playTable.getPtableName();
@@ -957,6 +1166,7 @@ public class PtableController {
 					jsonArray.add(jsonObject);
 				}
 				PrintWriter out = response.getWriter();
+				System.out.println("json:"+jsonArray.toString());
 				out.print(jsonArray);
 				out.flush();
 				out.close();
@@ -994,7 +1204,20 @@ public class PtableController {
 		} catch (Exception e) {
 		}
 	}
-
+	
+	@RequestMapping(value = "/modifyMarqueeNum")
+	public void modifyMarqueeNum(String mid, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		logger.info("LOGO/图片叠加审核");
+		String userId=(String) request.getSession().getAttribute("userId");
+		String userName = userDao.getuserNameByid(userId);
+		marqueeService.updateMarqueeStatus(mid,userName,"","2");
+		PrintWriter out = response.getWriter();
+		out.print("true");
+		out.flush();
+		out.close();
+		
+	}
+	
 	/**
 	 * 播表初级审核
 	 * 
@@ -1073,6 +1296,39 @@ public class PtableController {
 			out.close();
 		}
 	}
+	@RequestMapping(value = "/modifyMarqueeFinalNum")
+	public void modifyMarqueeFinalNum(String mid, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		System.out.println("print by PtableControll.modifyMarqueeFinalNum");
+		logger.info("LOGO/图片叠加终审");
+		String userId=(String) request.getSession().getAttribute("userId");
+		String userName = userDao.getuserNameByid(userId);
+		Timer timer = new Timer();
+		marqueeService.updateMarqueeStatus(mid,"",userName,"3");
+		Marquee marquee = marqueeService.getById(mid);
+		// 判断跑马灯是否立即生效，如果生效，需要更新播表
+		try {
+			if (TimeUtil.isTodayBetween(marquee.getStartDate(), marquee.getEndDate())) {
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						if (restartTerminalAfterAudit(marquee.getTerminalId())) {
+							timer.cancel();
+						}
+					}
+				}, 3000, 60000); // 指定启动定时器3s之后运行定时器任务run方法，并且若未终止，间隔10s一直执行
+
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		PrintWriter out = response.getWriter();
+		out.print("true");
+		out.flush();
+		out.close();
+	}
+	
 
 	/**
 	 * 播表终级审核，审核通过后重启终端，更新播表
@@ -1240,7 +1496,32 @@ public class PtableController {
 					}
 					System.out.println("insertDataRs=" + insertDtoRs);
 				}
-
+				SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+				Date now = new Date();
+				String today = format2.format(now);
+				List<Marquee> marquees = marqueeService.findMarqueeByTerminalIdBetweenDates(terminalId, today, today);
+				System.out.println(marquees);
+				List<MarqueeInfoDto> marqueeFiles = new ArrayList<MarqueeInfoDto>();
+				if(marquees.size()>0) { //有需要播放的跑马灯
+					for(Marquee marquee : marquees )
+					{
+						ArrayList<FileDto> fileDto = new ArrayList<FileDto>();
+						MarqueeInfoDto marqueeInfoDto = new MarqueeInfoDto();
+						Period period = fileDao.findByPeriod(marquee.getPeriodId());
+						marqueeInfoDto.setMarqueeName(marquee.getMarqName());
+						marqueeInfoDto.setPeriodId(marquee.getPeriodId());
+						marqueeInfoDto.setMid(marquee.getMaterialId());
+						marqueeInfoDto.setPositionX(marquee.getPositionX());
+						marqueeInfoDto.setPositionY(marqueeInfoDto.getPositionY());
+						FileDto file = new FileDto(marquee.getMaterialId(), StringUtil.getFileName(marquee.getFilePath()), marquee.getFileName(), marquee.getMd5());
+						fileDto.add(file);
+						marqueeInfoDto.setFile(fileDto);
+						marqueeInfoDto.setStart(format.format(period.getStartInterval()));
+						marqueeInfoDto.setEnd(format.format(period.getEndInterval()));
+						marqueeFiles.add(marqueeInfoDto);
+					}
+				}
+				dataRs.put(DataKey.MarqueeFiles,marqueeFiles);
 				dataRs.put(DataKey.vediofiles, vediofilesRs);
 				dataRs.put(DataKey.insertfiles, insertDtoRs);
 				resultMsgRs.setData(dataRs);
@@ -1282,6 +1563,30 @@ public class PtableController {
 			out.flush();
 			out.close();
 		}
+	}
+	
+	@RequestMapping(value = "/marqueeUnAccess")
+	public void marqueeUnAccess(String mid, Model model, String[] checkArray, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		System.out.println(checkArray.length);
+		if (checkArray.length == 0) {
+			PrintWriter out = response.getWriter();
+			out.print("false");
+			out.flush();
+			out.close();
+		} else {
+			if (checkArray.length == 2) {
+					marqueeService.marqueeUnAccess(mid, "7");
+			} else if (checkArray.length == 1 && "1".equals(checkArray[0])) {
+					marqueeService.marqueeUnAccess(mid, "5");
+			} else if (checkArray.length == 1 && "2".equals(checkArray[0])) {
+					marqueeService.marqueeUnAccess(mid, "6");
+			}
+			PrintWriter out = response.getWriter();
+			out.print("true");
+			out.flush();
+			out.close();
+		 }
 	}
 
 	@RequestMapping(value = "/playTableUnAccess")
@@ -1397,24 +1702,25 @@ public class PtableController {
 			int insertnum = Integer.parseInt(num) + 1;
 			if (commonService.copyOneToPlayFile(ppid, mmid, insertnum)) {
 				// 更新播表时间
-				List<Items> itmsList = materialDao.findByPtable(ppid);
+				System.out.println("copy one to playFile !!!!!");
+				List<Items> itemsList = materialDao.findByPtable(ppid);
+				PlayTable playTable = ptableService.getPlayTableByPid(ppid); 
 				int allTime = 0;
 				String terminalId = "";
-				if (itmsList.size() > 0) {
-					terminalId = itmsList.get(0).getTerminalId();
+				if (itemsList.size() > 0) {
+					terminalId = itemsList.get(0).getTerminalId();
 				}
-				List<Items> itemSet = new ArrayList<Items>();
-				for (Items items : itmsList) {
-					System.out.println(items.toString());
-					//2019.9.22修复添加节目到播表时，播表时间计算错误
-					if (itemSet.add(items)) {
-						allTime += items.getDuration() * items.getFrequency();
-					}
+				//Set<Items> itemSet = new HashSet<Items>();
+				for (Items items : itemsList) {
+					// allTime = ∑item时长 * 播表基频
+					allTime += items.getDuration() * playTable.getBaseFrequency();
 				}
 				String allTimeStr = allTime / 60 + "分";
 				if (allTime % 60 == 0) {
 					allTimeStr += allTime % 60 + "秒";
 				}
+				
+				System.out.println(allTimeStr);
 				Terminal terminal = terminalService.get(terminalId);
 				double fullScreenRate = (double) allTime * 1000 / (terminal.getRunEndTime().getTime() - terminal.getRunStartTime().getTime());
 				ptableService.updatePlayTableAllTime(ppid, allTimeStr, new DecimalFormat("#.##%").format(fullScreenRate));
@@ -1452,22 +1758,82 @@ public class PtableController {
 			int deltnum = Integer.parseInt(num) + 1;
 			if (commonService.delOneFromPlayFile(ppid, mmid, deltnum)) {
 				// 删除成功后，更新file表的序号
-				List<Items> files = materialDao.findByPtable(ppid);// 获取播表id对应剩余的所有素材item
+				List<Items> itemsList  = materialDao.findByPtable(ppid);// 获取播表id对应剩余的所有素材item
+			
 				String sortNum = "";// 当前ppid所存在的所有素材mid
-				for (int i = 0; i < files.size(); i++) {
-					sortNum += "," + files.get(i).getMaterial().getMid();
+				for (Items item:itemsList ) {
+					sortNum += "," + item.getMaterial().getMid();
 				}
 				//判断sortNum是否为空
 				if (!"".equals(sortNum)) {
 					sortNum = sortNum.substring(1);
 					ptableService.modifyPlayTableNumbyDelAll(ppid, sortNum);
 				}
-				//更新播表时间
-				List<Items> itmsList = materialDao.findByPtable(ppid);
+				
+				
+				//更新播表时间以及重设素材是否排播
+				
+				//Set <Items> itemsSet = new HashSet<Items>(itemsList);
+				PlayTable playTable = ptableService.getPlayTableByPid(ppid);
+				
+				//bug :  空指针异常！      
+				//by bobo   2019/11/22
+				//处理删除最后一个
+				if (itemsList.size() == 0){
+					ptableService.updatePlayTableAllTime(ppid, "0分0秒", new DecimalFormat("#.##%").format(0.00));
+					PrintWriter out = response.getWriter();
+					out.print("true");
+					out.flush();
+					out.close();
+					return;
+				}
+				
+				
+				
+				//这里是把当天这个节目彻底删除
+				//bug :  无法添加删除后的素材
+				//by  bobo  2019/11/22
+//				
+//				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//				Date d1 = playTable.getPlayDate();
+//				List<Items> list = materialDao.findItemsByMidBetweenDates(mmid, sdf.format(d1), sdf.format(d1));
+//				//把这个items给删掉
+//				for (Items item : list) {
+//					item.setDeleted(1);
+//					commonService.updateItem(item);
+//				}
+				
+//				Material material = materialService.getById(mmid);
+//				System.out.println("开始检测更新素材排播信息！！！");
+//				boolean hasWillBeDeletedMaterialFlag = false;
+//				for (Items items : itemsList) {
+//					if (items.getMaterial().getMid() == mmid){
+//						//还有这个素材的节目
+//						hasWillBeDeletedMaterialFlag = true;
+//						break; 
+//					}
+//				}
+//				//没有这个mmid的素材的节目了,更新一下信息
+//				if (!hasWillBeDeletedMaterialFlag) {
+//					System.out.println("更新素材排播信息！！！");
+//					//这里要把删除的那个item的deleted变成1
+//					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//					Date d1 = playTable.getPlayDate();
+//					List<Items> list = materialDao.findItemsByMidBetweenDates(mmid, sdf.format(d1), sdf.format(d1));
+//					//其实就只有一个
+//					for (Items item : list) {
+//						item.setDeleted(1);
+//						commonService.updateItem(item);
+//					}
+//				}
+
+				itemsList  = materialDao.findByPtable(ppid);
 				int allTime = 0;
 				String terminalId = "";
-				for (Items items : itmsList) {
-					allTime += items.getDuration() * items.getFrequency();
+				for (Items items : itemsList) {
+					// allTime = ∑item时长 * 播表基频
+					allTime += items.getDuration() * playTable.getBaseFrequency();
+					
 					if ("".equals(terminalId)) {
 						terminalId = items.getTerminalId();
 					}
@@ -1477,6 +1843,8 @@ public class PtableController {
 				Terminal terminal = terminalService.get(terminalId);
 				double fullScreenRate = (double)allTime * 1000 / (terminal.getRunEndTime().getTime() - terminal.getRunStartTime().getTime());
 				ptableService.updatePlayTableAllTime(ppid, allTimeStr, new DecimalFormat("#.##%").format(fullScreenRate));
+				
+				
 				PrintWriter out = response.getWriter();
 				out.print("true");
 				out.flush();

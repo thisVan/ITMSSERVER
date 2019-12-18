@@ -97,7 +97,7 @@
 						arr.push(tdata[i].material.mid);
 					}
 					if (arr.length != 0) {
-						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;" onclick="showMaterialsSortByName()">总共有' + arr.length + '条不同素材</span>';
+						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;" onclick="showMaterialsSortByName()">总共有' + arr.length + '条不同素材啊</span>';
 					//document.getElementById("totalMaterial").innerText = "" +  + "";
 					}
 
@@ -309,14 +309,16 @@
 	function showMaterialsSortByName(){
 		var url = '<%=request.getContextPath()%>/ptable/getDistinctMaterialsByPidSortByName.do?pid='+pid;
 		$.post(url, {}, function(str){
+			
+			var obj = JSON.parse(str);
 			var contentStr = "";
 			contentStr += "<div style='padding: 1% 5%;'><table class='layui-table'>";
-			for(var i =0; i<str.length;i++){
+			for(var i =0; i<obj.length;i++){
 				contentStr += "<tr>";
-				contentStr += "<td>"+str[i].num+"</td>";
-				contentStr += "<td>"+str[i].name+"</td>";
-				contentStr += "<td>"+str[i].frequncy+"</td>";
-				contentStr += "<td>"+str[i].duration+"</td>";
+				contentStr += "<td>"+obj[i].num+"</td>";
+				contentStr += "<td>"+obj[i].name+"</td>";
+				contentStr += "<td>"+obj[i].frequncy+"</td>";
+				contentStr += "<td>"+obj[i].duration+"</td>";
 				contentStr += "</tr>";
 			}
 			contentStr += "</table></div>";

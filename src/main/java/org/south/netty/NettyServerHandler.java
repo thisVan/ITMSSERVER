@@ -2,6 +2,7 @@ package org.south.netty;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,15 @@ import java.util.Map;
 import org.south.itms.controller.FileController;
 import org.south.itms.dao.impl.FileDao;
 import org.south.itms.dao.impl.LogDao;
+import org.south.itms.dao.impl.MarqueeDao;
 import org.south.itms.dao.impl.TerminalDao;
 import org.south.itms.dto.Result;
+import org.south.itms.entity.Marquee;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.Period;
 import org.south.itms.entity.PlayTable;
 import org.south.itms.entity.Terminal;
+import org.south.itms.service.impl.MarqueeService;
 import org.south.itms.util.SpringContextHelper;
 import org.south.itms.util.StringUtil;
 import org.south.netty.msg.BaseMsg;
@@ -24,10 +28,12 @@ import org.south.netty.msg.FileDto;
 import org.south.netty.msg.FileInfoDto;
 import org.south.netty.msg.InsertDto;
 import org.south.netty.msg.InsertVedioDto;
+import org.south.netty.msg.MarqueeInfoDto;
 import org.south.netty.msg.MsgType;
 import org.south.netty.msg.OffsetFileMsg;
 import org.south.netty.msg.ResultMsg;
 import org.south.netty.msg.ValidateMsg;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -48,6 +54,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 	
 	private FileController fileController =  (FileController) SpringContextHelper.getBean("fileController");
 	
+    private MarqueeDao marqueeService = (MarqueeDao) SpringContextHelper.getBean("marqueeDao");
+	
 	private LogDao logDao =  (LogDao) SpringContextHelper.getBean("logDao");
 	
 	@Override
@@ -60,8 +68,10 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 				break;
 	
 			case UpdatePtable:   //第二天自动更新播表  和　case Validate: 一样的操作
+				System.out.println("第二天自动更新播表");
 				
 			case Validate: // 客户端请求连接服务器
+				System.out.println(" 客户端请求连接服务器 ");
 				ValidateMsg validateMsg = (ValidateMsg) msg;
 				Terminal termianl = terminalDao.findByCondition(validateMsg.getAccount(), validateMsg.getPassword());
 				System.out.println(termianl);
@@ -94,6 +104,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 					//返回播放端的播放表有哪些视频列表
 					//List<FileDto> vediofiles = new ArrayList<FileDto>();
 					List<FileInfoDto> vediofiles = new ArrayList<FileInfoDto>();
+					List<MarqueeInfoDto> marqueefiles = new ArrayList<MarqueeInfoDto>();
 					//List<File> files = fileDao.findByPtable(termianl.getTerminalId());
 					System.out.println(data);
 					System.out.println("success!!!!!!!");
@@ -169,15 +180,40 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 		                	}
 		                }
 						
-
 						data.put(DataKey.vediofiles, vediofiles);
 						data.put(DataKey.insertfiles, insertDto);
-						resultMsg.setData(data);
-						ctx.writeAndFlush(resultMsg);
-					}else {
-						resultMsg.setData(data);
-						ctx.writeAndFlush(resultMsg);
+//						resultMsg.setData(data);
+//						System.out.println(resultMsg);
+//						ctx.writeAndFlush(resultMsg);
 					}
+					SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+					Date now = new Date();
+					String today = format2.format(now);
+					List<Marquee> marquees = marqueeService.findMarqueeByTerminalIdBetweenDates(termianl.getTerminalId(), today, today);
+					System.out.println(marquees);
+					if(marquees.size()!=0) { //有需要播放的跑马灯
+						for(Marquee marquee : marquees )
+						{
+							ArrayList<FileDto> fileDto = new ArrayList<FileDto>();
+							MarqueeInfoDto marqueeInfoDto = new MarqueeInfoDto();
+							Period period2 = fileDao.findByPeriod(marquee.getPeriodId());
+							marqueeInfoDto.setMarqueeName(marquee.getMarqName());
+							marqueeInfoDto.setPeriodId(marquee.getPeriodId());
+							marqueeInfoDto.setMid(marquee.getMaterialId());
+							marqueeInfoDto.setPositionX(marquee.getPositionX());
+							marqueeInfoDto.setPositionY(marqueeInfoDto.getPositionY());
+							FileDto file = new FileDto(marquee.getMaterialId(), StringUtil.getFileName(marquee.getFilePath()), marquee.getFileName(), marquee.getMd5());
+							fileDto.add(file);
+							marqueeInfoDto.setStart(format.format(period2.getStartInterval()));
+							marqueeInfoDto.setEnd(format.format(period2.getEndInterval()));
+							marqueeInfoDto.setFile(fileDto);
+							marqueefiles.add(marqueeInfoDto);
+						}
+						data.put(DataKey.MarqueeFiles,marqueefiles);
+					}
+						System.out.println("send data:"+data);
+						resultMsg.setData(data);
+						ctx.writeAndFlush(resultMsg);
 				}
 				break;
 				

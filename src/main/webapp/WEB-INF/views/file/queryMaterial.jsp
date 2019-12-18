@@ -11,9 +11,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
    <script type="text/javascript" defer="defer">
+   /* layui.use('table', function(){
+	    var form = layui.table;
+	    
+	    //单选
+	    form.on('checkbox(test)', function (data) {
+	        var i = 0;
+	        var j = 0;
+	        $("input[name='check[]']").each(function () {
+	            if( this.checked === true )
+	            {
+	                i++;
+	            }
+	            j++;
+	        });
+	        if( i == j )
+	        {
+	            $(".checkboxAll").prop("checked",true);
+	            form.render('checkbox');
+	        }else
+	        {
+	            $(".checkboxAll").removeAttr("checked");
+	            form.render('checkbox');
+	        }
+
+	    });
+	}); */
+   
    $(function(){
 	   init();
    });
+   
+	function getQueryString(name) {
+	    var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+	    if (result == null || result.length < 1) {
+	        return "";
+	    }
+	    return result[1];
+	}
    
       function init(){
     	  
@@ -31,7 +66,7 @@
 			   params = params +"terminal_id" + ",=,"+terminalvalue+",";
 		   }
 		   
-		   params = params + "statusId" + ",=," + "3" + ",";
+		   params = params + "statusId" + ",=," + "3" + ","+"file_type"+",=,"+"vedio";
     	  layui.use('table', function(){
     		  var table = layui.table;
     		  table.render({
@@ -42,8 +77,7 @@
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
-    		      //{field:'id', width:'1%'}
-    		      {checkbox: true, event: 'set1', fixed: true}
+    		      {type: 'radio', event: 'set1', fixed: true}
     		      ,{field:'materialName',width:200, event: 'set2', title: '素材名', fixed: true, sort: true}
     		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){
@@ -86,13 +120,45 @@
     					    }
     					});
     			  }else if(obj.event === 'checkMaterial'){
-    				  var index = parent.layer.getFrameIndex(window.name);
+    				  //var index = parent.layer.getFrameIndex(window.name);
+    				 /*  var mainIframeName=getQueryString("parentName");
     				  //console.log(mid);
     				  //console.log(materialName);
-    				  parent.$("#mid").val(mid);
-    				  parent.$('#materialName').val(materialName);
-    				  parent.$('#terminalId').val(tmpdata.terminal.terminalId);
-    				  parent.layer.closeAll();
+    				  var ifrc=window.parent.frames[mainIframeName];
+    				  var winc=ifrc.window;
+    				  winc.document.getElementById("mid").value=mid;
+    				  winc.document.getElementById("materialName").value=materialName;
+    				  winc.document.getElementById("terminalId").value=tmpdata.terminal.terminalId;
+    				   */
+    				  var index=layer.open({
+    						title:'排播素材',
+    						type:2,
+    						area:['70%','80%'],
+    						//shade:false,
+    						content:'<%=request.getContextPath()%>/views/ajaxViews/material-broad.jsp',
+    						//zIndex: layer.zIndex, //重点1
+    						success: function(layero, index){
+    							var body = layer.getChildFrame('body',index);//建立父子联系
+    				            var iframeWin = window[layero.find('iframe')[0]['name']];
+    				            // console.log(arr); //得到iframe页的body内容
+    				            // console.log(body.find('input'));
+    				            var inputList = body.find('input');
+    				            //var labelList = body.find('label');
+    				            //$(inputList[0]).val(mmid);
+    				            //$(inputList[1]).val(materialName);
+    				            body.find('#mid').val(mid);
+    				            body.find('#materialName').val(materialName);
+    				            body.find('#terminalId').val(tmpdata.terminal.terminalId);
+    				            layer.iframeAuto(index);
+    				            //layer.setTop(layero); //重点2
+    						} 
+    				  });
+    				  /* window.parent.$("#layui-layer-iframe"+idx).contents().find("mid").val(mid);
+    				  window.parent.$("#layui-layer-iframe"+idx).contents().find("materialName").val(materialName);
+    				  window.parent.$("#layui-layer-iframe"+idx).contents().find("terminalId").val(tmpdata.terminal.terminalId); */
+    				  //parent.$('#materialName').val(materialName);
+    				  //parent.$('#terminalId').val(tmpdata.terminal.terminalId);
+    				  //parent.layer.close(index);
     			  }
     		  });
     		});
@@ -107,6 +173,7 @@
    
 </head>
 <body>
+	<script type="text/javascript">document.write(mainIframeName);</script>
 	<input type="hidden" id="videoView" value="">
 	<div class="layui-fluid">
 		<div class="layui-row layui-col-space1">
@@ -130,9 +197,9 @@
 									style="width: 150px; height: 35px;">
 									<select name="terminal" id="terminal" lay-verify="required" lay-search="" style="width: 140px; height: 35px;">
 										<option value="">直接选择或搜索</option>
-										<c:forEach items="${terminals}" var = "terminal" varStatus = "status">
-                                        <option value="${terminal.terminalId}">${terminal.terminalName}</option>
-                                        </c:forEach>
+										<c:forEach items="${terminals}" var = "item" varStatus = "status">
+                                        <option value="${item.terminalId}"  <c:if test="${item.terminalId==terminalId}">selected</c:if> > ${item.terminalName} </option>
+                              			</c:forEach>
 									</select>
 								</div>
 							</div>
@@ -154,7 +221,6 @@
 			
 		 <div class="layui-col-md12">
             <table class="layui-table" id="table1" lay-filter="tableEvent"></table>
-			<!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="top" topUrl="views/datagrid2/one.html" topMode="readonly" topWidth="800px" topHeight="600px" topTitle="查看demo" inputs="id:">查看</a> -->
 			<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-sm" lay-event="mediaView" >预览</a>
                 <a class="layui-btn layui-btn-sm" lay-event="checkMaterial" >选定</a>

@@ -152,6 +152,32 @@ public class CommonServiceImpl implements CommonService {
 				SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy), whereMap, currentPage,
 				pageSize);
 	}
+	
+	
+	@Override
+	public Page pageSearchUserActionLogByTemplateHQL(String start, String end, String[] params, int currentPage,
+			int pageSize, String className, String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchUserActionLogByTemplateHQL(start, end,
+				SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap,
+					currentPage, pageSize);
+		}
+
+				// 获取查询的结果
+		return commonDao.pageSearchUserActionLogByTemplateHQL(start, end,
+				SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy), whereMap, currentPage,
+				pageSize);
+	}
 
 	@Override
 	public Page pageSearchByTemplateHQLTree(String[] params, int currentPage, int pageSize, String className,
@@ -766,5 +792,7 @@ public class CommonServiceImpl implements CommonService {
 			return true;
 		return false;
 	}
+
+
 
 }

@@ -164,10 +164,9 @@ public class DownloadController {
     		   response.reset();
     		   response.setContentType("application/octet-stream");
     		   response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().getBytes("UTF-8"),"ISO-8859-1"));
-    		   response.setContentType("multipart/form-data");
     		   fis = new FileInputStream(file.getPath());
+    		   System.out.println("文件地址："+file.getPath());
     		   byte[] buffer = new byte[fis.available()];
-    		   System.out.println("file size:"+fis.available());
     		   toClient = response.getOutputStream();
     		   int length = 0;
     		   while((length = fis.read(buffer))>0) {
@@ -208,7 +207,6 @@ public class DownloadController {
 
 			if (!file.exists())
 				return;
-			System.out.println("response once");
 			downloadFile(file, response, false);
 		} catch (Exception e) {
 			e.printStackTrace();

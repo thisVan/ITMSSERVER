@@ -75,12 +75,17 @@
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/terminal/comon/searchTerminal/' + searchAreaCode + '.do'
     		    ,height: 420
+    		    ,initSort: {
+		              field: 'deleted' 
+		              ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+		          }
     		    //,cellMinWidth: 120
     		    ,limits:[25,50,75,100]
     		    ,limit:25
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'deleted', width:100, event: 'set1', title: '状态', fixed: 'left'
+    		      {field:'deleted', width:120, event: 'set1', title: '在线情况' 
+    		    	  ,fixed: 'left'
     		    	  ,templet: function(d){
     		    		  if(d.deleted == 0){
     		    			  return '<span style="color: #FF6347;">' + '离线' + '</span>';
@@ -100,7 +105,7 @@
     		      ,{field:'startSpotLeft',width:130, event: 'set9', title: 'LED起点-Left'}
     		      ,{field:'runStartTime',width:130, event: 'set10', title: '运行开始时间'}
     		      ,{field:'runEndTime',width:130, event: 'set11', title: '运行结束时间'}
-    		      ,{field:'state',width:100, event: 'set12', title: '启用状态'}
+    		      ,{field:'state',width:100, event: 'set12', title: '启用状态' }
     		      ,{fixed: 'right', width:180, event: 'set13', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
@@ -110,7 +115,13 @@
     		          changeBg();
     		      }
     		  });
-    		  
+    		  table.on('sort(flagOne)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+  		        console.log(obj.field); //当前排序的字段名
+  		        console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+  		        console.log(this) //当前排序的 th 对象*/
+  		      	changeBg();
+         
+  		    });
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
     			  var terminalId = tmpdata.terminalId;

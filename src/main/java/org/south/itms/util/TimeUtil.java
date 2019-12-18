@@ -4,6 +4,9 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.*;
 import java.util.Date;
+
+import javax.enterprise.inject.New;
+
 import java.util.Calendar;
 
 
@@ -17,6 +20,25 @@ public class TimeUtil {
 	public static Date translateDate(String dataStr) throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.parse(dataStr);
+	}
+	
+	public static boolean isTodayBetween(Date startDate,Date endDate) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar date = Calendar.getInstance();
+		date.setTime(new Date() );
+		//设置开始时间
+		Calendar begin = Calendar.getInstance();
+		begin.setTime(startDate);
+		//设置结束时间
+		Calendar endc = Calendar.getInstance();
+	    endc.setTime(endDate);
+		//处于开始时间之后，和结束时间之前的判断
+	    endc.add(Calendar.DAY_OF_YEAR, 1);
+	    if (date.after(begin) && date.before(endc)) {
+		return true;
+		} else {
+	    return false;
+	    }
 	}
 	
 	public static Time translateTime(String timeStr) throws ParseException {
@@ -129,14 +151,10 @@ public class TimeUtil {
 	
 	public static void main(String[] args) throws ParseException {
 		//System.out.println(TimeUtil.translateDate(""));
-		String startTime = "2017-11-25";
-		String endTime = "2017-11-25";
-		Date d1 = TimeUtil.translateDate(startTime);
-		Date d2 = TimeUtil.translateDate(endTime);
-		System.out.println(d1 + "=" + d2);
-		System.out.println(TimeUtil.dateValidate(d1,d2));
-		String time = TimeUtil.getPastDate(10);
-		System.out.println(time);
+		Date startTime =  TimeUtil.translateDate("2019-11-1");
+		Date  endTime =  TimeUtil.translateDate("2019-11-3");
+		boolean flag = TimeUtil.isTodayBetween(startTime, endTime);
+		System.out.println("flag="+flag);
 	}
 
 }

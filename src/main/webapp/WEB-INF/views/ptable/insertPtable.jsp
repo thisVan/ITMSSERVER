@@ -40,7 +40,8 @@
 		var laydate = layui.laydate;
 		laydate.render({
 			elem : '#dateTime', //指定元素
-			range : true
+			range : true,
+			format: 'yyyy-MM-dd'
 		});
 		laydate.render({
 			elem : '#testDate', //指定元素
@@ -695,7 +696,7 @@
 									<label class="layui-form-mid">插播时段：</label>
 									<div class="layui-input-inline"
 										style="width: 160px; height: 35px;">
-										<input type="text" id="testDate" name="testDate"
+										<input type="text" id="testDate" name="testDate" autocomplete="off"
 											placeholder="请选择时间" class="layui-input input-text" />
 									</div>
 								</div>

@@ -214,7 +214,7 @@ function generateTb(id){
 	formData.append("startDate", startDate);
 	formData.append("endDate", endDate);
 	  //layer.msg('Hello World');
-	  layer.confirm('确定生成播表!?', function(index){
+	  layer.confirm('确定生成播表?', function(index){
 		  layer.load(); //播表生成loading
 		  layer.close(index);
 		  $.ajax({
@@ -230,24 +230,26 @@ function generateTb(id){
 				  console.log(ignorePidsList);
 				  layer.closeAll('loading'); //关闭loading
 				  if(value=="true"){
+					  document.getElementById("stat"+id).innerText = "已生成播表";
+					  document.getElementById("generateBtn"+id).value="重新生成";
 				  	  if (ignorePidsList.length > 0) {
-					  	  layer.msg('播表生成成功！但是有播表已经审核，系统无法覆盖，请知悉！', {
-								icon : 6,
-								time : 5000
+					  	  layer.confirm('<div><p>播表生成成功！但是有播表已经审核，系统无法覆盖，请知悉!</p> 是否跳转到播表查看页面</div>', 
+					  		{ btn: ['确定', '取消'], title: "提示"
+							},function(){
+								document.location="<%=request.getContextPath()%>/ptable/ptableList.do";
 							});
 				  	  } else {
-					  	  layer.msg('播表生成成功!', {
-								icon : 6,
-								time : 2000
-							});
-				  	  
+					  	  layer.confirm('<p>播表生成成功!</p> 跳转到查看页面',{ btn: ['确定', '取消'], title: "提示"
+							}
+							,function(){
+								document.location="<%=request.getContextPath()%>/ptable/ptableList.do";
+							});	 
 				  	  }
 					  
 					  //var pid = document.getElementById("p"+id).innerText;
 					  //document.getElementById("startDate"+id).value = "";
 					  //document.getElementById("endDate"+id).value = "";
-					  document.getElementById("stat"+id).innerText = "已生成播表";
-					  document.getElementById("generateBtn"+id).value="重新生成";
+					 
 					  //document.getElementById("b"+id).disabled=true;
 				  }else if(value=="false"){
 					  document.getElementById("stat"+id).innerText = "播表生成失败";
@@ -411,7 +413,7 @@ function generateTable(id){
 	formData.append("periodId", id);
 	  var layer = layui.layer;
 	  //layer.msg('Hello World');
-	  layer.confirm('确定生成播表!?', function(index){
+	  layer.confirm('确定生成播表?', function(index){
 		  //do something
 			//var tid = document.getElementById("treeId").value;
 			//if(tid == null || tid == ''){
@@ -518,7 +520,7 @@ Date.prototype.format = function(fmt) { //author: meizz
 		"h+" : this.getHours(), //小时 
 		"m+" : this.getMinutes(), //分 
 		"s+" : this.getSeconds(), //秒 
-		"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+		"q+" : Math.floor((this.getMonth()+3)/3), //季度 
 		"S" : this.getMilliseconds() //毫秒 
 	};
 	if (/(y+)/.test(fmt))
