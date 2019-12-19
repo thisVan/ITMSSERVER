@@ -100,7 +100,7 @@ public class AuditController {
 
 
 
-	@RequestMapping("/getAllItemAuditLog")
+	@RequestMapping("/getAllPeriodAuditLog")
 	@ResponseBody
 	public PageResultData<UserActionLog> getAllPeriodAuditLog(String start, String end,String param, int page,
 															int limit, Model model, HttpServletRequest request) {
