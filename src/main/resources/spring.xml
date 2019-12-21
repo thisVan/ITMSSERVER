@@ -111,6 +111,65 @@
        		pointcut="execution(* org.south.itms.controller.MaterialController.editFile(..))"/> 
     	</aop:aspect> 
   	</aop:config>
- 
+
+	<!-- 播表管理相关切点 -->
+	<bean id = "playTableOperationAspectPoint" class= "org.south.itms.aspect.PlayTableOperationAspect"/>
+	<!-- 为播表生成配置切面 -->
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableGeneration"
+					   pointcut="execution(* org.south.itms.controller.PtableController.generateTable(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<!-- 为播表复制节目配置切面 -->
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableCopyItemInIt"
+					   pointcut="execution(* org.south.itms.controller.PtableController.copyOneToPlayFile(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<!-- 为播表删除节目配置切面 -->
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableDeleteItemFromIt"
+					   pointcut="execution(* org.south.itms.controller.PtableController.delOneFromPlayFile(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 为播表修改顺序配置切面 -->
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableChangePlayOrder"
+					   pointcut="execution(* org.south.itms.controller.PtableController.modifyPlayTableNumFromaddPtable(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 为播表一级审核配置切面 -->
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableFirstLevelReviewAccess"
+					   pointcut="execution(* org.south.itms.controller.PtableController.modifyPlayTableNum(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableFirstLevelReviewUnAccess"
+					   pointcut="execution(* org.south.itms.controller.PtableController.playTableUnAccess(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<!-- 为播表终审配置切面 -->
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableFinalLevelReviewAccess"
+					   pointcut="execution(* org.south.itms.controller.PtableController.modifyPlayTableFinalNum(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:aspect ref="playTableOperationAspectPoint">
+			<aop:after method="completePlayTableFinalLevelReviewUnAccess"
+					   pointcut="execution(* org.south.itms.controller.PtableController.modifyPlayTableFinalNumUn(..))"/>
+		</aop:aspect>
+	</aop:config>
+
   	<aop:aspectj-autoproxy proxy-target-class="true"/> 
 </beans>

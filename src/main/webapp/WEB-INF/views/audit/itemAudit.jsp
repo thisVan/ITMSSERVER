@@ -66,7 +66,7 @@
     		  table.render({
       		    elem: '#table1'
       		    ,id: 'flagOne'
-      		    ,url:'<%=request.getContextPath()%>/audit/getAllMaterialAuditLog.do'
+      		    ,url:'<%=request.getContextPath()%>/audit/getAllItemAuditLog.do'
       		    //,height: 550
       		    //,cellMinWidth: 120
       		    ,limits:[10,25,50,75,100,500]
@@ -175,7 +175,7 @@
 									style="width: 150px; height: 35px;">
 									<select id="operation" name="operation" style="width: 150px; height: 35px;">
 										<option value="">-请选择-</option>
-										<option value="ITEM_ADD">上传</option>
+										<option value="ITEM_ADD">增加</option>
 										<option value="ITEM_DELETE">删除</option>
 										<option value="ITEM_MODIFY">修改</option>
 									</select>
@@ -183,7 +183,7 @@
 							</div> 
 
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材ID：</label>
+								<label class="layui-form-mid">节目ID：</label>
 								<div class="layui-input-inline"
 									style="width: 100px; height: 35px;">
 									<input type="tel" id="modifyObjectId" name="modifyObjectId" autocomplete="off"
