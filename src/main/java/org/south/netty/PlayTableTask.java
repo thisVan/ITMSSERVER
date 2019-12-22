@@ -22,6 +22,10 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import com.mysql.jdbc.PreparedStatement;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -225,6 +229,13 @@ public class PlayTableTask extends TimerTask {
 			tag.PlayTableGenerate(listTable, uid, i);
 		}
 		System.out.println(listFile);
+
+		//modify by bobo 2019/11/4
+		//保存成功了，设置成功
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpSession session=attr.getRequest().getSession(true);
+		session.setAttribute("completePlayTableGeneration", true);
+
 		return ignorePids;
 //		for(AutoPlayTable a : listTable) {
 //			System.out.println(a);

@@ -33,6 +33,8 @@ public class TableAutoGenerate {
 
 	public static String password;
 
+	public static ArrayList<String> playTableAutoIdList = new ArrayList<String>();
+
 	public TableAutoGenerate() {
 		try {
 			// 获得当前类的绝对路径
@@ -89,6 +91,10 @@ public class TableAutoGenerate {
 			} else {
 
 			}
+
+			//modify by bobo 2019/11/4
+			//把pid给传出来，放在一个静态变量里
+			playTableAutoIdList.add(String.valueOf(ptableid));
 		}
 		return ptableid;
 	}

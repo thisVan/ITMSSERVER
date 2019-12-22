@@ -1586,7 +1586,7 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/editMaterial")
-	public void editFile(String mid, String materialName, String newTerminalId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void editMaterial(String mid, String materialName, String newTerminalId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println(mid + "=" + materialName);
 		if ("".equals(mid) || mid == null) {
 			PrintWriter out = response.getWriter();
