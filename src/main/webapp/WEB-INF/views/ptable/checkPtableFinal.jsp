@@ -44,7 +44,8 @@
 						field : 'materialName',
 						width : 270,
 						event : 'set1',
-						title : '素材名称'
+						title : '素材名称',
+						sort : true
 					}
 					, {
 						field : 'frequency',

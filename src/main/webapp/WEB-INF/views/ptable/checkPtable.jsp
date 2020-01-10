@@ -44,19 +44,22 @@
 						field : 'materialName',
 						width : 270,
 						event : 'set1',
-						title : '素材名称'
+						title : '素材名称',
+						sort : true
 					}
 					, {
 						field : 'frequency',
 						width : 140,
 						event : 'set2',
-						title : '频次'
+						title : '频次',
+						sort : true
 					}
 					, {
 						field : 'duration',
 						width : 140,
 						event : 'set3',
-						title : '时长'
+						title : '时长',
+						sort : true
 					}
 					, {
 						fixed : 'right',
