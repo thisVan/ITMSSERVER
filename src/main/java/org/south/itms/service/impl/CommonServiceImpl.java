@@ -14,16 +14,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.south.itms.dao.impl.CommonDao;
+import org.south.itms.dao.impl.RoleDao;
+import org.south.itms.dao.impl.UserDao;
 import org.south.itms.dto.Page;
 import org.south.itms.dto.ValueParam;
-import org.south.itms.entity.File;
-import org.south.itms.entity.IPTable;
-import org.south.itms.entity.Items;
-import org.south.itms.entity.Material;
-import org.south.itms.entity.Period;
-import org.south.itms.entity.PlayTable;
-import org.south.itms.entity.Terminal;
-import org.south.itms.entity.User;
+import org.south.itms.entity.*;
 import org.south.itms.util.SqlUpdate;
 import org.south.itms.util.SqlUtil;
 import org.south.itms.util.StringUtil;
@@ -39,6 +34,12 @@ public class CommonServiceImpl implements CommonService {
 
 	@Autowired
 	private CommonDao commonDao;
+
+	@Autowired
+	private UserDao userDao;
+
+	@Autowired
+	private RoleDao roleDao;
 
 	@Transactional
 	@Override
@@ -793,6 +794,13 @@ public class CommonServiceImpl implements CommonService {
 		return false;
 	}
 
+    @Override
+    public User getUserById(String id) {
+        return userDao.getuserByid(id);
+    }
+
+    @Override
+    public Role getRoleById(String id) { return roleDao.getRoleById(id); }
 
 
 }

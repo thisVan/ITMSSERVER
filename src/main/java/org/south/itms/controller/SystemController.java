@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.DoubleToIntFunction;
 
 import javax.servlet.http.HttpSession;
 
@@ -489,6 +490,7 @@ public class SystemController {
 			  
 		  //开始更新数据
 		  try {
+			  System.out.println("删除角色");
 			  systemService.deleteRole(roleIds);
 			  return new Result(true, "");
 		  } catch(Exception e) {

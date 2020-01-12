@@ -149,6 +149,11 @@ public class UserDaoImpl implements UserDao{
 		User user =  (User) this.getCurrentSession().createQuery(hql).setParameter("userId", id).uniqueResult();
 		return user.getUserName();
 	}
-	
-	
+
+	@Override
+	public User getuserByid(String id) {
+		String hql = "from User where userId=:userId and deleted = 0";
+		User user =  (User) this.getCurrentSession().createQuery(hql).setParameter("userId", id).uniqueResult();
+		return user;
+	}
 }
