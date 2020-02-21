@@ -23,7 +23,9 @@ public class AspectDaoImpl implements AspectDao {
 	@Override
 	public void saveLog(UserActionLog userActionLog) {
 		// TODO Auto-generated method stub
+		System.out.printf("begin save log");
 		this.getCurrentSession().save(userActionLog);
+		System.out.printf("end save log");
 		
 	}
 

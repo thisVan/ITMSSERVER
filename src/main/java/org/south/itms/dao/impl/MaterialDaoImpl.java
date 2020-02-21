@@ -1,6 +1,7 @@
 package org.south.itms.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -30,7 +31,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	private Session openSession() {  
         return this.sessionFactory.openSession();  
-    } 
+    }
 	
 	//关闭Session
     private void closeSession(Session session){
@@ -135,7 +136,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public int getAllRecord2(String str) {
-		String hql = "select count(*) from Material where statusId = ? and deleted = 0 and tis = 1";
+		String hql = "select count(*) from Material where statusId = ? and deleted = 0 and tis = '1'";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, str);
 		return ((Number)query.uniqueResult()).intValue();  
@@ -176,7 +177,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	@Override
 	public int delMaterial2(String id) {
-		String hql = "update Material set deleted = 1 where mid=? and statusId != 3";
+		String hql = "update Material set deleted = 1 where mid=? and statusId != '3'";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, id);
 		return query.executeUpdate();
@@ -261,7 +262,7 @@ public class MaterialDaoImpl implements MaterialDao {
         try {
         	//String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid)  order by pf.num asc";
         	String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
-        	return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
+			return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
         } finally {
             closeSession(session);
         }

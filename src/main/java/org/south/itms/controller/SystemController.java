@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.DoubleToIntFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
@@ -305,14 +307,26 @@ public class SystemController {
 	  
 	  
 	  
-	  
+	  // modify by bobo
+	  // 2020/2/14
+	  // 添加强密码验证
 	  @RequestMapping(value="/user/addUser")  
 	  public @ResponseBody Result addUser(User user) {
 		  if(user == null || StringUtil.isEmpty(user.getUserAccount()) || user.getRole() == null || StringUtil.isEmpty(user.getRole().getRoleId())) {
 			  return new Result("添加错误");
 		  }
-		  
-		 // user.setUserId(UUID.randomUUID().toString());
+
+		  //强密码验证
+		  //强密码正则表达式
+		  String regex = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$";
+		  Pattern p = Pattern.compile(regex);
+		  Matcher m = p.matcher(user.getUserPassword());
+		  //不匹配强密码
+		  if(!m.matches()){
+			  return new Result("添加失败，密码过弱，必须数字与字母的组合，长度在8~16位之间");
+		  }
+
+		  // user.setUserId(UUID.randomUUID().toString());
 		  user.setState("激活");
 		  user.setDeleted(0);
 		  
@@ -324,6 +338,8 @@ public class SystemController {
 		  systemService.saveUser(user);
 		  return new Result(true, "");
 	  }
+
+
 	  
 	  
 	  @RequestMapping(value="/user/delUser")  
@@ -343,6 +359,8 @@ public class SystemController {
 		  }
 		  
 	  }
+
+
 	  
 
 	  @RequestMapping(value="/user/searchUser")  

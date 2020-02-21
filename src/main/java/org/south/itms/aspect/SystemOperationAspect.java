@@ -27,28 +27,28 @@ public class SystemOperationAspect {
 
     public void completeSystemLogin(JoinPoint joinPoint){
 
+        //当前操作
+        final String  currentOperation = "SYSTEM_LOGIN";
 
-//        //当前操作
-//        final String  currentOperation = "SYSTEM_LOGIN";
-//
-//        //获取用户Session
-//        HttpSession session = aspectCommonMethod.getNowSession();
-//
-//        String modifyObjectName = (String)session.getAttribute("userName");
-//        String modifyObjectType = OBJECT_TYPE;
-//        String modifyObjectId = "000";
-//
-//        //生成并保存
-//        aspectCommonMethod.saveUserActionLog(
-//                (String)session.getAttribute("userName"),
-//                (String)session.getAttribute("roleName"),
-//                aspectCommonMethod.getOperationTime(),
-//                currentOperation,
-//                modifyObjectName,
-//                modifyObjectType,
-//                modifyObjectId
-//        );
+        //获取用户Session
+        HttpSession session = aspectCommonMethod.getNowSession();
 
+        String modifyObjectName = (String)session.getAttribute("userName");
+        String modifyObjectType = OBJECT_TYPE;
+        String modifyObjectId = "000";
+
+        //生成并保存
+        aspectCommonMethod.saveUserActionLog(
+                (String)session.getAttribute("userName"),
+                (String)session.getAttribute("roleName"),
+                aspectCommonMethod.getOperationTime(),
+                currentOperation,
+                modifyObjectName,
+                modifyObjectType,
+                modifyObjectId
+        );
+
+        System.out.println("endlogin");
     }
 
 

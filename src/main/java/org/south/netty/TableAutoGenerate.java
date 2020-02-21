@@ -789,6 +789,8 @@ public class TableAutoGenerate {
 			if (!conn.isClosed())
 				System.out.println("Succeeded connecting to the Database!");
 
+			System.out.println("准备在ptable_file删除一个素材");
+
 			// statement用来执行SQL语句
 			String deltSql = "delete from ptable_file where deleted = 0 and mid = ? and pid =? and num=?";
 			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(deltSql);
@@ -797,7 +799,7 @@ public class TableAutoGenerate {
 			statement.setInt(2, Integer.parseInt(pid));
 			statement.setInt(3, num);
 			statement.executeUpdate();
-
+			System.out.println("从ptable_file删除成功");
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Sorry,can`t find the Driver!");

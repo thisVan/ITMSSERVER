@@ -11,6 +11,7 @@ import org.south.itms.dto.Result;
 import org.south.itms.entity.Resource;
 import org.south.itms.entity.User;
 import org.south.itms.util.StringUtil;
+import org.south.itms.util.UserLoginListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +55,15 @@ public class LoginController {
 		  if(StringUtil.isEmpty(userPassword) || StringUtil.isEmpty(userAccount)) {
 			  return new Result("登录失败, 请输入用户名和密码");
 		  }
-		  
+
+		  //modify by bobo 2020/2/14
+		  //判断能否登录，是否达到上限
+		  UserLoginListener.getSingleInstance().updateUserLoginInfo(userAccount);
+		  if (!UserLoginListener.getSingleInstance().userLoginInfo.get(userAccount).getCanLogin()){
+			  return new Result("登录失败, 当日登录已经超出允许次数");
+		  }
+
+
 		  User user = userDao.getUserByAccountAndPassword(userAccount, userPassword);
 	      if(user != null) {
 	    	  Map<String, List<Resource>> map = userDao.getAllResource(user.getRole().getRoleId());
@@ -62,7 +71,7 @@ public class LoginController {
 	    	  String path = webPath.substring(0, webPath.indexOf("WEB-INF"));
 	    	  System.out.println(webPath);
 	    	  System.out.println(path);
-	    	  user.setUserPassword("");
+	    	  //user.setUserPassword("");
 	    	  if(session.getAttribute("resourcesMap") != null || !"".equals(session.getAttribute("resourcesMap"))) {
 	    		  session.removeAttribute("resourcesMap");
 	    	  }
@@ -141,7 +150,7 @@ public class LoginController {
 	    	  String path = webPath.substring(0, webPath.indexOf("WEB-INF"));
 	    	  System.out.println(webPath);
 	    	  System.out.println(path);
-	    	  user.setUserPassword("");
+	    	  //user.setUserPassword("");
 	    	  session.setAttribute("user", user);
 	    	  session.setAttribute("userId", user.getUserId());
 	    	  session.setAttribute("userName", user.getUserName());
@@ -213,3 +222,5 @@ public class LoginController {
 	  }
 	
 }
+
+
