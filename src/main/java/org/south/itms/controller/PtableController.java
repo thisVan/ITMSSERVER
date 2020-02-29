@@ -460,7 +460,7 @@ public class PtableController {
 
 	@RequestMapping("/fildIPtable")
 	@ResponseBody
-	public PageResultData<PtableDto> fildIPtable(String terminalId, int page, int limit) {
+	public PageResultData<PtableDto> fildIPtable(String terminalId, String field, String order, int page, int limit) {
 		// List<IPTable> list = new ArrayList<IPTable>();
 		List<Terminal> list = commonService.getAllTerminal();
 		List<Period> listPeriod = commonService.getAllPeriod();
@@ -468,7 +468,7 @@ public class PtableController {
 		if ("".equals(terminalId) || terminalId == null) {
 			String[] params = new String[0];
 			try {
-				Page pageD = commonService.pageSearchInsertByTemplateHQL(params, page, limit, "PlayTable", "pid asc",
+				Page pageD = commonService.pageSearchInsertByTemplateHQL(params, page, limit, "PlayTable", field+" "+order,
 						null);
 				List<PlayTable> listPtable = pageD.getList();
 				//List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);

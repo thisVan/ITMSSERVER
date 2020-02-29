@@ -42,6 +42,7 @@ public interface CommonDao {
 	List<Terminal> getAllTerminal();
 
 	Page pageSearchCheckByTemplateHQL(String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
+	Page pageSearchCheckByTemplateHQL(String start, String end, String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
 	
 	Page pageSearchInsertByTemplateHQL(String hql, Map<String, ValueParam> whereMap, int currentPage, int pageSize);
 

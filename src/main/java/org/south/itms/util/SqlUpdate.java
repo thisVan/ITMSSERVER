@@ -234,7 +234,7 @@ public class SqlUpdate {
 			
 			String[] resourceIds = authorityList.split(",");
 			for(int i = 0 ; i < resourceIds.length; i++) {
-				String sqlTmp = "insert into role_resource (resource_id, role_id, deleted) values (?,?,?)";
+				String sqlTmp = "INSERT INTO role_resource (resource_id, role_id, deleted) values (?,?,?)";
 				PreparedStatement statementTmp = (PreparedStatement) conn.prepareStatement(sqlTmp);
 				statementTmp.setInt(1, Integer.parseInt(resourceIds[i]));
 				statementTmp.setInt(2, Integer.parseInt(roleId));

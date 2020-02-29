@@ -84,8 +84,7 @@
     		    ,limit:25
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'deleted', width:120, event: 'set1', title: '在线情况' 
-    		    	  ,fixed: 'left'
+    		      {field:'deleted', width:120, event: 'set1', title: '在线情况', fixed: 'left'
     		    	  ,templet: function(d){
     		    		  if(d.deleted == 0){
     		    			  return '<span style="color: #FF6347;">' + '离线' + '</span>';
@@ -120,7 +119,7 @@
   		        console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
   		        console.log(this) //当前排序的 th 对象*/
   		      	changeBg();
-         
+
   		    });
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;

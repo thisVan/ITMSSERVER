@@ -73,9 +73,16 @@
         		      //,{field:'periodName',width:130, event: 'set4', title: '时段名', sort: true}
         		      ,{field:'periodTime',width:260, event: 'set4', title: '时段范围', sort: true
         		    	,templet: function(d){
-        		    		var periodName = d.periodName;
-        		    		var periodTime = d.periodTime;
-        		    		return periodName + " " + periodTime;
+        		      		var flag = d.insertFlag;
+        		      		if(flag == '0') {
+								var periodName = d.periodName;
+								var periodTime = d.periodTime;
+								return periodName + " " + periodTime;
+							}else if (flag == '1'){
+        		      			var periodStart = d.startTime;
+        		      			var periodEnd = d.endTime;
+        		      			return periodStart + "-" + periodEnd;
+							}
         		    	}
         		      }
         		      ,{field:'insertFlag',width:100, event: 'set5', title: '播表类型', sort: true

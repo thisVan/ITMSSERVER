@@ -277,6 +277,32 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public Page pageSearchCheckByTemplateHQL(String start, String end, String[] params, int currentPage, int pageSize, String className,
+											 String orderBy, String whereSuffix) {
+		// 组装查询条件
+		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+		if (params != null && (params.length % 3 == 0)) {
+			for (int i = 0; i < params.length; i += 3) {
+				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
+			}
+		}
+
+		// whereMap.put("statusId", new ValueParam("=", "1"));
+
+		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			if (!StringUtil.isEmpty(orderBy))
+				whereSuffix += " order by " + orderBy;
+			return commonDao.pageSearchCheckByTemplateHQL(start, end,
+					SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap, currentPage,
+					pageSize);
+		}
+
+		// 获取查询的结果
+		return commonDao.pageSearchCheckByTemplateHQL(start, end, SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, orderBy),
+				whereMap, currentPage, pageSize);
+	}
+
+	@Override
 	public Page pageSearchFirstByTemplateHQL(String[] params, int currentPage, int pageSize, String className,
 			String orderBy, String whereSuffix) {
 		// 组装查询条件

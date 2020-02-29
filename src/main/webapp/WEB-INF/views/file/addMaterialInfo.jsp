@@ -45,7 +45,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {type: 'radio', event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:200, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:200, event: 'set2', title: '素材名1', fixed: true, sort: true}
     		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){
     		    		  var name = d.terminal;
@@ -59,7 +59,7 @@
       		      ,{fixed: 'right', width:90, event: 'set8', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"param": params}
+    		    ,where: {"param": params,"field": "uploadTime", "order":"desc"}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		      }

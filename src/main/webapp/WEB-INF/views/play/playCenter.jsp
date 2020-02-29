@@ -80,7 +80,7 @@
     		    ,limit:25
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'deleted', width:100, event: 'set1', title: '状态', fixed: 'left'
+    		      {field:'deleted', width:100, event: 'set1', title: '在线情况', fixed: 'left'
     		    	  ,templet: function(d){
     		    		  if(d.deleted == 0){
     		    			  return '<span style="color: #FF6347;">' + '离线' + '</span>';
@@ -100,7 +100,7 @@
     		      ,{field:'startSpotLeft',width:130, event: 'set9', title: 'LED起点-Left'}
     		      ,{field:'runStartTime',width:130, event: 'set10', title: '运行开始时间'}
     		      ,{field:'runEndTime',width:130, event: 'set11', title: '运行结束时间'}
-    		      ,{field:'state',width:100, event: 'set12', title: '启用状态'}
+    		      ,{field:'state',width:100, event: 'set12', title: '启用状态' }
     		    ]]
     		    ,page: true
     		    ,where: {"terminalName": terminalName, "ip":ip, "state":state}
@@ -109,7 +109,7 @@
     		          changeBg();
     		      }
     		  });
-    		  
+
 
     		});
       }
@@ -124,7 +124,7 @@
    		//alert(trId[0].cells.length);
    		if (trId.length > 1) {
    			for (var i = 1; i < trId.length; i++) {
-   				if (trId[i].cells.length < 14) {
+   				if (trId[i].cells.length < 13) {
    					break;
    				}
    				var value = trId[i].cells[0].innerText;

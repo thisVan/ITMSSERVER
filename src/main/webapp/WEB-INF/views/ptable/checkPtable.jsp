@@ -45,7 +45,7 @@
 						width : 270,
 						event : 'set1',
 						title : '素材名称',
-						sort : true
+						sort :true
 					}
 					, {
 						field : 'frequency',

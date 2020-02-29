@@ -211,7 +211,7 @@
 		//审核通过后台代码要求的值pids为数组，修改此处代码，如果非批量审核方式，pids为[""]，此时重新赋值为pids[pid]
 		if (pids.length == 1 || pids[0] == ""){
 			if(pid != undefined && pid != ""){
-				pids[0] = pid;
+				pids[0] =  pid;
 			}
 		}
 		$.ajax({

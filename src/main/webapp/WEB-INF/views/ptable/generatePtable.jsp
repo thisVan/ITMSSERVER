@@ -242,7 +242,7 @@ function generateTb(id){
 					  	  layer.confirm('<p>播表生成成功!</p> 跳转到查看页面',{ btn: ['确定', '取消'], title: "提示"
 							}
 							,function(){
-								document.location="<%=request.getContextPath()%>/ptable/ptableList.do";
+					  	  		document.location="<%=request.getContextPath()%>/ptable/ptableList.do";
 							});	 
 				  	  }
 					  

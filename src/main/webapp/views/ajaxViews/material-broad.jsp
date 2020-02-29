@@ -226,7 +226,7 @@ layui.use(['layer','form'], function(){
 						parent.layer.closeAll();
 						parent.layer.msg('添加成功!',{icon:6,time:2000});
 						parent.parent.refresh();
-						//window.parent.location.reload(); //刷新父页面
+						window.parent.location.reload(); //刷新父页面
 					}else if(value=="false"){
 						layer.msg('存在同名文件，请重新输入!',{icon:5,time:2000});
 					}else if(value=="1"){

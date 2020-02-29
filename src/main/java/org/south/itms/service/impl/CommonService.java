@@ -46,7 +46,7 @@ public interface CommonService {
 	List<Terminal> getAllTerminal();
 
 	Page pageSearchCheckByTemplateHQL(String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
-
+	Page pageSearchCheckByTemplateHQL(String startDate, String endDate, String[] params, int currentPage, int pageSize, String className, String orderBy, String whereSuffix);
 	/**
 	 * @param fileId
 	 * @param timestamp 

@@ -125,6 +125,8 @@
     		    	  }
     		      }
     		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
+    		      ,{field:'checkTime',width:160, event: 'set13', title: '审核时间', sort: true}
+    		      ,{field:'checkName',width:90, event: 'set14', title: '审核人', sort: true}
     		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
@@ -286,6 +288,19 @@
     		    	  }
     		      }
     		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
+					  ,{field:'checkTime',width:160, event: 'set13', title: '审核时间', sort: true
+						  ,templet: function(d){
+							  var date = new Date(d.checkTime);
+							  var Y = date.getFullYear() + '-';
+							  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+							  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+							  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+							  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+							  return Y+M+D+h+m+s;
+						  }
+					  }
+					  ,{field:'checkName',width:90, event: 'set14', title: '审核人', sort: true}
     		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true

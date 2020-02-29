@@ -72,10 +72,10 @@ public class TerminalController {
 
   //查询播放端的方式
   @RequestMapping(value="/searchTerminal2")  
-  public @ResponseBody PageResultData<Terminal> searchTerminal2(String param, int page, int limit) {
+  public @ResponseBody PageResultData<Terminal> searchTerminal2(String param, int page, int limit ,String field ,String order) {
 	  String[] params = param.split(",");  
 	  try {
-		   Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Terminal", "terminalName asc", null);
+		   Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Terminal", field+" "+order, null);
 		   PageResultData<Terminal> pageResult = new PageResultData<Terminal>();
 		   pageResult.setCount(pageD.getTotalRecord());
 		   pageResult.setCode(0);

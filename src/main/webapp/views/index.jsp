@@ -302,7 +302,15 @@ div[carousel-item]>*:nth-child(4n+3) {
 			    }
 			    ,tabChange: function(id){
 			        //切换到指定Tab项
-			        element.tabChange('tabDemo', id); //切换到：22
+			        //element.tabChange('tabDemo', id); //切换到：22
+					  //切换到指定Tab项,并刷新
+					  element.tabChange('tabDemo', id);
+					  var othis = $('.layui-tab-title').find('>li[lay-id="' + id + '"]'),
+							  index = othis.parent().children('li').index(othis),
+							  parents = othis.parents('.layui-tab').eq(0),
+							  item = parents.children('.layui-tab-content').children('.layui-tab-item'),
+							  src = item.eq(index).find('iframe').attr("src");
+					  item.eq(index).find('iframe').attr("src", src);
 			    }
 			    /**
 				 * 监听浏览器窗口改变事件

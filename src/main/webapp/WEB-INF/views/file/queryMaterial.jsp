@@ -56,14 +56,20 @@
     	  
     	  var value;
     	  var terminalvalue;
-    	  
+    	  var timePeriodValue;
+
     	  value = $("#materialName").val();
     	  terminalvalue = $("#terminal").val();
+    	  timePeriodValue = $("#timePeriod").val();
+
 		   if(value != "") {
 			   params = params + "materialName" + ",like,%" + value + "%,";
 		   }
 		   if(terminalvalue!=""){
 			   params = params +"terminal_id" + ",=,"+terminalvalue+",";
+		   }
+		   if(timePeriodValue==""){
+			   timePeriodValue = 30;
 		   }
 		   
 		   params = params + "statusId" + ",=," + "3" + ","+"file_type"+",=,"+"vedio";
@@ -72,7 +78,7 @@
     		  table.render({
     		    elem: '#table1'
     		    ,id: 'flagOne'
-    		    ,url:'<%=request.getContextPath()%>/material/getAllMaterialInfo.do'
+    		    ,url:'<%=request.getContextPath()%>/material/getAllMaterialInfo2.do'
     		    ,height: 400
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
@@ -89,15 +95,56 @@
       		      ,{field: 'duration',width:80, event: 'set5', title: '时长(秒)', sort: true}
       		      ,{field: 'size',width:100, event: 'set6', title: '大小', sort: true}
       		      ,{field: 'usedNum',width:100, event: 'set7', title: '使用次数', sort: true}
+      		      ,{field: 'uploadTime',width:160, event: 'set9', title: '上传时间', sort: true
+						  ,templet: function(d){
+							  var date = new Date(d.uploadTime);
+							  var Y = date.getFullYear() + '-';
+							  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+							  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+							  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+							  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+							  return Y+M+D+h+m+s;
+						  }
+					  }
+      		      ,{field: 'checkTime',width:160, event: 'set10', title: '审核时间', sort: true
+						  ,templet: function(d){
+							  var date = new Date(d.checkTime);
+							  var Y = date.getFullYear() + '-';
+							  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+							  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+							  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+							  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+							  return Y+M+D+h+m+s;
+						  }
+					  }
+      		      ,{field: 'checkName',width:100, event: 'set11', title: '审核人', sort: true}
       		      ,{fixed: 'right', width:140, event: 'set8', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"param": params}
+    		    ,where: {"param": params,"timePeriodValue": timePeriodValue, "field": "uploadTime", "order":"desc"}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		      }
     		  });
-    		  
+
+			  table.on('sort(tableEvent)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				  console.log(obj.field); //当前排序的字段名
+				  console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+				  console.log(this) //当前排序的 th 对象*/
+
+				  //尽管我们的 table 自带排序功能，但并没有请求服务端。
+				  //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+				  table.reload('flagOne', { //testTable是表格容器id
+					  initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+					  ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+						  field: obj.field //排序字段
+						  ,order: obj.type //排序方式
+					  }
+				  });
+			  });
+
     		  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
     			  var mid = tmpdata.mid;
@@ -203,7 +250,20 @@
 									</select>
 								</div>
 							</div>
-							
+
+							<div class="layui-inline">
+								<label class="layui-form-mid">时间段：</label>
+								<div class="layui-input-inline"
+									 style="width: 150px; height: 35px;">
+									<select id="timePeriod" name="timePeriod" style="width: 150px; height: 35px;">
+										<option value="">--请选择--</option>
+										<option value="7">近一周</option>
+										<option value="30">近一个月</option>
+										<option value="365">近一年</option>
+									</select>
+								</div>
+							</div>
+
 							<div class="layui-inline">
 								<div class="layui-inline">
 									<button class="layui-btn" type="button" onclick="init()">

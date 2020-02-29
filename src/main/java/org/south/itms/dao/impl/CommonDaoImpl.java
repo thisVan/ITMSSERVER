@@ -541,6 +541,152 @@ public class CommonDaoImpl implements CommonDao {
 		return new Page(currentPage, totalPage, pageSize, totalRecord, list);
 	}
 
+	//添加日期
+	@Override
+	public Page pageSearchCheckByTemplateHQL(String start, String end, String hql, Map<String, ValueParam> whereMap, int currentPage,
+											 int pageSize) { // 分页查询
+		if (pageSize < 1)
+			pageSize = 20;
+
+		int len = whereMap.size();
+		System.out.println("pageHql=" + start + "--" + end + "=====" + hql + "--" + whereMap.size());
+		String[] str = hql.split("order");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date startDate = null;
+		java.util.Date endDate = null;
+		java.sql.Date sqlStartDate = null;
+		java.sql.Date sqlEndDate = null;
+		if (!"".equals(start)) {
+			try {
+				startDate = format.parse(start);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			sqlStartDate = new java.sql.Date(startDate.getTime());
+		}
+		if (!"".equals(end)) {
+			try {
+				endDate = format.parse(end);
+				//日期的格式为yyyy-MM-dd 00:00:00 会造成查询异常，需要+1
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(endDate);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				endDate = calendar.getTime();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			sqlEndDate = new java.sql.Date(endDate.getTime());
+		}
+
+		if (!"".equals(start) && "".equals(end)) {
+			// String hqlStart = str[0] + " and uploadTime >= ? " + " order " + str[1];
+			// System.out.println("startHql=" + hqlStart);
+			String hqlStart = str[0] + " and uploadTime >=:start " + " order " + str[1];
+			// 先计算出在数据库总共有多少条数据
+			Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hqlStart));
+			SqlUtil.setQueryParamForSearch(countQuery, whereMap);
+			// countQuery.setParameter(len, sqlStartDate);
+			countQuery.setDate("start", sqlStartDate);
+			int totalRecord = Integer.valueOf(countQuery.uniqueResult() + "");
+			int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+			if (currentPage > totalPage)
+				currentPage = totalPage;
+			if (currentPage < 1)
+				currentPage = 1;
+
+			// 再获取某页的数据
+			Query query = this.getCurrentSession().createQuery(hqlStart);
+			SqlUtil.setQueryParamForSearch(query, whereMap);
+			// query.setParameter(len, sqlStartDate);
+			query.setDate("start", sqlStartDate);
+			query.setFirstResult(pageSize * (currentPage - 1));
+			query.setMaxResults(pageSize);
+			List list = query.list();
+
+			// 把结果包装成page返回
+			return new Page(currentPage, totalPage, pageSize, totalRecord, list);
+		} else if (!"".equals(end) && "".equals(start)) {
+//			String hqlEnd = str[0] + " and uploadTime <= ? " + " order " + str[1];
+//			System.out.println("endHql=" + hqlEnd);
+			String hqlEnd = str[0] + " and uploadTime <=:end " + " order " + str[1];
+			// 先计算出在数据库总共有多少条数据
+			Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hqlEnd));
+			SqlUtil.setQueryParamForSearch(countQuery, whereMap);
+			// countQuery.setParameter(len, sqlEndDate);
+			countQuery.setDate("end", sqlEndDate);
+			int totalRecord = Integer.valueOf(countQuery.uniqueResult() + "");
+			int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+			if (currentPage > totalPage)
+				currentPage = totalPage;
+			if (currentPage < 1)
+				currentPage = 1;
+
+			// 再获取某页的数据
+			Query query = this.getCurrentSession().createQuery(hqlEnd);
+			SqlUtil.setQueryParamForSearch(query, whereMap);
+			// query.setParameter(len, sqlEndDate);
+			query.setDate("end", sqlEndDate);
+			query.setFirstResult(pageSize * (currentPage - 1));
+			query.setMaxResults(pageSize);
+			List list = query.list();
+
+			// 把结果包装成page返回
+			return new Page(currentPage, totalPage, pageSize, totalRecord, list);
+		} else if (!"".equals(start) && !"".equals(end)) {
+			// String hqlst = str[0] + " and uploadTime >= ? and uploadTime <= ? " + " order
+			// " + str[1];
+			// System.out.println("st=" + hqlst);
+			String hqlst = str[0] + " and uploadTime >=:start and uploadTime <=:end " + " order " + str[1];
+			// 先计算出在数据库总共有多少条数据
+			Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hqlst));
+			SqlUtil.setQueryParamForSearch(countQuery, whereMap);
+			// countQuery.setParameter(len, sqlStartDate);
+			// countQuery.setParameter(len + 1, sqlEndDate);
+			countQuery.setDate("start", sqlStartDate);
+			countQuery.setDate("end", sqlEndDate);
+			int totalRecord = Integer.valueOf(countQuery.uniqueResult() + "");
+			int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+			if (currentPage > totalPage)
+				currentPage = totalPage;
+			if (currentPage < 1)
+				currentPage = 1;
+
+			// 再获取某页的数据
+			Query query = this.getCurrentSession().createQuery(hqlst);
+			SqlUtil.setQueryParamForSearch(query, whereMap);
+			// query.setParameter(len, sqlStartDate);
+			// query.setParameter(len + 1, sqlEndDate);
+			query.setDate("start", sqlStartDate);
+			query.setDate("end", sqlEndDate);
+			query.setFirstResult(pageSize * (currentPage - 1));
+			query.setMaxResults(pageSize);
+			List list = query.list();
+
+			// 把结果包装成page返回
+			return new Page(currentPage, totalPage, pageSize, totalRecord, list);
+		}
+
+		// 先计算出在数据库总共有多少条数据
+		Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hql));
+		SqlUtil.setQueryParamForSearch(countQuery, whereMap);
+		int totalRecord = Integer.valueOf(countQuery.uniqueResult() + "");
+		int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+		if (currentPage > totalPage)
+			currentPage = totalPage;
+		if (currentPage < 1)
+			currentPage = 1;
+
+		// 再获取某页的数据
+		Query query = this.getCurrentSession().createQuery(hql);
+		SqlUtil.setQueryParamForSearch(query, whereMap);
+		query.setFirstResult(pageSize * (currentPage - 1));
+		query.setMaxResults(pageSize);
+		List list = query.list();
+
+		// 把结果包装成page返回
+		return new Page(currentPage, totalPage, pageSize, totalRecord, list);
+	}
+
 	@Override
 	public Page pageSearchInsertByTemplateHQL(String hql, Map<String, ValueParam> whereMap, int currentPage,
 			int pageSize) { // 分页查询

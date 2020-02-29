@@ -167,7 +167,7 @@
       		      //,{fixed: 'right', width:150, event: 'set7', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"terminalId":terminalId}
+    		    ,where: {"terminalId":terminalId, "field":"playDate", "order":"desc"}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		    	  if(res.fail == 1){
@@ -176,8 +176,19 @@
     		    	  //console.log(res.msg);
     		      }
     		  });
-    		  
-    		  table.on('tool(tableEvent)', function(obj){
+
+			  table.on('sort(tableEvent)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				  table.reload('flagOne', { //testTable是表格容器id
+					  initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+					  ,where: {
+						  field: obj.field //排序字段
+						  ,order: obj.type //排序方式
+					  }
+				  });
+			  });
+
+
+			  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
     			  var pid = tmpdata.pid;
     			  //console.log(obj);

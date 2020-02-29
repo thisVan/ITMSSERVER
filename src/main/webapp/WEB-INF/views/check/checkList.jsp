@@ -17,11 +17,12 @@
       function init(){
     	  layui.use('laydate', function(){
     		  var laydate = layui.laydate;
-    		  
-    		  //执行一个laydate实例
-    		  laydate.render({
-    		    elem: '#month' //指定元素
-    		  });
+
+			  //执行一个laydate实例
+			  laydate.render({
+				  elem: '#dateTime' //指定元素
+				  ,range: true
+			  });
     		});
 		  
 		  //名称
@@ -32,6 +33,39 @@
 		   
 		   //状态
 		   var statusId = $("#statusId").val();
+
+		  //时间
+		  var dateTime = $("#dateTime").val();
+
+		  if(dateTime == ""){
+			  var d = new Date();
+			  var y = d.getFullYear();
+			  var m = d.getMonth()+1;//获取当前月份的日期
+			  var d = d.getDate();
+			  var cur_date = y +"-"+m+"-"+d;
+			  var pre_date;
+			  var tmp = m-1;
+			  if(m == 1) {
+				  pre_date = y -1 + "-12-" + d;
+			  }else if(m == 3){
+			  	if(y%400==0 || (y%4==0 && y%100!=0))
+					pre_date = y+"-"+tmp+"-29";
+			  	else
+					pre_date = y+"-"+tmp+"-28";
+			  }else if(m == 5 || m == 7 || m == 8 || m == 10 || m == 12){
+				  if(d == 31)
+					  pre_date = y+"-"+tmp+"-30";
+				  else
+					  pre_date = y+"-"+tmp+"-"+d;
+			  }else{
+
+				  if(d == 30 || (m == 2 && (d == 28 || d == 29)))
+					  pre_date = y+"-"+tmp+"-31";
+				  else
+					  pre_date = y + "-" +tmp + "-" + d;
+			  }
+			  dateTime = pre_date + " - " + cur_date;
+		  }
     	  
     	  layui.use('table', function(){
     		  var table = layui.table;
@@ -74,10 +108,39 @@
       		    	  }
       		      }
       		      ,{field:'uploadName',width:120, event: 'set7', title: '上传人', sort: true}
+      		      ,{field:'uploadTime',width:160, event: 'set9', title: '上传时间', sort: true
+						  ,templet: function(d){
+							  var date = new Date(d.uploadTime);
+							  var Y = date.getFullYear() + '-';
+							  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+							  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+							  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+							  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+							  return Y+M+D+h+m+s;
+						  }
+					  }
+      		      ,{field:'checkName',width:120, event: 'set10', title: '审核人', sort: true}
+      		      ,{field:'checkTime',width:160, event: 'set11', title: '审核时间', sort: true
+						  ,templet: function(d){
+							  if(d.checkTime == null){
+							  	return "";
+							  }else {
+								  var date = new Date(d.checkTime);
+								  var Y = date.getFullYear() + '-';
+								  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+								  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+								  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+								  var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+								  var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+								  return Y + M + D + h + m + s;
+							  }
+						  }
+					  }
       		      ,{fixed: 'right', width:100, event: 'set8', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"materialName": materialName, "fileType":fileType, "statusId":statusId}
+    		    ,where: {"materialName": materialName, "fileType":fileType, "statusId":statusId, "dateTime":dateTime}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		      }
@@ -160,7 +223,15 @@
 									<select id="statusId" name="statusId" style="width: 150px; height: 35px;">
 										<option value="1" selected>未审核</option>
 										<option value="4">未通过</option>
+										<option value="3">通过</option>
 									</select>
+								</div>
+							</div>
+
+							<div class="layui-inline">
+								<label class="layui-form-mid">上传日期范围：</label>
+								<div class="layui-inline" style="">
+									<input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 170px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
 								</div>
 							</div>
 							

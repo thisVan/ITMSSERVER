@@ -256,11 +256,52 @@ public class MaterialController {
 
 	@RequestMapping("/getAllMaterialInfo")
 	@ResponseBody
-	public PageResultData<Material> getAllMaterialInfo(String param, int page, int limit, Model model, HttpServletRequest request) {
+	public PageResultData<Material> getAllMaterialInfo(String param, int page, int limit, String field, String order, Model model, HttpServletRequest request) {
 		System.out.println(param);
+		System.out.println(field+" "+order);
 		String[] params = param.split(",");
 		try {
-			Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", null);
+			Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", field+" "+order, null);
+			List<Material> listM = pageD.getList();
+			for (Material m : listM) {
+				System.out.println(m);
+			}
+			PageResultData<Material> pageResult = new PageResultData<Material>();
+			pageResult.setCount(pageD.getTotalRecord());
+			pageResult.setCode(0);
+			pageResult.setMsg("");
+			pageResult.setData(listM);
+			return pageResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+			PageResultData<Material> pageResult1 = new PageResultData<Material>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setMsg("查询异常");
+			pageResult1.setFail(1);
+			return pageResult1;
+		}
+	}
+
+	@RequestMapping("/getAllMaterialInfo2")
+	@ResponseBody
+	public PageResultData<Material> getAllMaterialInfo2(String param, int page, int limit,int timePeriodValue, String field, String order, Model model, HttpServletRequest request) {
+		System.out.println(param);
+		//String timePeriod=timePeriodValue;
+		//System.out.println(timePeriod);
+		Date date = new Date();
+		Calendar ca = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		ca.add(Calendar.DATE, -timePeriodValue);//一个月内的订单
+		date = ca.getTime();
+
+		String timePeriod = " and upload_time >='"+ sdf.format(date) +"'";
+		//timePeriodValue = " and date_sub(curdate(),interval 30 day) <= date(upload_time)";
+		System.out.println(timePeriodValue);
+		String[] params = param.split(",");
+		try {
+			Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", field+" "+order, timePeriod);
 			List<Material> listM = pageD.getList();
 			for (Material m : listM) {
 				System.out.println(m);
@@ -299,14 +340,14 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/searchFile")
-	public @ResponseBody PageResultData<MaterialDto> searchFile(Model model, String param, String dateTime, int page, int limit) throws ParseException {
+	public @ResponseBody PageResultData<MaterialDto> searchFile(Model model, String param, String dateTime, int page, int limit, String field, String order) throws ParseException {
 		System.out.println("param=" + param + " dateTime=" + dateTime);
 		List<Terminal> listTerminal = commonService.getAllTerminal();
 		model.addAttribute("listTerminal", listTerminal);
 		String[] params = param.split(",");
 		if (dateTime == null || "".equals(dateTime)) {
 			try {
-				Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", null);
+				Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", field+" "+order, null);
 				List<Material> listM = pageD.getList();
 				System.out.println(listM);
 				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
@@ -356,17 +397,17 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/wrapSearchFile")
-	public @ResponseBody PageResultData<MaterialDto> wrapSearchFile(Model model, String terminalIdStr, String param, String dateTime, int page, int limit)
+	public @ResponseBody PageResultData<MaterialDto> wrapSearchFile(Model model, String terminalIdStr, String param, String dateTime, int page, int limit, String field, String order)
 			throws ParseException {
 		if (StringUtil.isEmpty(terminalIdStr)) {
-			return searchFile(model, param, dateTime, page, limit);
+			return searchFile(model, param, dateTime, page, limit, field, order);
 		}
 		String[] terminalIds = terminalIdStr.split(",");
 		if (terminalIds.length == 1) {
-			return searchFile(model, param + "terminalId" + ",=," + terminalIds[0] + ",", dateTime, page, limit);
+			return searchFile(model, param + "terminalId" + ",=," + terminalIds[0] + ",", dateTime, page, limit, field, order);
 		} else {
 			List<MaterialDto> listDto = new ArrayList<MaterialDto>();
-			PageResultData<MaterialDto> pageResult = searchFile(model, param, dateTime, page, limit);
+			PageResultData<MaterialDto> pageResult = searchFile(model, param, dateTime, page, limit, field, order);
 			for (MaterialDto itemsDto : pageResult.getData()) {
 				for (String terminalId : terminalIds) {
 					if (itemsDto.getTerminal().getTerminalId().equals(terminalId)) {
@@ -481,7 +522,15 @@ public class MaterialController {
 	}
 
 	@RequestMapping(value = "/wrapSearchBroadItem")
-	public @ResponseBody PageResultData<ItemsDto> wrapSearchBroadItem(String terminalIdStr, String params, String dateTime, int page, int limit) {
+	public @ResponseBody PageResultData<ItemsDto> wrapSearchBroadItem(String terminalIdStr, String params, String dateTime, int page, int limit, String field, String order) {
+		if(field.equals("terminalName")){
+			field="terminalId";
+		}
+		if(field.equals("periodName"))
+			field="periodId";
+		String orderBy = field + " " + order;
+		if(field.equals("playDate"))
+			orderBy = "startDate " + order + "," + "endDate " + order;
 
 		if (!StringUtil.isEmpty(dateTime)) {
 			String[] time = dateTime.split(" ");
@@ -493,14 +542,14 @@ public class MaterialController {
 		}
 
 		if (StringUtil.isEmpty(terminalIdStr)) {
-			return searchBroadItem2(params, dateTime, page, limit);
+			return searchBroadItem2(params, dateTime, page, limit, orderBy);
 		}
 		String[] terminalIds = terminalIdStr.split(",");
 		if (terminalIds.length == 1) {
-			return searchBroadItem2(params + "terminalId" + ",=," + terminalIds[0] + ",", dateTime, page, limit);
+			return searchBroadItem2(params + "terminalId" + ",=," + terminalIds[0] + ",", dateTime, page, limit, orderBy);
 		} else {
 			List<ItemsDto> listDto = new ArrayList<ItemsDto>();
-			PageResultData<ItemsDto> pageResult = searchBroadItem2(params, dateTime, page, limit);
+			PageResultData<ItemsDto> pageResult = searchBroadItem2(params, dateTime, page, limit, orderBy);
 			for (ItemsDto itemsDto : pageResult.getData()) {
 				for (String terminalId : terminalIds) {
 					if (itemsDto.getTerminalId().equals(terminalId)) {
@@ -517,10 +566,10 @@ public class MaterialController {
 
 	}
 
-	private PageResultData<ItemsDto> searchBroadItem2(String params, String whereSuffix, int page, int limit) {
+	private PageResultData<ItemsDto> searchBroadItem2(String params, String whereSuffix, int page, int limit, String orderBy) {
 		String[] param = params.split(",");
 		List<Period> listPeriod = commonService.getAllPeriod();
-		Page pageD = commonService.pageSearchByTemplateHQL(param, page, limit, "Items", "createTime desc", whereSuffix);
+		Page pageD = commonService.pageSearchByTemplateHQL(param, page, limit, "Items", orderBy, whereSuffix);
 		List<Items> listM = pageD.getList();
 		System.out.println("item listDto"+listM);
 		List<ItemsDto> listDto = EntityUtil.getItemsDto(listM, listPeriod);
@@ -1169,27 +1218,87 @@ public class MaterialController {
 
 	@RequestMapping(value = "/searchCheckFile")
 	public @ResponseBody PageResultData<Material> searchCheckFile(Model model, HttpServletRequest request, String materialName, String fileType,
-			String statusId, int page, int limit) {
+			String statusId, String dateTime, int page, int limit) {
 		String[] param = initParam(materialName, fileType, statusId);
-		try {
-			// Page page = commonService.pageSearchByTemplateHQL(params,
-			// currentPage,
-			// pageSize, "File", "uploadTime desc", null);
-			Page pageD = commonService.pageSearchCheckByTemplateHQL(param, page, limit, "Material", "uploadTime desc", null);
-			List<Material> listM = pageD.getList();
-			PageResultData<Material> pageResult = new PageResultData<Material>();
-			pageResult.setCount(pageD.getTotalRecord());
-			pageResult.setCode(0);
-			pageResult.setMsg("");
-			pageResult.setData(listM);
-			return pageResult;
-		} catch (Exception e) {
-			e.printStackTrace();
-			PageResultData<Material> pageResult1 = new PageResultData<Material>();
-			pageResult1.setCount(0);
-			pageResult1.setCode(0);
-			pageResult1.setMsg("");
-			return pageResult1;
+
+//		if (dateTime == null || "".equals(dateTime)) {
+//			Calendar calendar = Calendar.getInstance();
+//			int y = calendar.get(Calendar.YEAR);
+//			int m = calendar.get(Calendar.MONTH) + 1;
+//			int d = calendar.get(Calendar.DATE);
+//			String cur_date = y + "-" + m + "-" + d;
+//			String pre_date;
+//			int tmp = m - 1;
+//			if (m == 1) {
+//				pre_date = y - 1 + "-12-" + d;
+//			} else if (m == 3) {
+//				if (y % 400 == 0 || (y % 4 == 0 && y % 100 != 0)) {
+//					pre_date = y + "-" + tmp + "-29";
+//				} else {
+//					pre_date = y + "-" + tmp + "-28";
+//				}
+//			} else if (m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
+//				if (d == 31) {
+//					pre_date = y + "-" + tmp + "-30";
+//				} else {
+//					pre_date = y + "-" + tmp + "-" + d;
+//				}
+//			} else {
+//				if (d == 30 || (m == 2 && (d == 28 || d == 29))) {
+//					pre_date = y + "-" + tmp + "-31";
+//				} else {
+//					pre_date = y + "-" + tmp + "-" + d;
+//				}
+//			}
+//			dateTime = pre_date + " - " + cur_date;
+//		}
+
+		if (dateTime == null || "".equals(dateTime)) {
+			try {
+				// Page page = commonService.pageSearchByTemplateHQL(params,
+				// currentPage,
+				// pageSize, "File", "uploadTime desc", null);
+				Page pageD = commonService.pageSearchCheckByTemplateHQL(param, page, limit, "Material", "uploadTime desc", null);
+				List<Material> listM = pageD.getList();
+				PageResultData<Material> pageResult = new PageResultData<Material>();
+				pageResult.setCount(pageD.getTotalRecord());
+				pageResult.setCode(0);
+				pageResult.setMsg("");
+				pageResult.setData(listM);
+				return pageResult;
+			} catch (Exception e) {
+				e.printStackTrace();
+				PageResultData<Material> pageResult1 = new PageResultData<Material>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("");
+				return pageResult1;
+			}
+		}else{
+			try {
+				System.out.println(dateTime);
+				String[] time = dateTime.split(" - ");
+				String startDate = time[0];
+				String endDate = time[1];
+				// Page page = commonService.pageSearchByTemplateHQL(params,
+				// currentPage,
+				// pageSize, "File", "uploadTime desc", null);
+				Page pageD = commonService.pageSearchCheckByTemplateHQL(startDate, endDate, param, page, limit, "Material", "uploadTime desc", null);
+				List<Material> listM = pageD.getList();
+				PageResultData<Material> pageResult = new PageResultData<Material>();
+				pageResult.setCount(pageD.getTotalRecord());
+				pageResult.setCode(0);
+				pageResult.setMsg("");
+				pageResult.setData(listM);
+				return pageResult;
+			} catch (Exception e) {
+				e.printStackTrace();
+				PageResultData<Material> pageResult1 = new PageResultData<Material>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("");
+				return pageResult1;
+			}
 		}
 	}
 
