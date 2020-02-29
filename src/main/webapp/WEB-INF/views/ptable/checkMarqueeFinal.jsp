@@ -248,7 +248,7 @@
 						<div class="layui-row layui-col-space10">
 							<div class="layui-col-md12">
 								<div align="center">
-									<img width="300" src="" height="250" id="img1" class="indexBanner"/>
+									<img width="300" src="" height="" id="img1" class="indexBanner"/>
 								</div>
 							</div>
 							<div>

@@ -28,7 +28,7 @@
 			<video width="650" height="350" id="video" class="indexBanner" style="display:none">
 				<source src="" type="video/mp4" />
 			</video>
-			<img alt="跑马灯图片" src="" width="650" height="450" id ="img1" style="display:none" >
+			<img alt="跑马灯图片" src="" width="650" height="" id ="img1" style="display:none" >
 		</div>
 		<div id="duration">
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>总时长:</label>

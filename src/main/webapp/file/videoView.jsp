@@ -22,7 +22,7 @@
 			<video width="650" height="450" id="video1" style="display:none" class="indexBanner" controls="controls" autoplay>
 				<source src="" type="video/mp4" />
 			</video>
-			<img alt="跑马灯图片" src="" width="650" height="450" id ="img1" style="display:none" >
+			<img alt="跑马灯图片" src="" width="650" height="" id ="img1" style="display:none" >
 			
 		</div>
 		<br>

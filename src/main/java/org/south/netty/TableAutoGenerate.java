@@ -17,6 +17,7 @@ import java.util.Properties;
 import javax.sound.midi.Soundbank;
 
 import com.mysql.jdbc.PreparedStatement;
+import org.south.itms.entity.Items;
 
 /**
  * @author jan
@@ -66,20 +67,26 @@ public class TableAutoGenerate {
 				ptableid = pid;
 				Ad[] adArray = new Ad[apt.getListAd().size()];
 				int len = 0;
+
 				for (Ad a : apt.getListAd()) {
 					adArray[len] = a;
 					len++;
 				}
-				System.out.println("array1=" + adArray[0]);
-				System.out.println("array2=" + adArray[1]);
+
+				System.out.println("生成播表！！！广告视频在没处理之前是这样的：");
+				for(int i = 0; i < adArray.length; i++){
+					System.out.print(adArray[i].getFileId() + " ");
+				}
+				System.out.println();
+
 				Ad[] d = Playlist.generatePlaylist(adArray);
-				System.out.println("Ad====" + d.length + " d1=" + d[0]);
-				System.out.println("d2=" + d[1]);
-				// System.out.println(d.length);
-				// for(int i = 0; i < d.length; i++){
-				// System.out.print(d[i].getFileId() + " ");
-				// }
-				// System.out.println();
+
+				System.out.println(d.length);
+				for(int i = 0; i < d.length; i++){
+					System.out.print(d[i].getFileId() + " ");
+				 }
+				 System.out.println();
+
 				writeSqlPlayFile(pid, d);
 			} else if (apt.getListAd().size() == 1) {
 				writeSqlTable(apt.getTerminalId(), apt.getPeriodId(), apt.getListAd(), uid, length);
@@ -476,7 +483,9 @@ public class TableAutoGenerate {
 			for (Ad a : ad) {
 				System.out.println(a.getFileId() + "----");
 			}
+//##################################高能区##########################################################
 
+//	原来的版本
 			for (int i = 1; i <= ad.length; i++) {
 				// statement用来执行SQL语句
 				String insertSql = "INSERT INTO ptable_file" + "(mid, pid, num, deleted)" + "values(?,?,?,?)";
@@ -488,6 +497,21 @@ public class TableAutoGenerate {
 				statement.setInt(4, 0);
 				statement.executeUpdate();
 			}
+
+//	新版本，解决ptable_file问题,删除与显示问题，目标一个ptable_file就对应一个item
+			//先将Ad[i]去重
+			//从items表中找到所有的是Ad[i]中对应mid的且符合pid中播放日期，时段的item
+			//将以上的item全部插入ptable_file
+
+			System.out.println("#####################################");
+			System.out.println("开始制作有itemid的ptable_file!!!!!!!!");
+			//在这之前,先针对ad[]素材找到对应的mid ID的item，返回一个itemList
+			//把itemID写入ptabefile
+//			String sql = "select it.* from items it  where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
+//			session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
+//########################################################################################################
+
+
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Sorry,can`t find the Driver!");

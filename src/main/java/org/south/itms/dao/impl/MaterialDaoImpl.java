@@ -136,7 +136,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public int getAllRecord2(String str) {
-		String hql = "select count(*) from Material where statusId = ? and deleted = 0 and tis = '1'";
+		String hql = "select count(*) from Material where statusId = ? and deleted = 0 and tis = 1";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, str);
 		return ((Number)query.uniqueResult()).intValue();  
@@ -177,7 +177,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	@Override
 	public int delMaterial2(String id) {
-		String hql = "update Material set deleted = 1 where mid=? and statusId != '3'";
+		String hql = "update Material set deleted = 1 where mid=? and statusId != 3";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, id);
 		return query.executeUpdate();
