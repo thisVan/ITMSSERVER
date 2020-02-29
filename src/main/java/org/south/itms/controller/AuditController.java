@@ -161,6 +161,39 @@ public class AuditController {
 	}
 
 
+	@RequestMapping("/systemAudit")
+	public String systemAudit(Model model, HttpServletRequest request) {
+		return "audit/systemAudit";
+	}
+
+
+
+	@RequestMapping("/getAllSystemAuditLog")
+	@ResponseBody
+	public PageResultData<UserActionLog> getAllSystemAuditLog(String start, String end,String param, int page,
+															  int limit, Model model, HttpServletRequest request) {
+		String[] params = param.split(",");
+		try {
+			Page pageD = commonService.pageSearchUserActionLogByTemplateHQL(start,end,params, page, limit, "UserActionLog", "operationTime desc", null);
+			List<UserActionLog> logList = pageD.getList();
+			PageResultData<UserActionLog> pageResult = new PageResultData<UserActionLog>();
+			pageResult.setCount(pageD.getTotalRecord());
+			pageResult.setCode(0);
+			pageResult.setMsg("");
+			pageResult.setData(logList);
+			return pageResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+			PageResultData<UserActionLog> pageResult1 = new PageResultData<UserActionLog>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setMsg("查询异常");
+			pageResult1.setFail(1);
+			return pageResult1;
+		}
+	}
+
+
 
 
 }

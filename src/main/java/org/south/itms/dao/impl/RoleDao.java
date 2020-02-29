@@ -2,8 +2,8 @@ package org.south.itms.dao.impl;
 
 import java.util.List;
 
-import org.south.itms.entity.Resource;
 import org.south.itms.entity.Role;
+import org.south.itms.entity.User;
 
 public interface RoleDao {
 
@@ -20,4 +20,6 @@ public interface RoleDao {
 
 	void saveRoleResourceRelation(String roleId, String[] resourceIds);
 
+	// 2020/1/11 by bobo
+	Role getRoleById(String roleId);
 }

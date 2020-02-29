@@ -4,15 +4,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-import org.south.itms.entity.File;
-import org.south.itms.entity.IPTable;
-import org.south.itms.entity.Items;
-import org.south.itms.entity.Material;
-import org.south.itms.entity.Period;
-import org.south.itms.entity.PlayTable;
+import org.south.itms.entity.*;
 import org.south.itms.dto.Page;
-import org.south.itms.entity.Terminal;
-import org.south.itms.entity.User;
 
 public interface CommonService {
 
@@ -89,7 +82,7 @@ public interface CommonService {
 	boolean queryByMaterialName(String materialName);
 
 	/**
-	 * @param fileId
+	 * @param mid
 	 * @return
 	 */
 	Material queryById(String mid);
@@ -139,5 +132,9 @@ public interface CommonService {
     //7.15
     boolean delOneFromPlayFile(String pid, String mid,int num);
 
- 
+
+    //2020.1.11 by bobo
+	User getUserById(String id);
+
+	Role getRoleById(String id);
 }  

@@ -1,18 +1,11 @@
 package org.south.itms.aspect;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.servlet.http.HttpSession;
 import org.aspectj.lang.JoinPoint;
 import org.south.itms.entity.PlayTable;
-import org.south.itms.entity.UserActionLog;
 import org.south.itms.service.impl.PtableServiceImpl;
 import org.south.netty.TableAutoGenerate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 
 public class PlayTableOperationAspect {
     //素材操作，被操作对象都是播表

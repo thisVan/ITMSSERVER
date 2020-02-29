@@ -171,5 +171,104 @@
 		</aop:aspect>
 	</aop:config>
 
-  	<aop:aspectj-autoproxy proxy-target-class="true"/> 
+
+	<!-- 系统管理相关切点 -->
+	<bean id = "systemOperationAspectPoint" class= "org.south.itms.aspect.SystemOperationAspect"/>
+
+	<!-- 登录 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeSystemLogin"
+					   pointcut="execution(* org.south.itms.controller.LoginController.loginIn(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 添加用户-->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeAddUser"
+					   pointcut="execution(* org.south.itms.controller.SystemController.addUser(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 编辑用户-->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeModifyUser"
+					   pointcut="execution(* org.south.itms.controller.SystemController.editUser(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 删除用户 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:before method="completeDeleteUser"
+					   pointcut="execution(* org.south.itms.controller.SystemController.delUser(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 添加角色 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeAddRole"
+						pointcut="execution(* org.south.itms.controller.SystemController.addRole(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 编辑角色 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeModifyRole"
+					   pointcut="execution(* org.south.itms.controller.SystemController.editRole(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 删除角色 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:before method="completeDeleteRole"
+					   pointcut="execution(* org.south.itms.controller.SystemController.delRole(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 添加终端 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeAddTerminal"
+					   pointcut="execution(* org.south.itms.controller.TerminalController.addTerminal(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 修改终端 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeModifyTerminal"
+					   pointcut="execution(* org.south.itms.controller.TerminalController.editTerminal(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 删除终端 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:before method="completeDeleteTerminal"
+					   pointcut="execution(* org.south.itms.controller.TerminalController.delTerminal2(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 终止播放端 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeStopTerminal"
+					   pointcut="execution(* org.south.itms.controller.PlayerController.stopTerminal(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 重启播放端 -->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeRestartTerminal"
+					   pointcut="execution(* org.south.itms.controller.PlayerController.restartTerminal(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
 </beans>

@@ -1,13 +1,12 @@
 package org.south.itms.dao.impl;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.south.itms.entity.Resource;
 import org.south.itms.entity.Role;
+import org.south.itms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +28,7 @@ public class RoleDaoImpl implements RoleDao{
     
     @Override  
     public int countByRoleName(Role entity) {
-    	String hqlString = "select count(*) from Role where deleted = 0 and roleName = :roleName and roleId != :roleId";  
+    	String hqlString = "select count(*) from Role where deleted = 0 and roleName = :roleName and roleId != :roleId";
     	Query query = this.getCurrentSession().createQuery(hqlString);  
     	query.setParameter("roleName", entity.getRoleName());
     	query.setParameter("roleId", entity.getRoleId());
@@ -86,13 +85,20 @@ public class RoleDaoImpl implements RoleDao{
 	@Override
 	public void saveRoleResourceRelation(String roleId, String[] resourceIds) {  
 		// TODO Auto-generated method stub
-		String sql = "insert into role_resource(role_id, resource_id, deleted) values (:roleId, :resourceId, 0)";
+		String sql = "insert into role_resource(role_id, resource_id, deleted) values (=:roleId, =:resourceId, 0)";
 		Query query = this.getCurrentSession().createNativeQuery(sql);
 		query.setParameter("roleId", roleId);
 		for(String resourceId : resourceIds) {
 			query.setParameter("resourceId", resourceId);
 			query.executeUpdate();
 		}
-	} 
-	
+	}
+
+	@Override
+	public Role getRoleById(String roleId) {
+		String hql = "from Role where roleId=: roleId and deleted = 0";
+		Role role =  (Role) this.getCurrentSession().createQuery(hql).setParameter("roleId", roleId).uniqueResult();
+		return role;
+	}
+
 }

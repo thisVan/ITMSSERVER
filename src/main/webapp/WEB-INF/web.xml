@@ -5,8 +5,17 @@
    <context-param>  
        <param-name>contextConfigLocation</param-name>  
        <param-value>classpath:spring.xml,classpath:spring-hibernate.xml</param-value>  
-   </context-param>  
-   
+   </context-param>
+
+    <!-- 防止Xss攻击-->
+    <filter>
+        <filter-name>XssFilter</filter-name>
+        <filter-class>org.south.itms.security.XssFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>XssFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
  
    <filter>  
        <filter-name>encodingFilter</filter-name>  
@@ -61,8 +70,13 @@
            <param-value>classpath:spring-mvc.xml</param-value>  
        </init-param>  
        <load-on-startup>1</load-on-startup>  
-   </servlet>  
-   
+   </servlet>
+
+
+    <!-- 每日5点的更新任务监听器-->
+    <listener>
+        <listener-class>org.south.itms.util.ClearUserLoginInfoTimerTaskListener</listener-class>
+    </listener>
    
    <!-- 用于启动netty的服务器 -->
    <listener>
@@ -93,6 +107,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
-  
+
+
+
+
+
 </web-app>

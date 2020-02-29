@@ -1074,12 +1074,18 @@ public class PtableController {
 			if (playTable.getInsertFlag() == 0) {
 				List<Items> files = materialDao.findByPtable(pid);
 				request.getSession().setAttribute("modifyPid", pid);
+
+				System.out.println("下面是从pid = "+pid +  "中查到的对应item：");
 				System.out.println(files);
+
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("playTable", playTable);
 				map.put("files", files);
 				PageResultData<Items> pageResult = new PageResultData<Items>();
+
 				pageResult.setCount(files.size());
+				System.out.println("一共返回了：" + files.size() + "个item");
+
 				pageResult.setCode(0);
 				pageResult.setMsg(name);
 				pageResult.setFail(0);

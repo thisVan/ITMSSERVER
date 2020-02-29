@@ -1,6 +1,7 @@
 package org.south.itms.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -30,7 +31,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	private Session openSession() {  
         return this.sessionFactory.openSession();  
-    } 
+    }
 	
 	//关闭Session
     private void closeSession(Session session){
@@ -261,7 +262,7 @@ public class MaterialDaoImpl implements MaterialDao {
         try {
         	//String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid)  order by pf.num asc";
         	String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
-        	return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
+			return session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
         } finally {
             closeSession(session);
         }
