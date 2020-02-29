@@ -47,7 +47,7 @@
 <div class="video_mask"></div>
 <div class="login">
     <h1>在线排播系统登录</h1>
-    <h2 id="tipMsg"  align="center" style="color:red; margin-bottom:5px;"></h2>
+    <h2 id="tipMsg" style="text-align:center; color:red; margin-bottom:5px;clear: both"></h2>
         <div class="layui-form-item">
             <input class="layui-input" id="userAccount" name="userAccount" placeholder="用户名" value="" lay-verify="required" type="text" autocomplete="off">
         </div>
