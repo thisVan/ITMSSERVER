@@ -308,8 +308,10 @@ public class MaterialDaoImpl implements MaterialDao {
 	public List<Material> findMaterialByPtable(String pid) {
 		Session session = openSession();
         try {
-        	String sql = "select DISTINCT m.* from ptable_file pf left join material m on pf.mid = m.mid where m.deleted = 0 and pf.deleted = 0 and pf.pid = :pid order by pf.num asc";
-        	return session.createNativeQuery(sql, Material.class).setParameter("pid", pid).getResultList();
+        	//String sql = "select DISTINCT m.* from ptable_file pf left join material m on pf.mid = m.mid where m.deleted = 0 and pf.deleted = 0 and pf.pid = :pid order by pf.num asc";
+			String sql = "select  m.* from ptable_file pf left join material m on pf.mid = m.mid where m.deleted = 0 and pf.deleted = 0 and pf.pid = :pid order by pf.num asc";
+
+			return session.createNativeQuery(sql, Material.class).setParameter("pid", pid).getResultList();
         } finally {
             closeSession(session);
         }
