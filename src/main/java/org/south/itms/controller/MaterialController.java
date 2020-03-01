@@ -2,6 +2,7 @@ package org.south.itms.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -44,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -1404,9 +1406,16 @@ public class MaterialController {
 		rootPath = rootPath + fName;
 		// rootPath1 = rootPath;
 		int durTime = 1;
-		BigInteger bigIntMD5 = FileUtil.getMD5(rootPath);
-		String md = bigIntMD5.toString(16);
+		//BigInteger bigIntMD5 = FileUtil.getMD5(rootPath);
+		//String md = bigIntMD5.toString(16);
 		// savePath = savePath + "/" + fName;
+		String  fileMD5 = DigestUtils.md5DigestAsHex(new FileInputStream(new File(rootPath)));
+		//System.out.println("旧的MD5:");
+		//System.out.println(md);
+		//System.out.println("新的MD5");
+		System.out.println(fileMD5);
+
+
 		Material material = new Material();
 		material.setDeleted(0);
 		material.setTis("0");
@@ -1415,7 +1424,7 @@ public class MaterialController {
 		String materialName = fileName.substring(0, fileName.lastIndexOf("."));
 		System.out.println(materialName);
 		material.setMaterialName(materialName);
-		material.setMd5(md);
+		material.setMd5(fileMD5);
 		material.setUploadName(name);
 		material.setStatusId("1");
 		material.setInfo("0");
