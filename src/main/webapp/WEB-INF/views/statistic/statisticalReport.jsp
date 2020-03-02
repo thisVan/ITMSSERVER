@@ -115,7 +115,7 @@
       }
       
       function generateExcel() {
-          	  var url = '<%=request.getContextPath()%>/statistic/generateExcel.do?terminalId=' + $("#terminal").val() + '&dateTime=' + $("#statisTime").val() +'&type=' + $("#statisType").val();
+          	  var url = '<%=request.getContextPath()%>/statistic/generateExcel.do?terminalId=' + $("#terminal").val() + '&dateTime=' + $("#statisTime").val() +'&type=' + $("#statisType").val() + '&materialNameLike='  + $("input[ name='material_name' ]").val() ;
 			  var xhr = new XMLHttpRequest(); 
 			  xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
 			  xhr.responseType = "blob";  // 返回类型blob

@@ -46,6 +46,7 @@ public class StatisticController {
 		return "statistic/statisticalReport";
 	}
 
+	// 播放次数统计表
 	@RequestMapping(value = "/searchPlayNum")
 	public @ResponseBody PageResultData<PlayNumDto> searchPlayNum(String terminalId, String dateTime, String materialName) {
 		if (StringUtil.isEmpty(terminalId) || StringUtil.isEmpty(dateTime)) {
@@ -109,8 +110,9 @@ public class StatisticController {
 
 	}
 
+	// 生成EXCEL表格
 	@RequestMapping(value = "/generateExcel")
-	public void generateExcel(String terminalId, String dateTime, String type, HttpServletResponse response) {
+	public void generateExcel(String terminalId, String dateTime, String type,String materialNameLike, HttpServletResponse response) {
 		if (StringUtil.isEmpty(terminalId) || StringUtil.isEmpty(dateTime) || StringUtil.isEmpty(type)) {
 			return;
 		}
@@ -146,7 +148,12 @@ public class StatisticController {
 				cell.setCellValue("所属播表");
 
 				// 第五步，写入实体数据 实际应用中这些数据从数据库得到，
-				List<PlayLog> list = statisticService.findPlayLog(terminalId, startTime, endTime);
+				List<PlayLog> list = statisticService.findPlayLog(terminalId, startTime, endTime, materialNameLike);
+
+				System.out.println(list.size());
+				for (int i = 0; i < list.size(); i++){
+					System.out.println(list.get(i).toString());
+				}
 
 				for (int i = 0; i < list.size(); i++) {
 					row = sheet.createRow((int) i + 1);
@@ -178,7 +185,7 @@ public class StatisticController {
 				cell.setCellValue("结束播放时间");
 
 				// 第五步，写入实体数据 实际应用中这些数据从数据库得到，
-				List<PlayNumDto> list = statisticService.findPlayNumDto(terminalId, startTime, endTime);
+				List<PlayNumDto> list = statisticService.findPlayNumDto(terminalId, startTime, endTime, materialNameLike);
 
 				for (int i = 0; i < list.size(); i++) {
 					row = sheet.createRow((int) i + 1);

@@ -130,9 +130,20 @@ public class StatisticDaoImpl implements StatisticDao {
 	}
     
     @Override 
-    public List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime) {
-    	String sql = "select * from play_log where deleted = 0 and terminal_id = :terminalId and str_to_date(play_start_time, '%Y-%m-%d %H:%i:%S') >= :startTime and str_to_date(play_end_time, '%Y-%m-%d %H:%i:%S') <= :endTime ORDER BY play_end_time desc";
-    	return getCurrentSession().createNativeQuery(sql, PlayLog.class).setParameter("terminalId", terminalId).setParameter("startTime", startTime).setParameter("endTime", endTime).getResultList();
+    public List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime,String materialNameLike) {
+		String sql = "";
+		if (materialNameLike.equals("")) {
+			sql = "select * from play_log where deleted = 0  and terminal_id = :terminalId and str_to_date(play_start_time, '%Y-%m-%d %H:%i:%S') >= :startTime and str_to_date(play_end_time, '%Y-%m-%d %H:%i:%S') <= :endTime ORDER BY play_end_time desc";
+			return getCurrentSession().createNativeQuery(sql, PlayLog.class).setParameter("terminalId", terminalId).setParameter("startTime", startTime).setParameter("endTime", endTime).getResultList();
+
+		}
+		else{
+			materialNameLike = "%" + materialNameLike + "%";
+			sql = "select * from play_log where deleted = 0 and material_name like :materialNameLike and terminal_id = :terminalId and str_to_date(play_start_time, '%Y-%m-%d %H:%i:%S') >= :startTime and str_to_date(play_end_time, '%Y-%m-%d %H:%i:%S') <= :endTime ORDER BY play_end_time desc";
+			return getCurrentSession().createNativeQuery(sql, PlayLog.class).setParameter("terminalId", terminalId).setParameter("startTime", startTime).setParameter("endTime", endTime).setParameter("materialNameLike",materialNameLike).getResultList();
+
+
+		}
     }
   
     

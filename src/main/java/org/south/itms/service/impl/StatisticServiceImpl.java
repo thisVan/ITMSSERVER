@@ -37,9 +37,9 @@ public class StatisticServiceImpl implements StatisticService {
 	}
 
 	@Override
-	public List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime) {
+	public List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime,String materialNameLike) {
 		// TODO Auto-generated method stub
-		return statisticDao.findPlayLog(terminalId, startTime, endTime);
+		return statisticDao.findPlayLog(terminalId, startTime, endTime,materialNameLike);
 	}
 
 	@Override

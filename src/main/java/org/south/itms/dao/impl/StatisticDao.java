@@ -14,7 +14,7 @@ public interface StatisticDao {
 	
 	List<PlayNumDto> findPlayNumDto(String terminalId, String startTime, String endTime, String materialName);
 
-	List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime);
+	List<PlayLog> findPlayLog(String terminalId, String startTime, String endTime,String materialNameLike);
 	
 	Page pageSearchPlayLog(String terminalId, String material_name, String startTime, String endTime, int currentPage, int pageSize);
 
