@@ -507,11 +507,6 @@
 					<div class="layui-field-box">
 						<div class="layui-col-md12 layui-col-space1" id="playTableMaterialsDiv">
 							<label class="layui-form-mid" id="ptableNameOnce"> </label>
-<label class="layui-form-mid pull-right" >
-								<button class="layui-btn" type="button" onclick="goBack()">
-									<i class="layui-icon">&#xe65c;</i>返回播表管理
-								</button>
-							</label>
 							<table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 							<script type="text/html" id="toolbarDemo">
   								<div class="layui-btn-container">

@@ -160,7 +160,7 @@
       		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"param": param,"dateTime":dateTime}
+    		    ,where: {"param": param,"dateTime":dateTime, "field":"materialName", "order":"asc"}
     		    ,done: function(res, curr, count){
     		    	  //changeBg();
     		      }
@@ -340,7 +340,9 @@
       function doTreeSearch(id){
     	  layui.use('table', function(){
     		  var table = layui.table;
-    		  
+    		  // if(id == null || "".equals(id)){
+    		  // 	id = "t9";
+			  // }
     		  table.render({
     		    elem: '#table1'
     		    ,id: 'flagTwo'
