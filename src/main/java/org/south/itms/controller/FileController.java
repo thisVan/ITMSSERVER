@@ -1,6 +1,7 @@
 package org.south.itms.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -35,6 +36,7 @@ import org.south.netty.msg.MsgType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -305,7 +307,17 @@ public class FileController {
 				}
 
 				FileUtil.fileCopy(path, rootPath);
-				BigInteger bigIntMD5 = FileUtil.getMD5(path);
+				//BigInteger bigIntMD5 = FileUtil.getMD5(path);
+
+				// modify by bobo 2020/3/1
+				// 修正MD5错误
+				String fileMD5 = DigestUtils.md5DigestAsHex(new FileInputStream(new File(path)));
+
+//				System.out.println("下面是计算的MD5值");
+//				System.out.println("原来的计算结果");
+//				System.out.println(bigIntMD5.toString(16));
+//				System.out.println("新的计算结果：");
+				System.out.println(fileMD5);
 
 				org.south.itms.entity.File upload = new org.south.itms.entity.File();
 				if ("".equals(frequency)) {
@@ -332,8 +344,8 @@ public class FileController {
 				upload.setUploadName((String) request.getSession().getAttribute("userName"));
 				upload.setFileName(fileName);
 				upload.setFilePath(savePath);
-				String md = bigIntMD5.toString(16);
-				upload.setMd5(md);
+				System.out.println("存了新的MD5值：");;
+				upload.setMd5(fileMD5);
 				upload.setStartTime(date1);
 				upload.setEndTime(date2);
 				upload.setMaterialName(materialName);
