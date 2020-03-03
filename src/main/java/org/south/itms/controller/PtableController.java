@@ -900,7 +900,11 @@ public class PtableController {
 		modelMap.addAttribute("isUnChecked", playTableIsUnChecked);
 		modelMap.addAttribute("playTableName", playTable.getPtableName());
 		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
-		
+		modelMap.addAttribute("startTime",playTable.getStartTime());
+		modelMap.addAttribute("endTime",playTable.getEndTime());
+		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
+		modelMap.addAttribute("min",playTable.getMin());
+
 		modelMap.addAttribute("playTableDuration", playTable.getPlayTotalTime());
 		modelMap.addAttribute("playTableMaxCommonDivisor", playTable.getBaseFrequency());//基础频次，最大公约数
 		

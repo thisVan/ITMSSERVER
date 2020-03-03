@@ -21,7 +21,11 @@
 	var periodID = '${periodID}'; //时段ID
 	var itemnum; //该播表素材的总数
 	var ptableStyle = '${ptableStyle}';
-	
+	var startTime = '${startTime}';
+	var endTime = '${endTime}';
+	var insertFlag = '${insertFlag}'
+	var min = '${min}';
+
 	var ptableTotalDuration = '${playTableDuration}';
 	var ptableMaxCommonDivisor = '${playTableMaxCommonDivisor}';
 	$(function() {
@@ -68,6 +72,28 @@
 						width : 140,
 						event : 'set3',
 						title : '时长'
+					}
+					, {
+						field : 'min',
+						width : 140,
+						event : 'set5',
+						title : '间隔'
+						,templet: function(d){
+							if(insertFlag == '0') {
+								return " " ;
+							}else if (insertFlag == '1'){
+								return min;
+							}
+						}
+					}
+					,{field:'periodTime',width:260, event: 'set6', title: '时段范围', sort: true
+						,templet: function(d){
+							if(insertFlag == '0') {
+								return periodName + " " ;
+							}else if (insertFlag == '1'){
+								return startTime + "-" + endTime;
+							}
+						}
 					}
 					, {
 						fixed : 'right',
@@ -242,7 +268,7 @@
 
 
 				} else if (obj.event === 'del') {
-					layer.confirm('真的删除么', function(index) {
+					layer.confirm('是否删除「 '+obj.data.materialName+' 」？', function(index) {
 
 						layer.close(index);
 						//向服务端发送删除指令
