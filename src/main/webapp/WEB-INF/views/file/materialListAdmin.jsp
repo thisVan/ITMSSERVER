@@ -200,6 +200,10 @@
     											init();
     											layer.msg('删除成功!',{icon:6,time:4000});
     										}
+    										if(value== "false"){
+    											init();
+												layer.msg('删除失败!只能删除未审核且你自己上传的！',{icon:5,time:4000});
+											}
     									}
     								});
     			    	  });

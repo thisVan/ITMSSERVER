@@ -1669,6 +1669,23 @@ public class MaterialController {
 	@RequestMapping(value = "/delMaterial")
 	public @ResponseBody String delMaterial(String[] mid, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String rid = (String) request.getSession().getAttribute("rId");
+
+		// 删除检验
+		// 只有符合条件的才能删除
+		for (int i = 0 ; i < mid.length ; i++){
+			Material m = materialService.getById(mid[i]);
+			//只要有一个不合条件就不允许删除
+			System.out.println(m.getUploadName() + "?" +   (String)request.getSession().getAttribute("userName"));
+			if (!m.getStatusId().equals("1")){
+				return "false";
+			}
+			if (!m.getUploadName().equals((String)request.getSession().getAttribute("userName"))) {
+				return "false";
+			}
+		}
+
+
+
 		if (rid.equals(Constant.adminValue)) { // 是系统管理员的话
 			materialService.delFile(mid); // 直接逻辑删除
 		} else {
