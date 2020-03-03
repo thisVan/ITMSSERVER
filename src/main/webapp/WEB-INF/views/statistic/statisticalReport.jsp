@@ -44,8 +44,9 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/statistic/searchPlayNum.do'
-    		    ,height: 500
+    		   // ,height: 500
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		       {field:'materialName',width:350, event: 'set1', title: '素材名称', fixed: true, sort: true}

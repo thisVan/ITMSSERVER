@@ -49,7 +49,8 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/system/resource/searchResource.do'
-    		    ,height: 365
+    		    //,height:1000
+				 ,height:'full-200'
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
@@ -242,7 +243,7 @@
 				</button>
 		      </div>
 			
-		 <div class="layui-col-md12">
+		 <div class="layui-col-md12" >
             <table class="layui-table" id="table1" lay-filter="tableEvent"></table>
 			<!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="top" topUrl="views/datagrid2/one.html" topMode="readonly" topWidth="800px" topHeight="600px" topTitle="查看demo" inputs="id:">查看</a> -->
 			<script type="text/html" id="barDemo">

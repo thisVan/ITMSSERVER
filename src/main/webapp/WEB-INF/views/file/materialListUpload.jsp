@@ -49,8 +49,9 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/searchFile.do'
-    		    ,height: 410
+    		    //,height: 410
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
@@ -207,8 +208,9 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/material/searchTreeFile.do'
-    		    ,height: 410
+    		    //,height: 410
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}

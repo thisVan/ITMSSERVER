@@ -68,8 +68,9 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/material/getAllMaterialInfo.do'
-    		    ,height: 400
+    		    //,height: 400
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      {type: 'radio', event: 'set1', fixed: true}

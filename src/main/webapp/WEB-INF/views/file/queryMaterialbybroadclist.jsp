@@ -40,8 +40,9 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/material/getPidMaterialInfo.do'
-    		    ,height: 400
+    		   // ,height: 400
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}

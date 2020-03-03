@@ -42,6 +42,7 @@
 				skin : 'row', //,cellMinWidth: 120
 				title: playTableName,
 				even : true,
+				height:'full-200',
 				toolbar: '#toolbarDemo',
 				limits : [ 10, 25, 50, 75, 100 ],
 				cols : [ [

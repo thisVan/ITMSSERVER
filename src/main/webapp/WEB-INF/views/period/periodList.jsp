@@ -33,8 +33,9 @@
     		    elem: '#table1'
     		    ,id: 'flagThree'
     		    ,url:'<%=request.getContextPath()%>/period/searchPeriod.do'
-    		    ,height: 410
-    		    //,cellMinWidth: 120
+    		   // ,height: 410
+				,height:'full-200'
+    		    //,cellMinWidth: 80
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      {checkbox: true, event: 'set1', fixed: true}

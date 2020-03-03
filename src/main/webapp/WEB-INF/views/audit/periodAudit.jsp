@@ -76,6 +76,7 @@
                     ,url:'<%=request.getContextPath()%>/audit/getAllPeriodAuditLog.do'
                     //,height: 550
                     //,cellMinWidth: 120
+                    ,height:'full-200'
                     ,limits:[10,25,50,75,100,500]
                     , initSort: {
                         field: 'statusId' //排序字段，对应 cols 设定的各字段名

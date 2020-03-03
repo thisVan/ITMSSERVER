@@ -40,6 +40,7 @@
     		    ,url:'<%=request.getContextPath()%>/material/searchItemByPid2.do'
     		    //,height: 500
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}

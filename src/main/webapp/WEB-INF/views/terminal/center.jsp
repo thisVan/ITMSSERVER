@@ -134,8 +134,9 @@
 				  ,autoSort: false
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/terminal/searchTerminal2.do'
-    		    ,height: 365
+    		    //,height: 365
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}

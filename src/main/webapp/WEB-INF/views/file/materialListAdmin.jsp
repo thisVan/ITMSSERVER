@@ -95,8 +95,9 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/searchFile.do'
-    		    ,height: 550
+    		    //,height: 550
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
       		      //{field:'id', width:'1%'}

@@ -74,8 +74,9 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/terminal/comon/searchTerminal/' + searchAreaCode + '.do'
-    		    ,height: 420
+    		    //,height: 420
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[25,50,75,100]
     		    ,limit:25
     		    ,cols: [[

@@ -79,8 +79,9 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/ptable/fildIPtable.do'
-    		    ,height: 265
+    		    //,height: 265
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,skin:"nob"
     		    ,cols: [[

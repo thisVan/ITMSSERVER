@@ -109,8 +109,9 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/wrapSearchFile.do'
-    		    ,height: 500
+    		    //,height: 500
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
@@ -234,8 +235,9 @@
     		    elem: '#table1'
     		    ,id: 'flagTwo'
     		    ,url:'<%=request.getContextPath()%>/material/wrapSearchBroadItem.do'
-    		    ,height: 500
+    		    //,height: 500
     		    //,cellMinWidth: 120
+				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}

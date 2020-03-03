@@ -79,7 +79,8 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/material/getAllMaterialInfo2.do'
-    		    ,height: 400
+    		   // ,height: 400
+				  ,height:'full-200'
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[

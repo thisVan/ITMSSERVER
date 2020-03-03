@@ -74,7 +74,8 @@
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/terminal/comon/searchTerminal/' + searchAreaCode + '.do'
-    		    ,height: 420
+    		    //,height: 420
+				  ,height:'full-200'
     		    ,initSort: {
 		              field: 'deleted' 
 		              ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序

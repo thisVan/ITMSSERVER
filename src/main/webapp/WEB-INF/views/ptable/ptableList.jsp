@@ -52,6 +52,7 @@
       		    ,url:'<%=request.getContextPath()%>/ptable/searchPtable.do'
       		    //,height: 550
       		    //,cellMinWidth: 120
+				  ,height:'full-200'
       		    ,limits:[10,25,50,75,100,500]
       		    , initSort: {
       		      field: 'statusId' //排序字段，对应 cols 设定的各字段名
@@ -243,7 +244,7 @@
     			  var tmpdata = obj.data;
     			  var pid = tmpdata.pid;
 				  var periodName=tmpdata.periodName+" ";
-    			  var tid=tmpdata.tid;		   	 
+    			  var tid=tmpdata.tid;
     			  if(obj.event === 'mediaInfo'){
     			  	console.log('<%=request.getContextPath()%>/ptable/goModifyPtable/' + pid + '/' + periodName + '/' + tid + '.do');
     				  document.location = '<%=request.getContextPath()%>/ptable/goModifyPtable/' + pid + '/' + periodName + '/' + tid + '.do';
