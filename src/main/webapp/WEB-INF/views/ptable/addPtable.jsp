@@ -95,7 +95,7 @@
 								return startTime + "-" + endTime;
 							}
 						}
-					}
+					}//选择
 					, {
 						fixed : 'right',
 						field : 'operator',
