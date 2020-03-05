@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class UserLoginListener {
 
-    //当日登录次数限制
+    //当日错误登录次数限制
     private final int  TODAYLOGINLIMIT = 5;
 
     private static UserLoginListener instance = new UserLoginListener();
@@ -29,6 +29,7 @@ public class UserLoginListener {
         public boolean getCanLogin(){
             return canLogin;
         }
+        public int getTodayLoginTimes() { return todayLoginTimes;}
 
         UserInfo(String userAccount, String loginIPAddr, int todayLoginTimes, boolean canLogin){
             this.userAccount =userAccount;
@@ -69,7 +70,7 @@ public class UserLoginListener {
     }
 
     public boolean isOverstepLoginTimes(String userAccount) {
-        return userLoginInfo.get(userAccount).todayLoginTimes > TODAYLOGINLIMIT;
+        return userLoginInfo.get(userAccount).todayLoginTimes >= TODAYLOGINLIMIT;
     }
 
 
@@ -78,4 +79,8 @@ public class UserLoginListener {
         userLoginInfo.clear();
         System.out.println("清理完毕");
     }
+
+    public int getTodayLoginLimit(){return TODAYLOGINLIMIT;}
+
+    public HashMap<String,UserInfo> getUserLoginInfo(){ return userLoginInfo;}
 }
