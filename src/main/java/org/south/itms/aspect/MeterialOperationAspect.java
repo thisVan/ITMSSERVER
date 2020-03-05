@@ -1,6 +1,6 @@
 /* author:bobo
  * time:2019-11-4
- * 完成素材相关操作的切面控制器类实现		
+ * 完成稿件相关操作的切面控制器类实现
  */
 package org.south.itms.aspect;
 
@@ -14,11 +14,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class MeterialOperationAspect {
 	
-	//素材操作，被操作对象都是素材
+	//稿件操作，被操作对象都是稿件
 	private final String OBJECT_TYPE = "MATERIAL";
 	
 	
-	//注入素材服务
+	//注入稿件服务
 	@Autowired
 	private MaterialServiceImpl materialServiceImpl;
 	
@@ -28,7 +28,7 @@ public class MeterialOperationAspect {
 	
 	//注入
 	
-	//素材上传切面
+	//稿件上传切面
 	public void completeMaterialUpload(JoinPoint joinPoint) {
 		
 		final String  currentOperation = "MATERIAL_UPLOAD";
@@ -58,7 +58,7 @@ public class MeterialOperationAspect {
 				modifyObjectId);	
 	}
 	
-	//素材删除切面
+	//稿件删除切面
 	public void completeMaterialDelete(JoinPoint joinPoint) {
 		
 		final String  currentOperation = "MATERIAL_DELETE";
@@ -67,7 +67,7 @@ public class MeterialOperationAspect {
 		//获取session
 		HttpSession session = aspectCommonMethod.getNowSession();
 		
-		//获取要删除素材的ID
+		//获取要删除稿件的ID
 		Object[] args = joinPoint.getArgs();
 		String[] materialIds = (String[])args[0];
 		
@@ -75,10 +75,10 @@ public class MeterialOperationAspect {
 		if (materialIds.length == 0) return;
 	
 		
-		//生成所有素材删除的操作日志
+		//生成所有稿件删除的操作日志
 		for (int i = 0 ;i < materialIds.length ; i++)
 		{
-			//获取被删除的素材
+			//获取被删除的稿件
 			Material material = materialServiceImpl.getById(materialIds[i]);
 			
 			//获取被修改对象的信息
@@ -98,7 +98,7 @@ public class MeterialOperationAspect {
 		}			
 	}
 	
-	//素材修改切面
+	//稿件修改切面
 	public void completeMaterialModify(JoinPoint joinPoint) {
 		
 		final String  currentOperation = "MATERIAL_MODIFY";
@@ -127,7 +127,7 @@ public class MeterialOperationAspect {
 				modifyObjectId);	
 	}
 	
-	//素材审核切面
+	//稿件审核切面
 	public void completeMaterialReview(JoinPoint joinPoint ) {
 		
 		final String  currentOperation = "MATERIAL_REVIEW";

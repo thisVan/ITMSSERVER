@@ -6,7 +6,7 @@
 
 <meta content="text/html;charset=UTF-8" />
 <%@ include file="/layui/header.jsp"%>
-<title>排播素材</title>
+<title>排播稿件</title>
 
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -44,16 +44,16 @@ Date.prototype.format = function(fmt) { //author: meizz
 
 	<div class="layui-fluid">
 		<div class="layui-form-item">
-			<label class="layui-form-label">素材名：</label>
+			<label class="layui-form-label">稿件名：</label>
 			<div class="layui-input-inline">
 				<input type="text" id="materialName" name="materialName"
-					placeholder="请选择素材" autocomplete="off" style="width: 250px;"
+					placeholder="请选择稿件" autocomplete="off" style="width: 250px;"
 					class="layui-input input-text" readonly="readonly" disabled/>
 			</div>
 			<!-- <div class="layui-input-inline">
 				<button name="" id="" class="layui-btn" type="button"
 					onclick="selectMaterial()">
-					<i class="layui-icon">&#xe61f;</i> 素材选择
+					<i class="layui-icon">&#xe61f;</i> 稿件选择
 				</button>
 			</div> -->
 		</div>
@@ -234,7 +234,7 @@ layui.use(['layer','form'], function(){
 					}else if(value == "2"){
 					    layer.msg('登陆超时,重新登陆操作!',{icon:5,time:2000});
 					}else if(value == "4"){
-					    layer.msg('执行失败,当前素材在选定时间已经排播!',{icon:5,time:2000});
+					    layer.msg('执行失败,当前稿件在选定时间已经排播!',{icon:5,time:2000});
 					}else {
 					    layer.msg('添加失败!',{icon:5,time:2000});
 					}
@@ -246,7 +246,7 @@ layui.use(['layer','form'], function(){
    function selectPeriod(){		
           var terminalId = $("#terminalId").val();
           if(terminalId == "") {
-             parent.layer.msg('请先决定排播的素材!',{icon:5,time:1500});
+             parent.layer.msg('请先决定排播的稿件!',{icon:5,time:1500});
              return;
           }	  
           
@@ -262,7 +262,7 @@ layui.use(['layer','form'], function(){
 	   var terminalId=parent.$("#terminalId").val();
 	   var parentName= window.name;
 	   var idx=parent.layer.open({
-		    title:'素材列表',
+		    title:'稿件列表',
 			type:2,
 			area:['60%','90%'],
 			//moveOut:true,

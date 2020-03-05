@@ -153,9 +153,9 @@
 		    			  }else if(state == 5){
 		    			  	return '<span style="color: #FF6347;">' + '未通过(排播有误)' + '</span>';
 		    			  }else if(state == 6){
-		    			  	return '<span style="color: #FF6347;">' + '未通过(素材敏感)' + '</span>';
+		    			  	return '<span style="color: #FF6347;">' + '未通过(稿件敏感)' + '</span>';
 		    			  }else if(state == 7){
-		    			  	return '<span style="color: #FF6347;">' + '未通过(排播有误、素材敏感)' + '</span>';
+		    			  	return '<span style="color: #FF6347;">' + '未通过(排播有误、稿件敏感)' + '</span>';
 		    			  }
     		    	  }
     		      }
@@ -294,7 +294,7 @@
 	    	
 	    	document.getElementById("checkTwice").value = '';
 	    	layer.open({
-    			title:'添加素材',
+    			title:'添加稿件',
     			type:2,
     			area:['80%','100%'],
     			content:'<%=request.getContextPath()%>/material/addMaterialInfo2.do?terminalId=' + $("#terminal").val(),
@@ -409,7 +409,7 @@
 	    		}
 	    		//console.log(midds);
 	    		if(midds == ''){
-	    			layer.msg("未选择素材",{icon:5,time:2000});
+	    			layer.msg("未选择稿件",{icon:5,time:2000});
 	 				return ;
 	    		}
 	    		
@@ -492,7 +492,7 @@
 	    		}
 	    		//console.log(midds);
 	    		if(midds == ''){
-	    			layer.msg("未选择素材",{icon:5,time:2000});
+	    			layer.msg("未选择稿件",{icon:5,time:2000});
 	 				return ;
 	    		}
 	    		
@@ -774,7 +774,7 @@
 					<table class="layui-table" lay-skin="line">
 						<thead>
 							<tr>
-								<th>素材名称</th>
+								<th>稿件名称</th>
 								<th>时长(秒)</th>
 								<th>大小</th>
 								<th>分辨率</th>
@@ -791,7 +791,7 @@
 								<div class="layui-inline">
 									<button class="layui-btn layui-bg-green" type="button"
 										onclick="addFileMaterial()">
-										<i class="layui-icon">&#xe654;</i>添加素材
+										<i class="layui-icon">&#xe654;</i>添加稿件
 									</button>
 								</div>
 								<div class="layui-inline">

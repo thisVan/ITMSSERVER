@@ -218,7 +218,7 @@ public class SqlUtil {
 			}
 		}
 		
-		//2018.12.20 加载所有素材
+		//2018.12.20 加载所有稿件
 /*		if(!StringUtil.isEmpty(alreadymid))
 		{
 			String notmids=" ( "+alreadymid+" ) ";

@@ -23,7 +23,7 @@ public class InsertDto implements Serializable {
 	
 	private String status; //瞬时or延时
 	
-	private List<String> mid; //素材编号
+	private List<String> mid; //稿件编号
 	
 	private List<String> fileName;
 	

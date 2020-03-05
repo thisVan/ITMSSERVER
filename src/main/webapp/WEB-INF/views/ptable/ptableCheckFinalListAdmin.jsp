@@ -80,9 +80,9 @@
   		    		  }else if(state == 5){
   		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误)' + '</span>';
   		    		  }else if(state == 6){
-  		    			  return '<span style="color: #FF6347;">' + '未通过(素材敏感)' + '</span>';
+  		    			  return '<span style="color: #FF6347;">' + '未通过(稿件敏感)' + '</span>';
   		    		  }else if(state == 7){
-  		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误、素材敏感)' + '</span>';
+  		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误、稿件敏感)' + '</span>';
   		    		  }
       		    	  }
       		      }

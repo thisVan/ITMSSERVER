@@ -11,7 +11,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <%@ include file="/layui/header.jsp"%>
-<title>素材上传模块 - layui</title>
+<title>稿件上传模块 - layui</title>
 
 <style>
  #file {
@@ -54,14 +54,14 @@
 		<div style="width: 80%; height: 100%; float: left">
 			<fieldset class="layui-elem-field layui-field-title"
 				style="margin-top: 30px;">
-				<legend>上传素材列表</legend>
+				<legend>上传稿件列表</legend>
 			</fieldset>
 						
 			<div>
 			  <div class="layui-inline">
 			     <div>
                    <!-- <input id="file-jan" type="file" onchange="stateChange()" multiple/> -->
-                   <input type="button" onclick="file.click()" id="btn-jan" value="多素材选择">
+                   <input type="button" onclick="file.click()" id="btn-jan" value="多稿件选择">
                    <input type="file" id="file" onchange="stateChange()" multiple/>
                  </div>
 			  </div>
@@ -295,7 +295,7 @@ function uploadFile(){
 					}
 				}else if(b == '1'){
 					var labelVal = document.getElementById("stat"+start);
-					labelVal.innerHTML = '<span style="color: #FF5722;">上传失败(同名素材)</span>';
+					labelVal.innerHTML = '<span style="color: #FF5722;">上传失败(同名稿件)</span>';
 					$("#prog"+start).remove();
 					$("#numValue" + start).remove();
 					objFile[start] = 0;
@@ -383,7 +383,7 @@ function uploadFile(){
 						}
 					}else if(value == '1'){
 						var labelVal = document.getElementById("stat"+start);
-						labelVal.innerHTML = '<span style="color: #FF5722;">上传失败(同名素材)</span>';
+						labelVal.innerHTML = '<span style="color: #FF5722;">上传失败(同名稿件)</span>';
 						$("#prog"+start).remove();
 						$("#numValue" + start).remove();
 						objFile[start] = 0;

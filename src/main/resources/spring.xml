@@ -25,30 +25,30 @@
   	<!-- 下面是切面的注入与配置 -->
   	
   	
-  	<!-- 素材管理相关的切点 -->
+  	<!-- 稿件管理相关的切点 -->
   	<bean id = "meterialOperationAspectPoint" class= "org.south.itms.aspect.MeterialOperationAspect"/>
-  	<!-- 为素材上传配置切面 -->
+  	<!-- 为稿件上传配置切面 -->
   	<aop:config> 
     	<aop:aspect ref="meterialOperationAspectPoint"> 
        		<aop:after method="completeMaterialUpload" 
        		pointcut="execution(* org.south.itms.controller.MaterialController.upload(..))"/> 
     	</aop:aspect> 
   	</aop:config>
-  	<!-- 为素材删除配置切面 -->
+  	<!-- 为稿件删除配置切面 -->
   	<aop:config> 
     	<aop:aspect ref="meterialOperationAspectPoint"> 
        		<aop:before method="completeMaterialDelete" 
        		pointcut="execution(* org.south.itms.controller.MaterialController.delMaterial(..))"/> 
     	</aop:aspect> 
   	</aop:config>
-  	<!-- 为素材修改配置切面 -->
+  	<!-- 为稿件修改配置切面 -->
   	<aop:config> 
     	<aop:aspect ref="meterialOperationAspectPoint"> 
        		<aop:after method="completeMaterialModify" 
        		pointcut="execution(* org.south.itms.controller.MaterialController.editMaterial(..))"/> 
     	</aop:aspect> 
   	</aop:config>
- 	<!-- 为素材审核配置切面 -->
+ 	<!-- 为稿件审核配置切面 -->
   	<aop:config> 
     	<aop:aspect ref="meterialOperationAspectPoint"> 
        		<aop:after method="completeMaterialReview" 
@@ -184,12 +184,12 @@
 	</aop:config>
 
 	<!-- 添加用户-->
-	<aop:config>
-		<aop:aspect ref="systemOperationAspectPoint">
-			<aop:after method="completeAddUser"
-					   pointcut="execution(* org.south.itms.controller.SystemController.addUser(..))"/>
-		</aop:aspect>
-	</aop:config>
+<!--	<aop:config>-->
+<!--		<aop:aspect ref="systemOperationAspectPoint">-->
+<!--			<aop:after method="completeAddUser"-->
+<!--					   pointcut="execution(* org.south.itms.controller.SystemController.addUser(..))"/>-->
+<!--		</aop:aspect>-->
+<!--	</aop:config>-->
 
 	<!-- 编辑用户-->
 	<aop:config>

@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>素材审核</title>
+<title>稿件审核</title>
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
@@ -37,16 +37,16 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label id="lens"><%=session.getAttribute("durationOnce")%></label>&nbsp;秒
 		</div>
 		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
-			<legend>素材信息</legend>
+			<legend>稿件信息</legend>
 		</fieldset>
 		<div class="panel panel-default" style="width: 75%; height: 100%; float: left">
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>素材名:</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>稿件名:</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><%=session.getAttribute("materialNameOnce")%></label>
 			<br>
 			<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>终端名称:</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><%=session.getAttribute("terminalNameOnce")%></label>
 			<br>
-			<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>素材分辨率:</label>
+			<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>稿件分辨率:</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><%=session.getAttribute("resolutionOnce")%></label>
 			<br>
 			<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>终端尺寸:</label>

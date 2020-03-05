@@ -26,7 +26,7 @@ public class AuditController {
 	private CommonService commonService;
 	
 	
-	//素材审计
+	//稿件审计
 	@RequestMapping("/materialAudit")
 	public String materialAudit(Model model, HttpServletRequest request) {
 		return "audit/materialAudit";

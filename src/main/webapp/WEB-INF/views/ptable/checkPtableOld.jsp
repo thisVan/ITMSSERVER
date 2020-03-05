@@ -102,7 +102,7 @@
 	    }
 	    
 		function editNum(){
-			$('.window-header .panel-title').html("修改播表素材顺序");
+			$('.window-header .panel-title').html("修改播表稿件顺序");
 		    $("#editFileApplyform").form('clear');
 		    $("#editFileBtn").attr("onclick", "saveListFile()");
 		    $('#editPeriodWin').window('open');
@@ -341,7 +341,7 @@
 		     <table class="table table-striped">
 		        <thead>
 		          <tr>
-		            <th>素材名称</th>
+		            <th>稿件名称</th>
 		            <th>开始日期</th>
 		            <th>结束日期</th>
 		            <th>视频预览</th>
@@ -396,7 +396,7 @@
             </div>
             <div class="checkbox">
               &nbsp;&nbsp;&nbsp;<label><input id="checkUn2" name="r" type="checkbox" value="2">
-              <font size="4" color="red">素材敏感信息</font>
+              <font size="4" color="red">稿件敏感信息</font>
               </label>
             </div>
       </div>

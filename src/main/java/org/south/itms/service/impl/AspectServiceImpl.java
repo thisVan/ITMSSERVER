@@ -12,7 +12,7 @@ public class AspectServiceImpl implements AspectService {
 	@Autowired
 	private AspectDaoImpl aspectDaoImpl;
 	
-	//保存素材操作的日志
+	//保存稿件操作的日志
 	@Transactional
 	@Override
 	public void saveLog(UserActionLog userActionLog) {

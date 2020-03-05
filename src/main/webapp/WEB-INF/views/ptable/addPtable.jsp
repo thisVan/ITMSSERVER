@@ -19,7 +19,7 @@
 	var isUnChecked = ${isUnChecked};//不加引号，因为下面用到判断条件为isUnchecked = false,而不是字符串比较
 	var ptdate = '${playTablePlayDate}'; //播表的播放日期
 	var periodID = '${periodID}'; //时段ID
-	var itemnum; //该播表素材的总数
+	var itemnum; //该播表稿件的总数
 	var ptableStyle = '${ptableStyle}';
 	var startTime = '${startTime}';
 	var endTime = '${endTime}';
@@ -59,7 +59,7 @@
 						field : 'materialName',
 						width : 270,
 						event : 'set1',
-						title : '素材名称',
+						title : '稿件名称',
 						sort  : true
 					}
 					, {
@@ -162,7 +162,7 @@
 						arr.push(tdata[i].material.mid);
 					}
 					if (arr.length != 0) {
-						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;" onclick="showMaterialsSortByName()">总共有' + arr.length + '条不同素材</span>';
+						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;" onclick="showMaterialsSortByName()">总共有' + arr.length + '条不同稿件</span>';
 					//document.getElementById("totalMaterial").innerText = "" +  + "";
 					}
 
@@ -185,7 +185,7 @@
 						vLen = vList.length; // 播放列表的长度
 						play();
 						function play() {
-							document.getElementById("mName").innerText = "当前播放素材名:  " + ms[curr].materialName;
+							document.getElementById("mName").innerText = "当前播放稿件名:  " + ms[curr].materialName;
 							document.getElementById("mResolution").innerText = "分辨率:  " + ms[curr].resolution;
 							document.getElementById("mSize").innerText = "大小:  " + ms[curr].size;
 							document.getElementById("mDuration").innerText = "时长:  " + ms[curr].duration;
@@ -339,7 +339,7 @@
 			
   			layer.open({
     		type: 1,
-    		title: "素材列表",
+    		title: "稿件列表",
     		area : [ '50%', '80%' ],
     		content: contentStr //注意，如果str是object，那么需要字符拼接。
   			});
@@ -347,7 +347,7 @@
 <%-- 		console.log($("#table1")); 
 		var materialsTable = "";
 		layer.open({
-			title : '素材列表',
+			title : '稿件列表',
 			type : 2,
 			area : [ '48%', '100%' ],
 			content : $("#show-distinct-material").html(),
@@ -356,7 +356,7 @@
                     var table = layui.table;
                     var cols =  [[ //标题栏
                         {field:'num', title: '序号',align: 'center'},
-                        {field:'name', title: '素材名',align: 'center'},
+                        {field:'name', title: '稿件名',align: 'center'},
                         {field:'frequncy', title: '频次',align: 'center'},
                         {field:'duration', title: '时长',align: 'center'}
                     ]]
@@ -414,7 +414,7 @@
 
 	function broadlistmaterialadd() {
 		layer.open({
-			title : '添加素材',
+			title : '添加稿件',
 			type : 2,
 			area : [ '60%', '85%' ],
 			content : '<%=request.getContextPath()%>/views/ajaxViews/broadlist-material-add.jsp',
@@ -529,7 +529,7 @@
 			<div class="layui-col-md8">
 				<fieldset id="menu_func_div" class="layui-elem-field">
 					<legend>
-						<i class="layui-icon">&#xe6ed;</i>播表素材顺序列表
+						<i class="layui-icon">&#xe6ed;</i>播表稿件顺序列表
 					</legend>
 					<div class="layui-field-box">
 						<div class="layui-col-md12 layui-col-space1" id="playTableMaterialsDiv">
@@ -557,7 +557,7 @@
 							</button>
 							<button class="layui-btn layui-btn-norma" type="button"
 								onclick="broadlistmaterialadd()" id="addMaterial">
-								<i class="layui-icon">&#xe642;</i>添加素材
+								<i class="layui-icon">&#xe642;</i>添加稿件
 							</button>
 							<!-- <button class="layui-btn layui-btn-warm" type="button"
 								onclick="broadlistmaterialsave()" id="saveMaterial">

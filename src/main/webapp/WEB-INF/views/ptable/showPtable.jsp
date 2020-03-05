@@ -16,7 +16,7 @@
 	var tid = '${tid}'; //终端ID
 	var ptdate; //播表的播放日期
 	var periodID; //时段ID
-	var itemnum; //该播表素材的总数
+	var itemnum; //该播表稿件的总数
 	$(function() {
 		initTable();
 	});
@@ -48,7 +48,7 @@
 						field : 'materialName',
 						width : "50%",
 						event : 'set1',
-						title : '素材名称'
+						title : '稿件名称'
 					}
 					, {
 						field : 'frequency',
@@ -109,7 +109,7 @@
 						arr.push(tdata[i].material.mid);
 					}
 					if (arr.length != 0) {
-						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;">总共有' + arr.length + '条不同素材</span>';
+						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;">总共有' + arr.length + '条不同稿件</span>';
 						//document.getElementById("totalMaterial").innerText = "" +  + "";
 					}
 
@@ -131,7 +131,7 @@
 					vLen = vList.length; // 播放列表的长度
 					play();
 					function play() {
-						document.getElementById("mName").innerText = "当前播放素材名:  " + ms[curr].materialName;
+						document.getElementById("mName").innerText = "当前播放稿件名:  " + ms[curr].materialName;
 						document.getElementById("mResolution").innerText = "分辨率:  " + ms[curr].resolution;
 						document.getElementById("mSize").innerText = "大小:  " + ms[curr].size;
 						document.getElementById("mDuration").innerText = "时长:  " + ms[curr].duration;
@@ -284,7 +284,7 @@
 
 	function broadlistmaterialadd() {
 		layer.open({
-			title : '添加素材',
+			title : '添加稿件',
 			type : 2,
 			area : [ '60%', '85%' ],
 			content : '<%=request.getContextPath()%>/views/ajaxViews/broadlist-material-add.jsp',
@@ -424,7 +424,7 @@
 							</button>
 							<button class="layui-btn layui-btn-norma" type="button"
 									onclick="broadlistmaterialadd()">
-									<i class="layui-icon">&#xe642;</i>添加素材
+									<i class="layui-icon">&#xe642;</i>添加稿件
 							</button> -->
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label id="totalMaterial"></label>
 							<br>

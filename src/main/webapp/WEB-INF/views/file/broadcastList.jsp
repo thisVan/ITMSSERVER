@@ -116,7 +116,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:280, event: 'set2', title: '稿件名', fixed: true, sort: true}
     		      ,{field:'terminalName',width:120, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){
     		    		  var terminal = d.terminal;
@@ -124,7 +124,7 @@
     		    	  }
     		      }
     		      ,{field:'resolution',width:100, event: 'set6', title: '分辨率'}
-    		      ,{field:'size',width:130, event: 'set6', title: '素材大小'}
+    		      ,{field:'size',width:130, event: 'set6', title: '稿件大小'}
     		      ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
     		      ,{field:'usedNum',width:100, event: 'set8', title: '使用次数', sort: true}
     		      ,{field:'statusId',width:100, event: 'set8', title: '审核状态', sort: true
@@ -209,7 +209,7 @@
     					});
     			  }else if(obj.event === 'broadMedia'){
     				  layer.open({
-			    			title:'排播素材',
+			    			title:'排播稿件',
 			    			type:2,
 			    			area:['60%','85%'],
 			    			content:'<%=request.getContextPath()%>/views/ajaxViews/material-add.jsp',
@@ -244,7 +244,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set1', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:280, event: 'set1', title: '稿件名', fixed: true, sort: true}
     		      ,{field:'terminalName',width:120, event: 'set2', title: '终端名', sort: true
     		    	  ,templet: function(d){
     		    		  var terminal = d.terminal;
@@ -252,7 +252,7 @@
     		    	  }
     		      }
     		      ,{field:'resolution',width:100, event: 'set3', title: '分辨率'}
-    		      ,{field:'size',width:130, event: 'set4', title: '素材大小'}
+    		      ,{field:'size',width:130, event: 'set4', title: '稿件大小'}
     		      ,{field:'fileType',width:100, event: 'set5', title: '文件类型', sort: true}
     		      ,{field:'statusId',width:100, event: 'set6', title: '审核状态', sort: true
     		    	  ,templet: function(d){
@@ -320,7 +320,7 @@
     					});
     			  }<%-- else if(obj.event === 'broadMedia'){
     				  layer.open({
-			    			title:'排播素材',
+			    			title:'排播稿件',
 			    			type:2,
 			    			area:['60%','85%'],
 			    			content:'<%=request.getContextPath()%>/views/ajaxViews/material-add.jsp',
@@ -386,7 +386,7 @@
     		    		  return material.resolution;
     		      }
     		      }
-    		      ,{field:'size',width:130, event: 'set8', title: '素材大小'
+    		      ,{field:'size',width:130, event: 'set8', title: '稿件大小'
     		    	  ,templet: function(d){
     		    		  var material = d.material;
     		    		  return material.size;
@@ -554,7 +554,7 @@
     					});
     			  }else if(obj.event === 'mediaUpdate'){
     				  layer.open({
-			    			title:'重新排播素材',
+			    			title:'重新排播稿件',
 			    			type:2,
 			    			area:['60%','85%'],
 			    			content:'<%=request.getContextPath()%>/views/ajaxViews/broad-update.jsp',
@@ -594,7 +594,7 @@
  		    ,cols: [[
  		      //{field:'id', width:'1%'}
  		      {checkbox: true, event: 'set1', fixed: true}
- 		     ,{field:'marqName',width:280, event: 'set2', title: '素材名', fixed: true, sort: true}
+ 		     ,{field:'marqName',width:280, event: 'set2', title: '稿件名', fixed: true, sort: true}
 		     ,{field:'marqName',width:120, event: 'set3', title: '终端名', sort: true
 		    	  ,templet: function(d){
 		    		 // var terminal = d.terminal;
@@ -603,7 +603,7 @@
 		      }
 		      ,{field:'resolution',width:100, event: 'set4', title: '分辨率'}
 		      ,{field:'playDate',width:200, event: 'set4', title: '播放日期', sort: true}
-		      ,{field:'size',width:130, event: 'set5', title: '素材大小'}
+		      ,{field:'size',width:130, event: 'set5', title: '稿件大小'}
 		      ,{field:'fileType',width:100, event: 'set6', title: '文件类型', sort: true}
 		      ,{field:'statusId',width:100, event: 'set7', title: '审核状态', sort: true
 		    	  ,templet: function(d){
@@ -734,7 +734,7 @@
 					});
 			  }else if(obj.event === 'marqueeUpdate'){
 				  layer.open({
-		    			title:'重新排播素材',
+		    			title:'重新排播稿件',
 		    			type:2,
 		    			area:['60%','85%'],
 		    			content:'<%=request.getContextPath()%>/views/ajaxViews/marquee-update.jsp',
@@ -847,7 +847,7 @@
    function materialBroad(){
 	   var terminalId=$("#terminalId").val();
 	   layer.open({
-			title:'素材列表',
+			title:'稿件列表',
 			type:2,
 			area:['80%','90%'],
 			//shade:false,
@@ -903,12 +903,12 @@
 						<form class="layui-form" id="query_form">
 							<div class="layui-form-item">
 								<div class="layui-inline">
-									<label class="layui-form-mid">素材名：</label>
+									<label class="layui-form-mid">稿件名：</label>
 									<div class="layui-input-inline"
 										style="width: 110px; height: 35px;">
 										<input type="tel" id="materialName" name="materialName"
 											autocomplete="off" style="width: 110px; height: 35px;"
-											placeholder="素材名" class="layui-input input-text" />
+											placeholder="稿件名" class="layui-input input-text" />
 									</div>
 								</div>
 

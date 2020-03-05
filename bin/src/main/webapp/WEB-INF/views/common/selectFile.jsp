@@ -5,7 +5,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include  file="/assets/header.jsp"%>
-   <title>素材列表</title>
+   <title>稿件列表</title>
    <script type="text/javascript">
 		$(function(){
 		  initGrid();
@@ -16,7 +16,7 @@
 		//实现对DataGird控件的绑定操作  
 		function initGrid() {  
 		    $('#MyDatagrid').datagrid({   //定位到Table标签，Table标签的ID是grid   
-		        title: '素材列表',  
+		        title: '稿件列表',
 		        iconCls: 'icon-save',  
 		        nowrap: true,  
 		        singleSelect : false,// 如果为true，则只允许选择一行。
@@ -30,7 +30,7 @@
 		        idField: 'fileId',   
 		        columns: [[  
 		             { field: 'ck', checkbox: true },   //选择  
-		             { title: '素材名称', field: 'materialName', width: 200},  
+		             { title: '稿件名称', field: 'materialName', width: 200},
 		             { title: '时长', field: 'duration', width: 100 },  
 		             { title: '文件类型', field: 'fileType', width: 100, 
 		                formatter: function(value,row,index) {
@@ -151,7 +151,7 @@
 	
 	    <form id="searchForm" style="padding:5px;">
 	    
-	     	<span>素材名称:</span>
+	     	<span>稿件名称:</span>
 			<input id="searchFileName" name="fileName" type="text" value="">
 			<span>终端：</span>
 			<select name="terminal" id="terminal" lay-verify="required" lay-search="" style="width: 140px; height: 35px;">

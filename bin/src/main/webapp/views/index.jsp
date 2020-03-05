@@ -60,7 +60,7 @@
               $("#loginBtn").attr("href", "<%=request.getContextPath()%>/login.do");
            } else { 
         	   
-        	   if(roleName == '素材初审管理员' || roleName ==  '素材终审管理员'){
+        	   if(roleName == '稿件初审管理员' || roleName ==  '稿件终审管理员'){
         		   //alert(roleName);
         		   $("#badgePlay").remove();
                    //显示欢迎信息和退出按钮
@@ -71,7 +71,7 @@
                    $("#loginBtn").html("退出");
                    $("#loginBtn").attr("href", "<%=request.getContextPath()%>/login/reqLogout.do");
                                       
-        		   if(roleName == '素材初审管理员'){
+        		   if(roleName == '稿件初审管理员'){
         			   timeFirstCheck();
         		   }else{
         			   var checkNumSec = '<%=session.getAttribute("checkNumSec")%>';
@@ -226,7 +226,7 @@
 //		   $("#badge").remove();
 		   $("#badge").hide();
 //		   alert(666);
-		   addTab('素材审核', '<%=request.getContextPath()%>/file/checkList.do');
+		   addTab('稿件审核', '<%=request.getContextPath()%>/file/checkList.do');
 	   }
 	   
 	   function checkPlay(){
@@ -313,11 +313,11 @@
 						</div></li>						
 				</ul>
 			</div>
-			<div title="素材管理">
+			<div title="稿件管理">
 				<ul>
 					<li><div>
 							<a href="javascript:void(0)" id="fileManage"
-								onclick="addTab('素材管理', '<%=request.getContextPath()%>/material/materialList.do');">素材管理</a>
+								onclick="addTab('稿件管理', '<%=request.getContextPath()%>/material/materialList.do');">稿件管理</a>
 						</div></li>
 					<li><div>
 							<a href="javascript:void(0)" id="fileTranslate"
@@ -345,7 +345,7 @@
 					class="cndns-right-btn"> <span class="demo-icon">&#xe68a;</span>
 		            <sup id="checkNumber"><%=session.getAttribute("checkNum")%></sup>
 					<p>
-						素材<br /> 审核
+						稿件<br /> 审核
 					</p>
 				</a>
 			</div>
@@ -368,7 +368,7 @@
                 textAlign : 'left',
                 hideAfter : 8000,
                 showHideTransition : 'slide',
-                text: '有新素材上传成功了，请按时审核',
+                text: '有新稿件上传成功了，请按时审核',
                 position : 'top-right'
             })">
             
@@ -378,7 +378,7 @@
                 textAlign : 'left',
                 hideAfter : 8000,
                 showHideTransition : 'slide',
-                text: '有素材初审通过了，请按时审核',
+                text: '有稿件初审通过了，请按时审核',
                 position : 'top-right'
             })">
             

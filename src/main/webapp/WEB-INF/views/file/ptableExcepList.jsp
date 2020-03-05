@@ -62,7 +62,7 @@
     		    		  return material.resolution;
     		      }
     		      }
-    		      ,{field:'size',width:130, event: 'set8', title: '素材大小'
+    		      ,{field:'size',width:130, event: 'set8', title: '稿件大小'
     		    	  ,templet: function(d){
     		    		  var material = d.material;
     		    		  return material.size;
@@ -213,7 +213,7 @@
     					});
     			  }else if(obj.event === 'mediaUpdate'){
     				  layer.open({
-			    			title:'重新排播素材',
+			    			title:'重新排播稿件',
 			    			type:2,
 			    			area:['60%','85%'],
 			    			content:'<%=request.getContextPath()%>/views/ajaxViews/broad-update.jsp',

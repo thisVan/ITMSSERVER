@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Service("aspectCommonMethod")
 public class AspectCommonMethod {
 	
-	//注入调用的素材切面服务
+	//注入调用的稿件切面服务
 	@Autowired
 	private AspectServiceImpl aspectServiceImpl;
 	
@@ -45,7 +45,7 @@ public class AspectCommonMethod {
 				modifyObjectType,
 				modifyObjectId);
 		    	
-		//使用素材切面Service
+		//使用稿件切面Service
 		aspectServiceImpl.saveLog(userActionLog);   	
 		System.out.println(userActionLog.toString());			
 	}

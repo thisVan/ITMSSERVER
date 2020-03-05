@@ -4,7 +4,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include file="/layui/header.jsp"%>
-   <title>素材审核列表</title>
+   <title>稿件审核列表</title>
    <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -79,7 +79,7 @@
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'materialName',width:320, event: 'set1', title: '素材名', fixed: true, sort: true}
+    		      {field:'materialName',width:320, event: 'set1', title: '稿件名', fixed: true, sort: true}
     		      ,{field:'terminalName',width:120, event: 'set2', title: '终端名'
     		    	  ,templet: function(d){
     		    		  var name = d.terminal;
@@ -195,11 +195,11 @@
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材名：</label>
+								<label class="layui-form-mid">稿件名：</label>
 								<div class="layui-input-inline"
 									style="width: 160px; height: 35px;">
 									<input type="tel" id="materialName" name="materialName" autocomplete="off"
-										style="width: 160px; height: 35px;" placeholder="素材名"
+										style="width: 160px; height: 35px;" placeholder="稿件名"
 										class="layui-input input-text" />
 								</div>
 							</div>

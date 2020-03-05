@@ -17,7 +17,7 @@ public class FileInfoDto implements Serializable {
 	 */ 
 	private static final long serialVersionUID = -6771432074537311504L;
  
-	private int flag;  //标志:从第一个素材开始播放
+	private int flag;  //标志:从第一个稿件开始播放
 	
 	private String start;
 	

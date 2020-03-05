@@ -85,7 +85,7 @@ public class MaterialServiceImpl implements MaterialService {
 	public void delFile(String[] mid) {
 		for(String id:mid) {
 			materialDao.delMaterial(id);
-			//已经被删除的素材, 其对应的节目需要提示素材已被删除
+			//已经被删除的稿件, 其对应的节目需要提示稿件已被删除
 			materialDao.updateItemDelMsg(id);
 		}
 	}
@@ -95,7 +95,7 @@ public class MaterialServiceImpl implements MaterialService {
 	public void delFile2(String[] mid) {
 		for(String id:mid) {
 			if(materialDao.delMaterial2(id) == 1) {
-				//已经被删除的素材, 其对应的节目需要提示素材已被删除
+				//已经被删除的稿件, 其对应的节目需要提示稿件已被删除
 				materialDao.updateItemDelMsg(id);
 			}
 		}

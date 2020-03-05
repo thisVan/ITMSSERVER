@@ -40,7 +40,7 @@
 						field : 'marqName',
 						width : 270,
 						event : 'set1',
-						title : '素材名称'
+						title : '稿件名称'
 					}
 					, {
 						field : 'opacity',
@@ -93,7 +93,7 @@
 					vLen = vList.length; // 播放列表的长度
 					show();
 					function show(){
-						document.getElementById("mName").innerText = "当前播放素材名:  " + ms[curr].marqName;
+						document.getElementById("mName").innerText = "当前播放稿件名:  " + ms[curr].marqName;
 						document.getElementById("mResolution").innerText = "分辨率:  " + ms[curr].resolution;
 						document.getElementById("mSize").innerText = "大小:  " + ms[curr].size;
 						document.getElementById("mPosition").innerText = "位置:"+"x="+ms[curr].positionX+",y="+ms[curr].positionY;
@@ -242,7 +242,7 @@
 			<div class="layui-col-md4">
 				<fieldset class="layui-elem-field">
 					<legend>
-						<i class="layui-icon">&#xe6ed;</i>素材预览
+						<i class="layui-icon">&#xe6ed;</i>稿件预览
 					</legend>
 					<div class="layui-field-box">
 						<div class="layui-row layui-col-space10">
@@ -266,7 +266,7 @@
 			<div class="layui-col-md8">
 				<fieldset id="menu_func_div" class="layui-elem-field">
 					<legend>
-						<i class="layui-icon">&#xe6ed;</i>LOGO/图片叠加素材列表
+						<i class="layui-icon">&#xe6ed;</i>LOGO/图片叠加稿件列表
 					</legend>
 					<div class="layui-field-box" >
 						<div class="layui-col-md12 layui-col-space1" id="playTableMaterialsDiv">

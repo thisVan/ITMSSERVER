@@ -39,7 +39,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
 				  {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'marqName',width:250, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'marqName',width:250, event: 'set2', title: '稿件名', fixed: true, sort: true}
     		        ,{field:'playDate',width:200, event: 'set3', title: '播放日期', sort: true}
         		    ,{field:'periodTime',width:260, event: 'set4', title: '时段范围', sort: true
         		    	,templet: function(d){
@@ -61,9 +61,9 @@
   		    		  }else if(state == 5){
   		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误)' + '</span>';
   		    		  }else if(state == 6){
-  		    			  return '<span style="color: #FF6347;">' + '未通过(素材敏感)' + '</span>';
+  		    			  return '<span style="color: #FF6347;">' + '未通过(稿件敏感)' + '</span>';
   		    		  }else if(state == 7){
-  		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误、素材敏感)' + '</span>';
+  		    			  return '<span style="color: #FF6347;">' + '未通过(排播有误、稿件敏感)' + '</span>';
   		    		  }
       		    	  }
       		      }

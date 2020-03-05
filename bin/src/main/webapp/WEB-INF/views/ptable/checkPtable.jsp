@@ -328,7 +328,7 @@
 		     <table class="table table-striped">
 		        <thead>
 		          <tr>
-		            <th>素材名称</th>
+		            <th>稿件名称</th>
 		            <th>开始日期</th>
 		            <th>结束日期</th>
 		            <th>视频预览</th>

@@ -53,7 +53,7 @@
 		        columns: [[  
 		             { field: 'ck', checkbox: true },   //选择  
 		             { title: '文件名', field: 'fileName', width: 80},
-		             { title: '素材名', field: 'materialName', width: 80},
+		             { title: '稿件名', field: 'materialName', width: 80},
 		             { title: '终端ID', field: 'terminalId', width: 40 },
 		             { title: '开始时间', field: 'startTime', width: 70,
 		            	 formatter : function(value){
@@ -73,7 +73,7 @@
                              }  },
 		             { title: '时段范围', field: 'periodId', width: 160 ,
                         formatter: function(value) {
-                        	if(value == null) return "插播素材";
+                        	if(value == null) return "插播稿件";
                             var tm = $("#time"+value).val();
                             return tm;
 					   }
@@ -277,7 +277,7 @@
             }); */
             
 			if(str==""){
-				$.messager.alert('提示', '请选择一个视频素材');
+				$.messager.alert('提示', '请选择一个视频稿件');
 			}else{
 				var formData = new FormData();
 				formData.append("uploadFile", $("#file")[0].files[0]);
@@ -327,7 +327,7 @@
 		function editFile(){
 			var rows = $('#MyDatagrid').datagrid('getSelections');
 			if(rows.length!=1){
-				$.messager.alert('提示', '请选择具体要修改的素材');
+				$.messager.alert('提示', '请选择具体要修改的稿件');
 				return ;
 			}else{
 		    	var rows = $('#MyDatagrid').datagrid('getSelections');
@@ -335,7 +335,7 @@
 				var fileName = rows[0].fileName;
 				var label=document.getElementById("fName1");
 				label.innerText = fileName;
-			    $('.window-header .panel-title').html("修改素材");
+			    $('.window-header .panel-title').html("修改稿件");
 			    $("#editFileApplyform").form('clear');
 			    $("#editFileBtn").attr("onclick", "editF()");
 			    $('#editFileWin').window('open');
@@ -383,7 +383,7 @@
 				  }else if(value=="1"){
 					  $.messager.alert('提示', '日期范围有误或为空!!');
 				  }else if(value=="2"){
-					  $.messager.alert('提示', '素材审核中，不可修改!!');
+					  $.messager.alert('提示', '稿件审核中，不可修改!!');
 				  }else{
 					  $.messager.alert('提示', '修改失败!!');
 				  }
@@ -468,7 +468,7 @@
 	<input type="hidden" id="pid" value="isNull">
 	<input type="hidden" id="mdValue" value="">
 	<input type="hidden" id="videoView" value="">
-	<input type="hidden" id="timenull" value="插播素材"/>
+	<input type="hidden" id="timenull" value="插播稿件"/>
 	<c:forEach items="${periods}" var="period" varStatus="status">
 		<input type='hidden' id='i${period.periodId}'
 			value="${period.periodName}">
@@ -487,7 +487,7 @@
 	  
 	  <div id="tb"> <!-- datagrid 的工具栏  start -->
 	  
-	  <div id="fileWin" class="easyui-window" title="素材上传" style="width:570px;height:460px;" closed="true">
+	  <div id="fileWin" class="easyui-window" title="稿件上传" style="width:570px;height:460px;" closed="true">
 		<form id="fileApplyform" style="padding:30px 20px 10px 40px;" enctype="multipart/form-data">
 <!--             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择文件:<br><br> -->
 <!--             <div style="padding:5px;text-align:center;">
@@ -500,7 +500,7 @@
 		  </div> -->
 		  <table width="100%" border="0">
              <tr>
-                 <th align="right" width="100px">素材上传:</th>
+                 <th align="right" width="100px">稿件上传:</th>
                  <th><input type="file" name="file" id="file" width="30px" onchange="stateChange()"></th>
                  <th><input type="hidden" id = "view"></th>
               </tr>
@@ -510,7 +510,7 @@
                  <td>&nbsp;</td>
               </tr>              
               <tr>
-                 <td align="right" width="100px">素材名:</td>
+                 <td align="right" width="100px">稿件名:</td>
                  <td><input type="text" name="adName" id="adName" value=""  width="80px" ></td>
                  <td>&nbsp;</td>
               </tr>
@@ -567,7 +567,7 @@
                  <td align="right" width="100px">时段范围:</td>
                  <td>
                    <select name="period" id="period" >
-                      <option value="isNull">插播素材</option>
+                      <option value="isNull">插播稿件</option>
                       <c:forEach items="${periods}" var = "period" varStatus = "status">
                           <c:if test="${status.count == 1}">
                             <option selected="selected" value="${period.periodId}">${period.periodName}${period.startInterval}-${period.endInterval}</option>
@@ -604,7 +604,7 @@
 	  </div> <!-- fileWin -->
 	  
 	  
-	  <div id="editFileWin" class="easyui-window" title="修改素材" style="width:550px;height:450px;" closed="true">
+	  <div id="editFileWin" class="easyui-window" title="修改稿件" style="width:550px;height:450px;" closed="true">
 		<form id="editFileApplyform" style="padding:30px 20px 10px 40px;" >
 		  <table width="100%" border="0">
               <tr>
@@ -618,7 +618,7 @@
                  <td>&nbsp;</td>
               </tr> 
               <tr>
-                 <td align="right" width="100px">素材名:</td>
+                 <td align="right" width="100px">稿件名:</td>
                  <td><input type="text" name="mName1" id="mName1" value="" width="80px" ></td>
                  <td>&nbsp;</td>
               </tr>
@@ -675,7 +675,7 @@
                  <td align="right" width="100px">时段范围:</td>
                  <td>
                    <select name="period1" id="period1" >
-                      <option value="isNull">插播素材</option>
+                      <option value="isNull">插播稿件</option>
                       <c:forEach items="${periods}" var = "period" varStatus = "status">
                           <c:if test="${status.count == 1}">
                             <option selected="selected" value="${period.periodId}">${period.periodName}${period.startInterval}-${period.endInterval}</option>

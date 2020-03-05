@@ -135,15 +135,15 @@ public class MaterialController {
 	public String getMaterialInfoBytid(@PathVariable String terminalId, @PathVariable String ppid, ModelMap modelMap, HttpServletRequest request) {
 		modelMap.addAttribute("resterminalid", terminalId);
 
-		List<Items> files = materialDao.findalreadyItemByPtable(ppid);// 获取播表id对应的所有素材item
-		String sortNum = "";// 当前ppid所存在的所有素材mid
+		List<Items> files = materialDao.findalreadyItemByPtable(ppid);// 获取播表id对应的所有稿件item
+		String sortNum = "";// 当前ppid所存在的所有稿件mid
 		for (int i = 0; i < files.size(); i++) {
 			sortNum += "," + files.get(i).getMaterial().getMid();
 		}
 		if (files != null && files.size() > 0) {
 			sortNum = sortNum.substring(1);
 		}
-		// 2018.12.24已经修改为加载所有素材，sortNum为空也不影响程序执行
+		// 2018.12.24已经修改为加载所有稿件，sortNum为空也不影响程序执行
 		modelMap.addAttribute("alreadymid", sortNum);
 
 		return "file/queryMaterialbybroadclist";
@@ -813,7 +813,7 @@ public class MaterialController {
 	// pageResult1.setCount(0);
 	// pageResult1.setCode(0);
 	// pageResult1.setFail(1);
-	// pageResult1.setMsg("无敏感素材");
+	// pageResult1.setMsg("无敏感稿件");
 	// return pageResult1;
 	// }else {
 	// List<Terminal> list = commonService.getAllTerminal();
@@ -1642,7 +1642,7 @@ public class MaterialController {
 						
 						
 						PrintWriter out = response.getWriter();
-						// 返回字符串，前台回显，素材在选定时间段已经排播，最好返回json数据，提示信息也在后台做
+						// 返回字符串，前台回显，稿件在选定时间段已经排播，最好返回json数据，提示信息也在后台做
 						out.print("true");
 						out.flush();
 						out.close();
@@ -1730,7 +1730,7 @@ public class MaterialController {
 			out.close();
 		} else {
 			Material file = commonService.queryById(mid);
-			// 如果materialName为空,就按照原先的素材名称
+			// 如果materialName为空,就按照原先的稿件名称
 			if (StringUtil.isEmpty(materialName))
 				materialName = file.getMaterialName();
 			String rid = (String) request.getSession().getAttribute("rId");

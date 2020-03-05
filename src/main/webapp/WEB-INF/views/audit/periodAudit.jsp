@@ -54,7 +54,7 @@
 
             //操作类型
             var operation=$("#operation").val();
-            //素材ID
+            //稿件ID
             var modifyObjectId = $("#modifyObjectId").val();
             var params = "modifyObjectType, = ,PERIOD,";
 

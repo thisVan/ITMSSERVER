@@ -5,7 +5,7 @@
 	  
 <meta content="text/html;charset=UTF-8" />
 <%@ include file="/layui/header.jsp"%>
-<title>排播素材</title>
+<title>排播稿件</title>
 
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -42,16 +42,16 @@ Date.prototype.format = function(fmt) { //author: meizz
 
 	<div class="layui-fluid">
 		<div class="layui-form-item">
-			<label class="layui-form-label">素材名：</label>
+			<label class="layui-form-label">稿件名：</label>
 			<div class="layui-input-inline">
 				<input type="text" id="materialName" name="materialName"
-					placeholder="请选择素材" autocomplete="off" style="width:250px;"
+					placeholder="请选择稿件" autocomplete="off" style="width:250px;"
 					class="layui-input input-text" readonly="readonly" />
 			</div>
 			<div class="layui-input-inline">
 				<button name="" id="" class="layui-btn" type="button"
 					onclick="selectLogo()">
-					<i class="layui-icon">&#xe61f;</i> 素材选择
+					<i class="layui-icon">&#xe61f;</i> 稿件选择
 				</button>
 			</div>
 		</div>
@@ -245,7 +245,7 @@ layui.use(['layer','form'], function(){
    function selectPeriod(){		
           var terminalId = $("#terminalId").val();
           if(terminalId == "") {
-             parent.layer.msg('请先决定添加的素材!',{icon:5,time:1500});
+             parent.layer.msg('请先决定添加的稿件!',{icon:5,time:1500});
              return;
           }	  
           
@@ -260,7 +260,7 @@ layui.use(['layer','form'], function(){
    function selectLogo(){
 	   var terminalId=parent.$("#terminalId").val();
 	   layer.open({
-		    title:'素材列表',
+		    title:'稿件列表',
 			type:2,
 			area:['100%','100%'],
 			content:'<%=request.getContextPath()%>/material/getLogoInfo.do?terminalId='+terminalId

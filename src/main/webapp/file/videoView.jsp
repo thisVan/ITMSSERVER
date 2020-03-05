@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>素材预览</title>
+<title>稿件预览</title>
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
 <script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
@@ -28,13 +28,13 @@
 		<br>
 		<fieldset class="layui-elem-field layui-field-title"
 			style="margin-top: 5px;">
-			<legend>素材信息</legend>
+			<legend>稿件信息</legend>
 		</fieldset>
 		<div>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>素材名:</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>稿件名:</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>${sessionScope.materialThree.materialName}</label>
 			<br>
-			<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>素材分辨率:</label>
+			<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>稿件分辨率:</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>${sessionScope.materialThree.resolution}</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>大小:</label>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>${sessionScope.materialThree.size}</label>

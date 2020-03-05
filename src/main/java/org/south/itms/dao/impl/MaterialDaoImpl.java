@@ -186,7 +186,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	@Override
 	public int updateItemDelMsg(String id) {  
-		String sql = "update items set item_name = CONCAT(item_name,' (对应素材已删除)')  where mid=:mid and deleted = '0'";
+		String sql = "update items set item_name = CONCAT(item_name,' (对应稿件已删除)')  where mid=:mid and deleted = '0'";
 		Query query = this.getCurrentSession().createNativeQuery(sql);
 		query.setParameter("mid", id);
 		return query.executeUpdate();

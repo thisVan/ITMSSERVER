@@ -5,7 +5,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include file="/layui/header.jsp"%>
-   <title>素材敏感列表</title>
+   <title>稿件敏感列表</title>
    <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -54,7 +54,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		       {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:320, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:320, event: 'set2', title: '稿件名', fixed: true, sort: true}
       		     // ,{width:110, event: 'set3', title: '校验码', align:'center', toolbar: '#barDemo1'}
       		      ,{field:'fileType',width:120, event: 'set4', title: '文件类型', sort: true}
       		      ,{field:'resolution',width:110, event: 'set5', title: '分辨率'}
@@ -106,7 +106,7 @@
     				    	  return ;
     				      }
     				      //批量删除
-    				      layer.confirm('真的删除这些素材么', function(index){
+    				      layer.confirm('真的删除这些稿件么', function(index){
     					         //obj.del();
     					         layer.close(index);
     					         console.log(mids.length);
@@ -185,7 +185,7 @@
 						<div class="layui-form-item">
 							
 							<div class="layui-inline">
-								<label class="layui-form-mid">含敏感素材的播表名：</label>
+								<label class="layui-form-mid">含敏感稿件的播表名：</label>
 								<div class="layui-input-inline"
 									style="width: 250px; height: 35px;">
 									<select name="broadId" id="broadId"  lay-filter="test">

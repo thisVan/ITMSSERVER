@@ -653,7 +653,7 @@ public class CommonServiceImpl implements CommonService {
 		return width;
 	}
 
-	// 获取素材最晚日期离现在天数
+	// 获取稿件最晚日期离现在天数
 	public int fromListMaterial(List<Items> list) {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;

@@ -49,7 +49,7 @@
 				  ,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
-    		       {field:'materialName',width:350, event: 'set1', title: '素材名称', fixed: true, sort: true}
+    		       {field:'materialName',width:350, event: 'set1', title: '稿件名称', fixed: true, sort: true}
       		      ,{field: 'playNum',width:200, event: 'set2', title: '总播放次数', sort: true}
       		      ,{field:'startPlayTime',width:200, event: 'set3', title: '开始播放时间', sort: true}
       		      ,{field:'endPlayTime',width:200, event: 'set4', title: '结束播放时间', sort: true}
@@ -168,9 +168,9 @@
 							</div>
 							
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材名称：</label>
+								<label class="layui-form-mid">稿件名称：</label>
 								<div class="layui-input-inline" style="width: 150px; height: 35px;">
-									<input type="text" class="layui-input" id="material_name" name="material_name" placeholder="素材名称关键字">
+									<input type="text" class="layui-input" id="material_name" name="material_name" placeholder="稿件名称关键字">
 								</div>
 							</div>
 							
