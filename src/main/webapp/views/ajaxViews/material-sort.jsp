@@ -5,7 +5,7 @@
 <head>
 	<meta content="text/html;charset=UTF-8"/>
 	<%@ include file="/layui/header.jsp"%>
-   <title>素材顺序修改列表</title>
+   <title>稿件顺序修改列表</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta http-equiv ="Pragma" content = "no-cache"/>
 	<meta http-equiv="Cache-Control" content="no cache" />
@@ -22,7 +22,7 @@
 </head>
 <body style="background-color:#FFFFFF;">
 	<input type="hidden" id="pid" name="pid"/>
-  <label>&nbsp;&nbsp;<font size="4" color="green">播表素材顺序列表(拖拽)&nbsp;&nbsp;<i class="layui-icon">&#xe6ed;</i>:</font></label>
+  <label>&nbsp;&nbsp;<font size="4" color="green">播表稿件顺序列表(拖拽)&nbsp;&nbsp;<i class="layui-icon">&#xe6ed;</i>:</font></label>
   <br><br>
   <!-- 
   <div style="width: 20%; float: left">

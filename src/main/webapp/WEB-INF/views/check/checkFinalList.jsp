@@ -52,7 +52,7 @@
 		        columns: [[  
 		               
 		             { title: '文件名', field: 'fileName', width: 100},
-		             { title: '素材名', field: 'materialName', width: 100},
+		             { title: '稿件名', field: 'materialName', width: 100},
 		             { title: '终端ID', field: 'terminalId', width: 40 },
 		             { title: '开始时间', field: 'startTime', width: 80,
 		            	 formatter : function(value){
@@ -332,7 +332,7 @@
             
             
 			if(str==""){
-				$.messager.alert('提示', '请选择一个视频素材');
+				$.messager.alert('提示', '请选择一个视频稿件');
 			}else{	
 				var formData = new FormData();
 				formData.append("uploadFile", $("#file")[0].files[0]);
@@ -526,7 +526,7 @@
 		  </div> -->
 		  <table width="100%" border="0">
              <tr>
-                 <th align="right" width="100px">素材上传:</th>
+                 <th align="right" width="100px">稿件上传:</th>
                  <th><input type="file" name="file" id="file" width="30px" onchange="stateChange()"></th>
                  <th><input type="hidden" id = "view"></th>
               </tr>
@@ -536,7 +536,7 @@
                  <td>&nbsp;</td>
               </tr>              
               <tr>
-                 <td align="right" width="100px">素材名:</td>
+                 <td align="right" width="100px">稿件名:</td>
                  <td><input type="text" name="adName" id="adName"  width="80px" ></td>
                  <td>&nbsp;</td>
               </tr>

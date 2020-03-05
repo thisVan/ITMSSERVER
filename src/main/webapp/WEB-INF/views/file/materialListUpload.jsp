@@ -4,7 +4,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include file="/layui/header.jsp"%>
-   <title>素材列表</title>
+   <title>稿件列表</title>
    <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -56,7 +56,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:280, event: 'set2', title: '稿件名', fixed: true, sort: true}
     		      ,{field:'terminalName',width:120, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){
     		    		  var tname = d.terminalName;
@@ -82,7 +82,7 @@
     		    	  }
     		      }
     		      ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
-    		      ,{field:'size',width:100, event: 'set6', title: '素材大小'}
+    		      ,{field:'size',width:100, event: 'set6', title: '稿件大小'}
     		      ,{field:'duration',width:80, event: 'set7', title: '时长', sort: true}
     		      ,{field:'info',width:100, event: 'set8', title: '排播状态', sort: true
     		    	  ,templet: function(d){
@@ -215,7 +215,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:280, event: 'set2', title: '稿件名', fixed: true, sort: true}
     		      ,{field:'terminalName',width:120, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){
     		    		  var tname = d.terminalName;
@@ -241,7 +241,7 @@
     		    	  }
     		      }
     		      ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
-    		      ,{field:'size',width:100, event: 'set6', title: '素材大小'}
+    		      ,{field:'size',width:100, event: 'set6', title: '稿件大小'}
     		      ,{field:'duration',width:80, event: 'set7', title: '时长', sort: true}
     		      ,{field:'info',width:100, event: 'set8', title: '排播状态', sort: true
     		    	  ,templet: function(d){
@@ -329,11 +329,11 @@
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材名：</label>
+								<label class="layui-form-mid">稿件名：</label>
 								<div class="layui-input-inline"
 									style="width: 100px; height: 35px;">
 									<input type="tel" id="materialName" name="materialName" autocomplete="off"
-										style="width: 120px; height: 35px;" placeholder="素材名"
+										style="width: 120px; height: 35px;" placeholder="稿件名"
 										class="layui-input input-text" />
 								</div>
 							</div>

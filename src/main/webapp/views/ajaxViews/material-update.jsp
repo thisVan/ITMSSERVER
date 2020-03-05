@@ -4,7 +4,7 @@
 <head>
 	<meta content="text/html;charset=UTF-8"/>
 	<%@ include file="/layui/header.jsp"%>
-    <title>素材修改列表</title>
+    <title>稿件修改列表</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta http-equiv ="Pragma" content = "no-cache"/>
 	<meta http-equiv="Cache-Control" content="no cache" />
@@ -21,7 +21,7 @@
     <form class="layui-form">
 
   <div class="layui-form-item">
-    <label class="layui-form-label my_width">素材原名：</label>
+    <label class="layui-form-label my_width">稿件原名：</label>
     <div class="layui-input-inline">
       <input type="text" id="materialName" name="materialName" required="" style="width:250px;" lay-verify="required"  autocomplete="off" class="layui-input" readonly="readonly"/>
     </div>
@@ -30,9 +30,9 @@
 
   
   <div class="layui-form-item">
-    <label class="layui-form-label my_width">素材的新名：</label>
+    <label class="layui-form-label my_width">稿件的新名：</label>
     <div class="layui-input-inline">
-      <input type="text" id="materialNewName" name="materialNewName" style="width:250px;"  placeholder="请输入素材新名称" autocomplete="off" class="layui-input input-text"/>
+      <input type="text" id="materialNewName" name="materialNewName" style="width:250px;"  placeholder="请输入稿件新名称" autocomplete="off" class="layui-input input-text"/>
     </div>
   </div>
   
@@ -72,10 +72,10 @@
 	   var newTerminalId = "";
 	   if($("#div2").is(':visible')){ 
 	      newTerminalId =  $("#terminalSelect").val();
-	   } else {  //单独修改素材名字就不能为空
+	   } else {  //单独修改稿件名字就不能为空
 	   
 	      if(materialNewName == ""){
-	        parent.layer.msg('修改失败, 新素材名不能为空',{icon:5,time:1000});
+	        parent.layer.msg('修改失败, 新稿件名不能为空',{icon:5,time:1000});
 		    return ;
 	      }
 	   }
@@ -99,7 +99,7 @@
 			  }else if(value=="1"){
 				  parent.layer.msg('操作有误!!!',{icon:5,time:2000});
 			  }else if(value=="2"){
-				  parent.layer.msg('素材已审核，该角色无权修改!!!',{icon:5,time:2000});
+				  parent.layer.msg('稿件已审核，该角色无权修改!!!',{icon:5,time:2000});
 			  }else{
 				  parent.layer.msg('修改失败!!!',{icon:5,time:2000});
 			  }

@@ -25,11 +25,11 @@ hr{margin: 30px 0;}
 <input type="hidden" id="videoViewPlay" value=""/>
 
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-  <legend>上传素材列表</legend>
+  <legend>上传稿件列表</legend>
 </fieldset> 
  
 <div class="layui-upload">
-  <button type="button" class="layui-btn layui-btn-normal" id="testList">多素材选择</button> 
+  <button type="button" class="layui-btn layui-btn-normal" id="testList">多稿件选择</button>
   <div class="layui-upload-list">
     <table class="layui-table">
       <thead>
@@ -127,7 +127,7 @@ layui.use('upload', function(){
     	  layer.closeAll('loading'); //关闭loading
     	  var tr = demoListView.find('tr#upload-'+ index)
           ,tds = tr.children();
-          tds.eq(2).html('<span style="color: #FF5722;">上传失败(已有同素材名文件)</span>');
+          tds.eq(2).html('<span style="color: #FF5722;">上传失败(已有同稿件名文件)</span>');
           tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
           return;
       }

@@ -197,7 +197,7 @@ div[carousel-item]>*:nth-child(4n+3) {
                 textAlign : 'left',
                 hideAfter : 8000,
                 showHideTransition : 'slide',
-                text: '有新素材上传成功了，请按时审核',
+                text: '有新稿件上传成功了，请按时审核',
                 position : 'top-right'
             })">
 
@@ -213,11 +213,11 @@ div[carousel-item]>*:nth-child(4n+3) {
 
 	<input type="hidden" id="materialExcep"
 		value="$.toast({
-                heading: '素材敏感提醒',
+                heading: '稿件敏感提醒',
                 textAlign : 'left',
                 hideAfter : 8000,
                 showHideTransition : 'slide',
-                text: '有播表素材含敏感信息，请及时检查素材信息',
+                text: '有播表稿件含敏感信息，请及时检查稿件信息',
                 position : 'top-right'
             })">
 
@@ -385,7 +385,7 @@ div[carousel-item]>*:nth-child(4n+3) {
 		
 		function initIndex(){
 			var roleName = '<%=request.getAttribute("roleName")%>';
-			 if(roleName == '素材初审管理员'){
+			 if(roleName == '稿件初审管理员'){
 				 timeFirstCheck();
 			 }else if(roleName == '排播管理员'){
 				 timeBroadCheck();

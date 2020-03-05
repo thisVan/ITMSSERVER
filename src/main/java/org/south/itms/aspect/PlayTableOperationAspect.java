@@ -8,7 +8,7 @@ import org.south.netty.TableAutoGenerate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PlayTableOperationAspect {
-    //素材操作，被操作对象都是播表
+    //稿件操作，被操作对象都是播表
     private final String OBJECT_TYPE = "PLAY_TABLE";
 
     //注入切面公共方法
@@ -154,7 +154,7 @@ public class PlayTableOperationAspect {
                 modifyObjectId);
     }
 
-    //添加播表里的素材
+    //添加播表里的稿件
     //这个和节目增加时一样的
 
     //播表一级审核

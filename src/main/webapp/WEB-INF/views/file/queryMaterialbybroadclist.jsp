@@ -4,7 +4,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include file="/layui/header.jsp"%>
-   <title>素材列表</title>
+   <title>稿件列表</title>
    <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -12,7 +12,7 @@
    <script type="text/javascript" defer="defer">
    
    var tid='${resterminalid}';//终端ID
-   var alreadymid='${alreadymid}';//该播表已有的素材mid，添加素材的时候需要排除
+   var alreadymid='${alreadymid}';//该播表已有的稿件mid，添加稿件的时候需要排除
    $(function(){
 	   init();
    });
@@ -47,7 +47,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:200, event: 'set2', title: '素材名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:200, event: 'set2', title: '稿件名', fixed: true, sort: true}
     		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: true
     		    	  ,templet: function(d){
     		    		  var name = d.terminal;
@@ -119,11 +119,11 @@
 						<div class="layui-form-item">
 							
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材名：</label>
+								<label class="layui-form-mid">稿件名：</label>
 								<div class="layui-input-inline"
 									style="width: 100px; height: 35px;">
 									<input type="tel" id="materialName" name="materialName" autocomplete="off"
-										style="width: 100px; height: 35px;" placeholder="素材名"
+										style="width: 100px; height: 35px;" placeholder="稿件名"
 										class="layui-input input-text" />
 								</div>
 							</div>

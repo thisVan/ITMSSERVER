@@ -1129,7 +1129,7 @@ public class PtableController {
 	}
 
 	/**
-	 * 返回去重排序后的播表素材列表，以ajax方式，json类型传回前端
+	 * 返回去重排序后的播表稿件列表，以ajax方式，json类型传回前端
 	 * 
 	 * @param pid
 	 * @param request
@@ -1768,9 +1768,9 @@ public class PtableController {
 			int deltnum = Integer.parseInt(num) + 1;
 			if (commonService.delOneFromPlayFile(ppid, mmid, deltnum)) {
 				// 删除成功后，更新file表的序号
-				List<Items> itemsList  = materialDao.findByPtable(ppid);// 获取播表id对应剩余的所有素材item
+				List<Items> itemsList  = materialDao.findByPtable(ppid);// 获取播表id对应剩余的所有稿件item
 			
-				String sortNum = "";// 当前ppid所存在的所有素材mid
+				String sortNum = "";// 当前ppid所存在的所有稿件mid
 				for (Items item:itemsList ) {
 					sortNum += "," + item.getMaterial().getMid();
 				}
@@ -1781,7 +1781,7 @@ public class PtableController {
 				}
 				
 				
-				//更新播表时间以及重设素材是否排播
+				//更新播表时间以及重设稿件是否排播
 				
 				//Set <Items> itemsSet = new HashSet<Items>(itemsList);
 				PlayTable playTable = ptableService.getPlayTableByPid(ppid);
@@ -1801,7 +1801,7 @@ public class PtableController {
 				
 				
 				//这里是把当天这个节目彻底删除
-				//bug :  无法添加删除后的素材
+				//bug :  无法添加删除后的稿件
 				//by  bobo  2019/11/22
 //				
 //				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1814,18 +1814,18 @@ public class PtableController {
 //				}
 				
 //				Material material = materialService.getById(mmid);
-//				System.out.println("开始检测更新素材排播信息！！！");
+//				System.out.println("开始检测更新稿件排播信息！！！");
 //				boolean hasWillBeDeletedMaterialFlag = false;
 //				for (Items items : itemsList) {
 //					if (items.getMaterial().getMid() == mmid){
-//						//还有这个素材的节目
+//						//还有这个稿件的节目
 //						hasWillBeDeletedMaterialFlag = true;
 //						break; 
 //					}
 //				}
-//				//没有这个mmid的素材的节目了,更新一下信息
+//				//没有这个mmid的稿件的节目了,更新一下信息
 //				if (!hasWillBeDeletedMaterialFlag) {
-//					System.out.println("更新素材排播信息！！！");
+//					System.out.println("更新稿件排播信息！！！");
 //					//这里要把删除的那个item的deleted变成1
 //					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //					Date d1 = playTable.getPlayDate();

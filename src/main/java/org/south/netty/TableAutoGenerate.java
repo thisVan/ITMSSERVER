@@ -505,7 +505,7 @@ public class TableAutoGenerate {
 
 			System.out.println("#####################################");
 			System.out.println("开始制作有itemid的ptable_file!!!!!!!!");
-			//在这之前,先针对ad[]素材找到对应的mid ID的item，返回一个itemList
+			//在这之前,先针对ad[]稿件找到对应的mid ID的item，返回一个itemList
 			//把itemID写入ptabefile
 //			String sql = "select it.* from items it  where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
 //			session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
@@ -771,7 +771,7 @@ public class TableAutoGenerate {
 	}
 
 	// 7.14
-	// 通过播表管理在ptable_file复制一个素材
+	// 通过播表管理在ptable_file复制一个稿件
 	public void copySqlPlayFile(String pid, String mid, int num) throws ParseException {
 		try {
 			// 加载驱动程序
@@ -803,7 +803,7 @@ public class TableAutoGenerate {
 	}
 
 	// 7.15
-	// 通过播表管理在ptable_file删除一个素材
+	// 通过播表管理在ptable_file删除一个稿件
 	public void delSqlPlayFile(String pid, String mid, int num) throws ParseException {
 		try {
 			// 加载驱动程序
@@ -813,7 +813,7 @@ public class TableAutoGenerate {
 			if (!conn.isClosed())
 				System.out.println("Succeeded connecting to the Database!");
 
-			System.out.println("准备在ptable_file删除一个素材");
+			System.out.println("准备在ptable_file删除一个稿件");
 
 			// statement用来执行SQL语句
 			String deltSql = "delete from ptable_file where deleted = 0 and mid = ? and pid =? and num=?";
@@ -835,7 +835,7 @@ public class TableAutoGenerate {
 		}
 	}
 
-	// 通过播表管理在ptable_file根据pid删除该pid的所有素材
+	// 通过播表管理在ptable_file根据pid删除该pid的所有稿件
 	public void delAllSqlPlayFile(String pid)  {
 		try {
 			// 加载驱动程序

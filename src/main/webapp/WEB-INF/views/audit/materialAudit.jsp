@@ -47,7 +47,7 @@
 		   
 		  //操作类型
 		  var operation=$("#operation").val();
-		   //素材ID
+		   //稿件ID
 		  var modifyObjectId = $("#modifyObjectId").val();
    		  var params = "modifyObjectType, = ,MATERIAL,";
 			
@@ -185,7 +185,7 @@
 							</div> 
 
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材ID：</label>
+								<label class="layui-form-mid">稿件ID：</label>
 								<div class="layui-input-inline"
 									style="width: 100px; height: 35px;">
 									<input type="tel" id="modifyObjectId" name="modifyObjectId" autocomplete="off"

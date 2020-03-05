@@ -96,13 +96,13 @@ function depose(){
 		      
 		      <br>
 		      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
-		        <legend>素材信息</legend>
+		        <legend>稿件信息</legend>
 	          </fieldset>
 	          <div>
-	             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>素材名:</label>
+	             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>稿件名:</label>
 	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>${sessionScope.materialThree.materialName}</label>
 	     <br><br>
-	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>素材分辨率:</label>
+	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>稿件分辨率:</label>
 	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>${sessionScope.materialThree.resolution}</label>	     
 	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>大小:</label>
 	     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>${sessionScope.materialThree.size}</label>	 

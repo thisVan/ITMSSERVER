@@ -9,7 +9,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include  file="/assets/header.jsp"%>
-   <title>素材管理</title>
+   <title>稿件管理</title>
    <link href="<%=request.getContextPath()%>/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
    <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
    <script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
@@ -99,7 +99,7 @@ layui.use('upload', function(){
 		//实现对DataGird控件的绑定操作  
 		function initGrid() {  
 		    $('#MyDatagrid').datagrid({   //定位到Table标签，Table标签的ID是grid   
-		        title: '素材列表',  
+		        title: '稿件列表',
 		        iconCls: 'icon-save',  
 		        nowrap: true,  
 		        singleSelect : false,// 如果为true，则只允许选择一行。
@@ -113,7 +113,7 @@ layui.use('upload', function(){
 		        idField: 'fileId',   
 		        columns: [[  
 		             { field: 'ck', checkbox: true },   //选择  
-		             { title: '素材名', field: 'materialName', width: 160},
+		             { title: '稿件名', field: 'materialName', width: 160},
 		             { title: '文件名', field: 'fileName', width: 160},
 		             /* { title: '终端ID', field: 'terminalId', width: 40 },
 		             { title: '开始时间', field: 'startTime', width: 70,
@@ -134,7 +134,7 @@ layui.use('upload', function(){
                              }  },
 		             { title: '时段范围', field: 'periodId', width: 160 ,
                         formatter: function(value) {
-                        	if(value == null) return "插播素材";
+                        	if(value == null) return "插播稿件";
                             var tm = $("#time"+value).val();
                             return tm;
 					   }
@@ -342,7 +342,7 @@ layui.use('upload', function(){
             }); */
             
 			if(str==""){
-				$.messager.alert('提示', '请选择一个视频素材');
+				$.messager.alert('提示', '请选择一个视频稿件');
 			}else{
 				var formData = new FormData();
 				formData.append("uploadFile", $("#file")[0].files[0]);
@@ -392,7 +392,7 @@ layui.use('upload', function(){
 		function editFile(){
 			var rows = $('#MyDatagrid').datagrid('getSelections');
 			if(rows.length!=1){
-				$.messager.alert('提示', '请选择具体要修改的素材');
+				$.messager.alert('提示', '请选择具体要修改的稿件');
 				return ;
 			}else{
 		    	var rows = $('#MyDatagrid').datagrid('getSelections');
@@ -400,7 +400,7 @@ layui.use('upload', function(){
 				var fileName = rows[0].fileName;
 				var label=document.getElementById("fName1");
 				label.innerText = fileName;
-			    $('.window-header .panel-title').html("修改素材");
+			    $('.window-header .panel-title').html("修改稿件");
 			    $("#editFileApplyform").form('clear');
 			    $("#editFileBtn").attr("onclick", "editF()");
 			    $('#editFileWin').window('open');
@@ -448,7 +448,7 @@ layui.use('upload', function(){
 				  }else if(value=="1"){
 					  $.messager.alert('提示', '日期范围有误或为空!!');
 				  }else if(value=="2"){
-					  $.messager.alert('提示', '素材审核中，不可修改!!');
+					  $.messager.alert('提示', '稿件审核中，不可修改!!');
 				  }else{
 					  $.messager.alert('提示', '修改失败!!');
 				  }
@@ -554,7 +554,7 @@ layui.use('upload', function(){
 	<input type="hidden" id="pid" value="isNull">
 	<input type="hidden" id="mdValue" value="">
 	<input type="hidden" id="videoView" value="">
-	<input type="hidden" id="timenull" value="插播素材"/>
+	<input type="hidden" id="timenull" value="插播稿件"/>
 	<c:forEach items="${periods}" var="period" varStatus="status">
 		<input type='hidden' id='i${period.periodId}'
 			value="${period.periodName}">
@@ -573,15 +573,15 @@ layui.use('upload', function(){
 	  
 	  <div id="tb"> <!-- datagrid 的工具栏  start -->
 	  
-	  <div id="fileWin" class="easyui-window" title="素材上传" style="width:770px;height:500px;" closed="true">
+	  <div id="fileWin" class="easyui-window" title="稿件上传" style="width:770px;height:500px;" closed="true">
 		<form id="fileApplyform" style="padding:30px 20px 10px 40px;" enctype="multipart/form-data">
 
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
-  <legend>多素材文件列表</legend>
+  <legend>多稿件文件列表</legend>
 </fieldset> 
  
 <div class="layui-upload">
-  <button type="button" class="layui-btn layui-btn-normal" id="testList">多素材选择</button> 
+  <button type="button" class="layui-btn layui-btn-normal" id="testList">多稿件选择</button>
   <div class="layui-upload-list">
     <table class="layui-table">
       <thead>
@@ -599,7 +599,7 @@ layui.use('upload', function(){
 
 <!-- 		  <table border="0" style="width:100%;text-align:center;">
              <tr align=center>
-                 <th align="right" width="80px">素材上传:</th>
+                 <th align="right" width="80px">稿件上传:</th>
                  <th><input type="file" name="file" id="file" width="30px" onchange="stateChange()" multiple="multiple"></th>
                  <th><input type="hidden" id = "view"></th>
               </tr>
@@ -621,7 +621,7 @@ layui.use('upload', function(){
 	  </div> <!-- fileWin -->
 	  
 	  
-	  <div id="editFileWin" class="easyui-window" title="修改素材" style="width:550px;height:450px;" closed="true">
+	  <div id="editFileWin" class="easyui-window" title="修改稿件" style="width:550px;height:450px;" closed="true">
 		<form id="editFileApplyform" style="padding:30px 20px 10px 40px;" >
 		  <table width="100%" border="0">
               <tr>
@@ -635,7 +635,7 @@ layui.use('upload', function(){
                  <td>&nbsp;</td>
               </tr> 
               <tr>
-                 <td align="right" width="100px">素材名:</td>
+                 <td align="right" width="100px">稿件名:</td>
                  <td><input type="text" name="mName1" id="mName1" value="" width="80px" ></td>
                  <td>&nbsp;</td>
               </tr>
@@ -655,9 +655,9 @@ layui.use('upload', function(){
 	
 	    <form id="searchForm" style="padding:5px;">
 	    
-	     	<span>素材名:</span>
+	     	<span>稿件名:</span>
 			<input id="searchFileName" name="fileName" type="text" value="">
-			<span>素材类型:</span>
+			<span>稿件类型:</span>
 		    <select id="searchFileTypeSelect" name="fileType">
 					   <option value=""></option>
 					   <option value="vedio">视频</option>
@@ -677,8 +677,8 @@ layui.use('upload', function(){
 			<a href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconCls="icon-reload" onclick="searchReset()">重置</a>
 	    </form>
 	    
-	    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="uploadMaterial()">上传素材</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editFile()">修改素材</a>
+	    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="uploadMaterial()">上传稿件</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editFile()">修改稿件</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delFile()">删除</a>
 	 </div>        <!-- datagrid 的工具栏  end -->
 

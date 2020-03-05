@@ -39,7 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		             { title: '终端ID', field: 'terminalId', width: 40},
 		             { title: '时段范围', field: 'periodId', width: 150 ,
 	                        formatter: function(value) {
-	                        	if(value == null) return "插播素材";
+	                        	if(value == null) return "插播稿件";
 	                            var tm = $("#time"+value).val();
 	                            return tm;
 						   }

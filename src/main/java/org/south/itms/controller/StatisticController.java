@@ -173,7 +173,7 @@ public class StatisticController {
 
 			} else if ("2".equals(type)) { // 播放次数统计表
 				HSSFCell cell = row.createCell((short) 0);
-				cell.setCellValue("素材名称");
+				cell.setCellValue("稿件名称");
 
 				cell = row.createCell((short) 1);
 				cell.setCellValue("总播放次数");

@@ -8,7 +8,7 @@ public class InsertVedioDto implements Serializable{   //为插播临时保存�
 
 	private String mid;
 	
-	private String logicName;  //素材的逻辑名
+	private String logicName;  //稿件的逻辑名
 	
 	private String md5;
 

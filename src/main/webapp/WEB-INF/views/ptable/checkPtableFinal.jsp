@@ -44,7 +44,7 @@
 						field : 'materialName',
 						width : 270,
 						event : 'set1',
-						title : '素材名称',
+						title : '稿件名称',
 						sort : true
 					}
 					, {
@@ -97,7 +97,7 @@
 						arr.push(tdata[i].material.mid);
 					}
 					if (arr.length != 0) {
-						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;">总共有' + arr.length + '条不同素材</span>';
+						document.getElementById("totalMaterial").innerHTML = '<span style="color: #1E9FFF;">总共有' + arr.length + '条不同稿件</span>';
 					//document.getElementById("totalMaterial").innerText = "" +  + "";
 					}
 
@@ -118,7 +118,7 @@
 					vLen = vList.length; // 播放列表的长度
 					play();
 					function play() {
-						document.getElementById("mName").innerText = "当前播放素材名:  " + ms[curr].materialName;
+						document.getElementById("mName").innerText = "当前播放稿件名:  " + ms[curr].materialName;
 						document.getElementById("mResolution").innerText = "分辨率:  " + ms[curr].resolution;
 						document.getElementById("mSize").innerText = "大小:  " + ms[curr].size;
 						document.getElementById("mDuration").innerText = "时长:  " + ms[curr].duration;
@@ -318,7 +318,7 @@
 			<div class="layui-col-md8">
 				<fieldset id="menu_func_div" class="layui-elem-field">
 					<legend>
-						<i class="layui-icon">&#xe6ed;</i>播表素材顺序列表
+						<i class="layui-icon">&#xe6ed;</i>播表稿件顺序列表
 					</legend>
 					<div class="layui-field-box">
 						<div class="layui-col-md12 layui-col-space1" id="playTableMaterialsDiv">

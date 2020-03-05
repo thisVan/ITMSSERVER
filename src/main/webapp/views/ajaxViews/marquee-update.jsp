@@ -18,7 +18,7 @@
 <input type="hidden" id="mid" value=""/>
 	<div class="layui-fluid">
   <div class="layui-form-item">
-    <label class="layui-form-label">素材名：</label>
+    <label class="layui-form-label">稿件名：</label>
     <div class="layui-input-inline">
       <input type="text" id="materialName" name="materialName"  autocomplete="off" style="width:250px;" class="layui-input input-text" readonly="readonly"/>
     </div>

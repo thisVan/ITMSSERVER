@@ -469,7 +469,7 @@
 				<table class="table table-striped" id="inser">
 					<thead>
 						<tr>
-							<th>素材名称</th>
+							<th>稿件名称</th>
 							<th>插播日期</th>
 							<th>开始时间</th>
 							<th>结束时间</th>
@@ -526,15 +526,15 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h5 class="sub-header">
-					<i class="fa fa-video-camera"></i><span style="margin-left: 2px;">插播素材信息:</span>
+					<i class="fa fa-video-camera"></i><span style="margin-left: 2px;">插播稿件信息:</span>
 				</h5>
 			</div>
 			<div class="panel-body">
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>素材名称</th>
-							<th>素材时长</th>
+							<th>稿件名称</th>
+							<th>稿件时长</th>
 							<th>上传时间</th>
 							<th>操作</th>
 						</tr>
@@ -544,7 +544,7 @@
 					</tbody>
 					<tr>
 						<td colspan="4" style="text-align: center;"><button id="buttonFile"
-								type="button" class="btn btn-link" onclick="openFileModal();">添加素材视频</button></td>
+								type="button" class="btn btn-link" onclick="openFileModal();">添加稿件视频</button></td>
 					</tr>
 				</table>
 			</div>

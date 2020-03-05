@@ -12,7 +12,7 @@
 .layui-table-cell{overflow: visible;}
 .layui-input{width:110px;height:30px;}
 </style>
-   <title>我的素材列表</title>
+   <title>我的稿件列表</title>
    <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -115,7 +115,7 @@
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
     		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '素材名',  sort: true}
+    		      ,{field:'materialName',width:280, event: 'set2', title: '稿件名',  sort: true}
     		      ,{field:'terminalName',width:200, event: 'set3', title: '终端名(已智能选择待绑定)',  sort: true
     		    	  ,templet: function(d){
     		    		  var tis1 = d.tis;
@@ -204,7 +204,7 @@
     				    	  return ;
     				      }
     				      //批量删除
-    				      layer.confirm('真的删除这些素材么', function(index){
+    				      layer.confirm('真的删除这些稿件么', function(index){
     					         //obj.del();
     					         layer.close(index);
     					         console.log(mids.length);
@@ -226,7 +226,7 @@
     								});
     			    	  });
     				    }
-    		  ,getTisData: function(){ //获取选中数据，2018.7.11 增加判断素材分辨率与终端分辨率是否相同功能 张一鸣
+    		  ,getTisData: function(){ //获取选中数据，2018.7.11 增加判断稿件分辨率与终端分辨率是否相同功能 张一鸣
 			      var checkStatus = table.checkStatus('flagTwo')
 			      ,data = checkStatus.data;
 			      var tids = [];
@@ -255,17 +255,17 @@
 			    	  }
 			      }
 			      if(flaglen == data.length){
-			    	  layer.msg('所选素材终端已确定!',{icon:6,time:1500});
+			    	  layer.msg('所选稿件终端已确定!',{icon:6,time:1500});
 			    	  return ;
 			      }
 			      if(tids.length == 0){
-			    	  layer.msg('请选择要保存的素材!',{icon:6,time:1500});
+			    	  layer.msg('请选择要保存的稿件!',{icon:6,time:1500});
 			    	  return ;
 			      }
 			      
 			      if(flagresolution!=0){
 			    	  //批量保存
-				      layer.confirm('素材分辨率与所选终端LED分辨率不一致，确定绑定吗', function(index){
+				      layer.confirm('稿件分辨率与所选终端LED分辨率不一致，确定绑定吗', function(index){
 					         //obj.del();
 					         layer.close(index);
 					         console.log(tids.length);
@@ -290,7 +290,7 @@
 			      }
 			      
 			      //批量保存
-			      layer.confirm('真的要保存所选素材确定的终端么', function(index){
+			      layer.confirm('真的要保存所选稿件确定的终端么', function(index){
 				         //obj.del();
 				         layer.close(index);
 				         console.log(tids.length);
@@ -319,7 +319,7 @@
     				    	  var mmid = data[0].mid;
     				    	  var mname = data[0].materialName;
     				    	  layer.open({
-    				    			title:'素材修改列表',
+    				    			title:'稿件修改列表',
     				    			type:2,
     				    			area:['50%','95%'],
     				    			content:'<%=request.getContextPath()%>/views/ajaxViews/material-update.jsp',
@@ -417,11 +417,11 @@
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
 							<div class="layui-inline">
-								<label class="layui-form-mid">素材名：</label>
+								<label class="layui-form-mid">稿件名：</label>
 								<div class="layui-input-inline"
 									style="width: 100px; height: 35px;">
 									<input type="tel" id="materialName" name="materialName" autocomplete="off"
-										style="width: 120px; height: 35px;" placeholder="素材名"
+										style="width: 120px; height: 35px;" placeholder="稿件名"
 										class="layui-input input-text" />
 								</div>
 							</div>
