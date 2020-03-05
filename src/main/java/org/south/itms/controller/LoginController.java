@@ -1,6 +1,7 @@
 package org.south.itms.controller;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,20 +53,23 @@ public class LoginController {
 	  @ResponseBody
 	  public Result loginIn(String userAccount, String userPassword, HttpSession session){
 		  System.out.println(userAccount + "==" + userPassword);
+
 		  if(StringUtil.isEmpty(userPassword) || StringUtil.isEmpty(userAccount)) {
 			  return new Result("登录失败, 请输入用户名和密码");
 		  }
 
-		  //modify by bobo 2020/2/14
-		  //判断能否登录，是否达到上限
-		  UserLoginListener.getSingleInstance().updateUserLoginInfo(userAccount);
-		  if (!UserLoginListener.getSingleInstance().userLoginInfo.get(userAccount).getCanLogin()){
-			  return new Result("登录失败, 当日登录已经超出允许次数");
-		  }
-
-
 		  User user = userDao.getUserByAccountAndPassword(userAccount, userPassword);
+		  // 正确登录
 	      if(user != null) {
+
+			  // modify by bobo 2020/3/5
+	      	  // 达到限制后，就算正确也不能登录了
+			  if (UserLoginListener.getSingleInstance().userLoginInfo.get(userAccount) != null ){
+				  if (!UserLoginListener.getSingleInstance().userLoginInfo.get(userAccount).getCanLogin()){
+					  return new Result("密码错误次数过多，当前账户被限制登录！");
+				  }
+			  }
+
 	    	  Map<String, List<Resource>> map = userDao.getAllResource(user.getRole().getRoleId());
 	    	  String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", " ");
 	    	  String path = webPath.substring(0, webPath.indexOf("WEB-INF"));
@@ -126,15 +130,39 @@ public class LoginController {
 	    	  
 	    	  //加载该用户的权限
 	    	  List<Resource> userResources = resourceDao.findByRole(user.getRole().getRoleId());
-	    	  for(Resource r : userResources) {
-	    		  System.out.println(r);
-	    	  }
+//	    	  for(Resource r : userResources) {
+//	    		  System.out.println(r);
+//	    	  }
 	    	  session.setAttribute("userResources", userResources);
 	    	  //每次登录移除以下属性, 该属性是该角色运行查看的地区
 	    	  session.removeAttribute("allowAreaName");
 	    	  return new Result(true, "");
-	      } else {  
-	    	  return new Result("用户名或者密码不正确");
+	      }
+	      // 错误登录
+	      else {
+	      	  // modify by bobo 2020/3/5
+	      	  // 这里是用户名和密码错误的登录限制
+			  // 会登记失败登录的用户名，加入名单，达到一定次数，将不能登录
+
+			  // 当前尝试登录的账户名
+			  String nowLoginUserAccount = userAccount;
+
+			  // 登录记录者单例
+			  UserLoginListener userLoginListener = UserLoginListener.getSingleInstance();
+
+			  // 错误登录记录表
+			  HashMap<String, UserLoginListener.UserInfo> userErrLoginInfo = userLoginListener.userLoginInfo;
+
+			  // 更新当前账户的信息
+			  userLoginListener.updateUserLoginInfo(nowLoginUserAccount);
+
+			  int canTryLoginTimes = userLoginListener.getTodayLoginLimit() - userErrLoginInfo.get(nowLoginUserAccount).getTodayLoginTimes();
+			  // 检查是否不能再登录
+			  if ((!userErrLoginInfo.get(userAccount).getCanLogin()) || canTryLoginTimes == 0){
+					return new Result("密码错误次数过多，当前账户被限制登录！");
+			  }
+			  // 返回还能登录的次数
+	    	  return new Result("用户名或密码错误，当前账户还剩" + canTryLoginTimes + "次尝试机会");
 	      }  
 	  }
 	  
