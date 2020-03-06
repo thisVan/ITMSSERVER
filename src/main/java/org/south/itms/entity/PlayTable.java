@@ -50,6 +50,12 @@ public class PlayTable implements java.io.Serializable {
 
 	private Integer baseFrequency;
 
+	private String checkName;
+	private Date checkTime;
+
+	private String checkSecondName;
+	private Date checkSecondTime;
+
 	@Id
 	@Column(name = "pid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -252,6 +258,21 @@ public class PlayTable implements java.io.Serializable {
 		this.baseFrequency = baseFrequency;
 	}
 
+	@Column(name = "check_name")
+	public String getCheckName(){ return checkName; }
+	public void setCheckName(String checkName){ this.checkName = checkName; }
+
+	@Column(name = "check_time")
+	public Date getCheckTime(){ return checkTime; }
+	public void setCheckTime(Date checkTime){ this.checkTime = checkTime; }
+
+	@Column(name = "check_second_name")
+	public String getCheckSecondName(){ return checkSecondName; }
+	public void setCheckSecondName(String checkSecondName){ this.checkSecondName = checkSecondName; }
+
+	@Column(name = "check_second_time")
+	public Date getCheckSecondTime(){ return checkSecondTime; }
+	public void setCheckSecondTime(Date checkSecondTime){ this.checkSecondTime = checkSecondTime; }
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

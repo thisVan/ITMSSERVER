@@ -1,5 +1,6 @@
 package org.south.itms.dao.impl;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.south.itms.entity.IPTable;
@@ -26,17 +27,17 @@ public interface PtableDao {
 
 	void modifyPlayTableNum(String pid, String sortNum);
 
-	void updateTableStatus(String pid);
+	void updateTableStatus(String pid) throws ParseException;
 	
-	void updateTableStatusFinal(String pid);
+	void updateTableStatusFinal(String pid) throws ParseException;
 
 	void saveInsertTable(IPTable insertTable);
 
 	void saveTable(IPTable insert);
 
-	void updateTableStatusFinalUn(String pid, String mark);
+	void updateTableStatusFinalUn(String pid, String mark) throws ParseException;
 
-	void playTableUnAccess(String pid, String statusId);
+	void playTableUnAccess(String pid, String statusId) throws ParseException;
 	
 	void updateAllTime(String pid, String allTime, String screenRate);
 

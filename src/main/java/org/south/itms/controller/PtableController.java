@@ -1240,7 +1240,7 @@ public class PtableController {
 	 */
 	@RequestMapping(value = "/modifyPlayTableNum")
 	public void modifyPlayTableNum(String[] ppid, Model model, HttpServletRequest request, HttpServletResponse response,
-			String sortNum) throws IOException {
+			String sortNum) throws IOException, ParseException {
 		// System.out.println(ppid + "=" + sortNum);
 		// System.out.println("pid=" + (String)
 		// request.getSession().getAttribute("modifyPid"));
@@ -1352,7 +1352,7 @@ public class PtableController {
 	 */
 	@RequestMapping(value = "/modifyPlayTableFinalNum")
 	public void modifyPlayTableFinalNum(String[] ppid, Model model, HttpServletRequest request,
-			HttpServletResponse response, String sortNum) throws IOException {
+			HttpServletResponse response, String sortNum) throws IOException, ParseException {
 		System.out.println("print by PtableControll.modifyPlayTableFinalNum():" + ppid + "=" + sortNum);
 		logger.info("播表终审");
 		logger.info("print by PtableControll.modifyPlayTableFinalNum():" + ppid + "=" + sortNum);
@@ -1563,7 +1563,7 @@ public class PtableController {
 
 	@RequestMapping(value = "/modifyPlayTableFinalNumUn")
 	public void modifyPlayTableFinalNumUn(String[] ppid, Model model, String mark, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response) throws IOException, ParseException {
 		System.out.println(ppid + "=");
 		// String pid = (String) request.getSession().getAttribute("modifyPid");
 		for (int i = 0; i < ppid.length; i++) {
@@ -1601,7 +1601,7 @@ public class PtableController {
 
 	@RequestMapping(value = "/playTableUnAccess")
 	public void playTableUnAccess(String[] ppid, Model model, String[] checkArray, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response) throws IOException, ParseException {
 		System.out.println(ppid + "=");
 		// String pid = (String) request.getSession().getAttribute("modifyPid");
 		System.out.println(checkArray.length);

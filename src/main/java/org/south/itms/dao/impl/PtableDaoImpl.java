@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -29,6 +30,8 @@ import org.south.netty.msg.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author: yezilong
@@ -146,23 +149,39 @@ public class PtableDaoImpl implements PtableDao {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void updateTableStatus(String pid) {
+	public void updateTableStatus(String pid) throws ParseException {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String userName = (String) request.getSession().getAttribute("userName");
+
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		Date date = df.parse(df.format(new Date()));
+
 		String hql = "from PlayTable where pid=? and deleted=0";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, pid);
 		PlayTable pt = (PlayTable) query.uniqueResult();
 		pt.setStatusId("2");
+		pt.setCheckName(userName);
+		pt.setCheckTime(date);
 		this.getCurrentSession().update(pt);
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void updateTableStatusFinal(String pid) {
+	public void updateTableStatusFinal(String pid) throws ParseException {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String userName = (String) request.getSession().getAttribute("userName");
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		Date date = sdf.parse(sdf.format(new Date()));
+
 		String hql = "from PlayTable where pid=? and deleted=0";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, pid);
 		PlayTable pt = (PlayTable) query.uniqueResult();
 		pt.setStatusId("3");
+		pt.setCheckSecondName(userName);
+		pt.setCheckSecondTime(date);
 		this.getCurrentSession().update(pt);
 		
 		//插播到客户端
@@ -224,13 +243,21 @@ public class PtableDaoImpl implements PtableDao {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void updateTableStatusFinalUn(String pid, String mark) {
+	public void updateTableStatusFinalUn(String pid, String mark) throws ParseException {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String userName = (String) request.getSession().getAttribute("userName");
+
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		Date date = df.parse(df.format(new Date()));
+
 		String hql = "from PlayTable where pid=? and deleted=0";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, pid);
 		PlayTable pt = (PlayTable) query.uniqueResult();
 		pt.setStatusId("4");
 		pt.setMark(mark);
+		pt.setCheckSecondName(userName);
+		pt.setCheckSecondTime(date);
 		this.getCurrentSession().update(pt);
 	}
 
@@ -264,12 +291,20 @@ public class PtableDaoImpl implements PtableDao {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void playTableUnAccess(String pid, String statusId) {
+	public void playTableUnAccess(String pid, String statusId) throws ParseException {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String userName = (String) request.getSession().getAttribute("userName");
+
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		Date date = df.parse(df.format(new Date()));
+
 		String hql = "from PlayTable where pid=? and deleted=0";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, pid);
 		PlayTable pt = (PlayTable) query.uniqueResult();
 		pt.setStatusId(statusId);
+		pt.setCheckName(userName);
+		pt.setCheckTime(date);
 		this.getCurrentSession().update(pt);
 	}
 

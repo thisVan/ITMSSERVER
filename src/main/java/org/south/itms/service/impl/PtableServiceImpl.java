@@ -1,5 +1,6 @@
 package org.south.itms.service.impl;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.south.itms.dao.impl.PtableDao;
@@ -50,12 +51,12 @@ public class PtableServiceImpl implements PtableService {
 	}
 
 	@Override
-	public void updateTableStatusFinal(String pid) {
+	public void updateTableStatusFinal(String pid) throws ParseException {
 		ptableDao.updateTableStatusFinal(pid);
 	}
 
 	@Override
-	public void updateTableStatus(String pid) {
+	public void updateTableStatus(String pid) throws ParseException {
 		ptableDao.updateTableStatus(pid);
 	}
 
@@ -70,12 +71,12 @@ public class PtableServiceImpl implements PtableService {
 	}
 
 	@Override
-	public void updateTableStatusFinalUn(String pid, String mark) {
+	public void updateTableStatusFinalUn(String pid, String mark) throws ParseException {
 		ptableDao.updateTableStatusFinalUn(pid, mark);
 	}
 
 	@Override
-	public void playTableUnAccess(String pid, String statusId) {
+	public void playTableUnAccess(String pid, String statusId) throws ParseException {
 		ptableDao.playTableUnAccess(pid, statusId);
 	}
 	

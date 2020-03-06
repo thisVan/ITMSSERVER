@@ -459,7 +459,8 @@
 									<select id="statusId" name="statusId" style="width: 150px; height: 35px;">
 										<option value="">--请选择--</option>
 										<option value="1">未审核</option>
-										<option value="3">通过</option>
+										<option value="2">已初审</option>
+										<option value="3">已通过</option>
 										<option value="4">未通过</option>
 									</select>
 								</div>

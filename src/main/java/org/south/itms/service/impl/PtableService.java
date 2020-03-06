@@ -1,5 +1,6 @@
 package org.south.itms.service.impl;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.south.itms.entity.IPTable;
@@ -17,17 +18,17 @@ public interface PtableService {
 
 	void modifyPlayTableNum(String pid, String sortNum);
 
-	void updateTableStatusFinal(String pid);
+	void updateTableStatusFinal(String pid) throws ParseException;
 
-	void updateTableStatus(String pid);
+	void updateTableStatus(String pid) throws ParseException;
 
 	void saveInsertTable(IPTable insert);
 
 	void updateTableStatus(String pid, String statusId);
 
-	void updateTableStatusFinalUn(String pid, String mark);
+	void updateTableStatusFinalUn(String pid, String mark) throws ParseException;
 
-	void playTableUnAccess(String pid, String string);
+	void playTableUnAccess(String pid, String string) throws ParseException;
 	
 	/**
 	 * 更新播表的播放时长和占屏率

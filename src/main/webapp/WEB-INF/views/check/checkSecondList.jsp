@@ -224,7 +224,7 @@
                                 <select id="statusId" name="statusId" style="width: 150px; height: 35px;">
                                     <option value="2" selected>已初审</option>
                                     <option value="3">已通过</option>
-                                    <option value="4">未通过</option>
+<%--                                    <option value="4">未通过</option>--%>
                                 </select>
                             </div>
                         </div>

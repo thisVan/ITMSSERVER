@@ -50,7 +50,47 @@ public class PtableDto {
 	
 	private String tid;
 	
-	private int duraTime;	
+	private int duraTime;
+
+	private String checkName;
+
+	private Date checkTime;
+
+	private String checkSecondName;
+
+	private Date checkSecondTime;
+
+	public String getCheckName() {
+		return checkName;
+	}
+
+	public void setCheckName(String checkName) {
+		this.checkName = checkName;
+	}
+
+	public Date getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Date checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	public void setCheckSecondName(String checkSecondName) {
+		this.checkSecondName = checkSecondName;
+	}
+
+	public void setCheckSecondTime(Date checkSecondTime) {
+		this.checkSecondTime = checkSecondTime;
+	}
+
+	public String getCheckSecondName() {
+		return checkSecondName;
+	}
+
+	public Date getCheckSecondTime() {
+		return checkSecondTime;
+	}
 
 	public int getDuraTime() {
 		return duraTime;
@@ -225,7 +265,7 @@ public class PtableDto {
 	}
 
 	public PtableDto(String TerminalId,String pid, String statusId, String playTotalTime, Date playDate, String screenRate,
-			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state) {
+			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state, String checkName, Date checkTime, String checkSecondName, Date checkSecondTime) {
 		super();
 		this.tid=TerminalId;
 		this.pid = pid;
@@ -240,7 +280,10 @@ public class PtableDto {
 		this.min = min;
 		this.insertFlag = insertFlag;
 		this.state = state;
-		
+		this.checkName = checkName;
+		this.checkTime = checkTime;
+		this.checkSecondName = checkSecondName;
+		this.checkSecondTime = checkSecondTime;
 	}
 
 	/*@Override
@@ -260,7 +303,7 @@ public class PtableDto {
 				+ ", allTime=" + allTime + ", ptableName=" + ptableName + ", createName=" + createName + ", createTime="
 				+ createTime + ", periodName=" + periodName + ", periodTime=" + periodTime + ", mark=" + mark
 				+ ", insertFlag=" + insertFlag + ", min=" + min + ", state=" + state + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", tid=" + tid + "]";
+				+ ", endTime=" + endTime + ", tid=" + tid + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + "]";
 	}
 	
 	
