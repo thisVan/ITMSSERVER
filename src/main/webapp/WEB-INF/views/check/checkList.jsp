@@ -4,7 +4,7 @@
 <head>
    <meta charset="UTF-8">
    <%@ include file="/layui/header.jsp"%>
-   <title>稿件审核列表</title>
+   <title>稿件一级审核</title>
    <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -97,15 +97,15 @@
       		      ,{field:'statusId',width:120, event: 'set6', title: '审核状态', sort: true
       		    	  ,templet: function(d){
       		    		  var state = d.statusId;
-      		    		  if(state == 1){
-      		    			  return "未审核";
-      		    		  }else if(state == 2){
-      		    			  return "已初审";
-      		    		  }else if(state == 3){
-      		    			  return "已通过";
-      		    		  }else if(state == 4){
-      		    			  return "未通过";
-      		    		  }
+                              if (state == 1) {
+                                  return '<span style="color: #FF6347;">' + '未审核' + '</span>';
+                              } else if (state == 2) {
+                                  return '<span style="color: #90EE90;">' + '已初审' + '</span>';
+                              } else if (state == 3) {
+                                  return '<span style="color: #90EE90;">' + '已通过' + '</span>';
+                              } else if (state == 4) {
+                                  return '<span style="color: #FF6347;">' + '未通过' + '</span>';
+                              }
       		    	  }
       		      }
       		      ,{field:'uploadName',width:120, event: 'set7', title: '上传人', sort: true}
@@ -223,8 +223,8 @@
 									style="width: 150px; height: 35px;">
 									<select id="statusId" name="statusId" style="width: 150px; height: 35px;">
 										<option value="1" selected>未审核</option>
-										<option value="4">未通过</option>
-										<option value="3">通过</option>
+										<option value="2">已初审</option>
+                                        <option value="4">未通过</option>
 									</select>
 								</div>
 							</div>

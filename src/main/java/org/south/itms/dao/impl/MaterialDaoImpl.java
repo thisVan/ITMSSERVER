@@ -100,7 +100,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	public void checkAccess(String mid, String name, Timestamp timestamp) {
 		String hql = "update Material set statusId=?, checkName=?,checkTime=? where mid=? and deleted=?";
 		Query query = this.getCurrentSession().createQuery(hql);
-		query.setParameter(0, "3");
+		query.setParameter(0, "2");
 		query.setParameter(1, name);
 		query.setParameter(2, timestamp);
 		query.setParameter(3, mid);
@@ -111,6 +111,31 @@ public class MaterialDaoImpl implements MaterialDao {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void checkUnAccess(String mid, String name, Timestamp timestamp) {
+		String hql = "update Material set statusId=?, checkName=?,checkTime=? where mid=? and deleted=?";
+		Query query = this.getCurrentSession().createQuery(hql);
+		query.setParameter(0, "4");
+		query.setParameter(1, name);
+		query.setParameter(2, timestamp);
+		query.setParameter(3, mid);
+		query.setParameter(4, 0);
+		query.executeUpdate();
+	}
+
+	@Override
+	public void checkSecondAccess(String mid, String name, Timestamp timestamp) {
+		String hql = "update Material set statusId=?, checkName=?,checkTime=? where mid=? and deleted=?";
+		Query query = this.getCurrentSession().createQuery(hql);
+		query.setParameter(0, "3");
+		query.setParameter(1, name);
+		query.setParameter(2, timestamp);
+		query.setParameter(3, mid);
+		query.setParameter(4, 0);
+		query.executeUpdate();
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void checkSecondUnAccess(String mid, String name, Timestamp timestamp) {
 		String hql = "update Material set statusId=?, checkName=?,checkTime=? where mid=? and deleted=?";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, "4");

@@ -1061,10 +1061,36 @@ public class MaterialController {
 		return "true";
 	}
 
+    @RequestMapping(value = "/checkSecondAccess")
+    @ResponseBody
+    public String checkSecondAccess(String mid, HttpServletRequest request) {
+        String name = (String) request.getSession().getAttribute("userName");
+        System.out.println(name);
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        materialService.checkSecondAccess(mid, name, timestamp);
+        return "true";
+    }
+
+    @RequestMapping(value = "/checkSecondUnAccess")
+    @ResponseBody
+    public String checkSecondUnAccess(String mid, HttpServletRequest request) {
+        String name = (String) request.getSession().getAttribute("userName");
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        materialService.checkSecondUnAccess(mid, name, timestamp);
+        return "true";
+    }
+
 	@RequestMapping("/checkList")
 	public String checkList(Model model, HttpServletRequest request) {
 		return "check/checkList";
 	}
+
+    @RequestMapping("/checkSecondList")
+    public String checkSecondList(Model model, HttpServletRequest request) {
+        return "check/checkSecondList";
+    }
 
 	@RequestMapping("/notifyFile")
 	public void notifyFile(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {

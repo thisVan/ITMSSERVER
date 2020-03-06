@@ -61,6 +61,16 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	@Override
+	public void checkSecondAccess(String mid, String name, Timestamp timestamp) {
+		materialDao.checkSecondAccess(mid, name, timestamp);
+	}
+
+	@Override
+	public void checkSecondUnAccess(String mid, String name, Timestamp timestamp) {
+		materialDao.checkSecondUnAccess(mid, name, timestamp);
+	}
+
+	@Override
 	public int getAllRecord(String str) {
 		return materialDao.getAllRecord(str);
 	}

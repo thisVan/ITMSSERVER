@@ -128,7 +128,7 @@
     		      ,{fixed: 'right', width:200, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
-    		    ,where: {"param": param,"dateTime":dateTime}
+    		    ,where: {"param": param,"dateTime":dateTime,"field":"uploadTime", "order":"asc"}
     		    ,done: function(res, curr, count){
     		    	  //changeBg();
     		      }
@@ -221,9 +221,9 @@
 									style="width: 90px; height: 35px;">
 									<select id="statusId" name="statusId" style="width: 150px; height: 35px;">
 										<option value="">请选择</option>
-										<option value="1">未审核</option>
-										<option value="3">通过</option>
-										<option value="4">未通过</option>
+<%--										<option value="1">未审核</option>--%>
+										<option value="2">已初审</option>
+										<option value="3">已通过</option>
 									</select>
 								</div>
 							</div>

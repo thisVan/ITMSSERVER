@@ -29,6 +29,10 @@ public interface MaterialService {
 
 	void checkUnAccess(String mid, String name, Timestamp timestamp);
 
+	void checkSecondAccess(String mid, String name, Timestamp timestamp);
+
+	void checkSecondUnAccess(String mid, String name, Timestamp timestamp);
+
 	int getAllRecord(String string);
 
 	Material getById(String mid);
