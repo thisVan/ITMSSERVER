@@ -52,6 +52,10 @@ public class Material implements java.io.Serializable {
 	private String checkName;
 	
 	private Date checkTime;
+
+	private String checkSecondName;
+
+	private Date checkSecondTime;
 	
 	private String statusId;
 	
@@ -184,6 +188,25 @@ public class Material implements java.io.Serializable {
 
 	public void setCheckTime(Date checkTime) {
 		this.checkTime = checkTime;
+	}
+
+	@Column(name = "check_second_name")
+	public String getCheckSecondName() {
+		return checkSecondName;
+	}
+
+	public void setCheckSecondName(String checkSecondName) {
+		this.checkSecondName = checkSecondName;
+	}
+
+	@Column(name = "check_second_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getCheckSecondTime() {
+		return checkSecondTime;
+	}
+
+	public void setCheckSecondTime(Date checkSecondTime) {
+		this.checkSecondTime = checkSecondTime;
 	}
 
 	@Column(name = "status_id")

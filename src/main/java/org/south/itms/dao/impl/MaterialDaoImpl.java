@@ -13,6 +13,10 @@ import org.south.itms.entity.File;
 import org.south.itms.entity.Items;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.Terminal;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author jan
@@ -121,9 +125,12 @@ public class MaterialDaoImpl implements MaterialDao {
 		query.executeUpdate();
 	}
 
+
+
+	// 终审稿件
 	@Override
 	public void checkSecondAccess(String mid, String name, Timestamp timestamp) {
-		String hql = "update Material set statusId=?, checkName=?,checkTime=? where mid=? and deleted=?";
+		String hql = "update Material set statusId=?, checkSecondName = ? , checkSecondTime = ?where mid=? and deleted=?";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, "3");
 		query.setParameter(1, name);
@@ -136,7 +143,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void checkSecondUnAccess(String mid, String name, Timestamp timestamp) {
-		String hql = "update Material set statusId=?, checkName=?,checkTime=? where mid=? and deleted=?";
+		String hql = "update Material set statusId=?, checkSecondName = ? , checkSecondTime = ?where mid=? and deleted=?";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, "4");
 		query.setParameter(1, name);
@@ -161,7 +168,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public int getAllRecord2(String str) {
-		String hql = "select count(*) from Material where statusId = ? and deleted = 0 and tis = 1";
+		String hql = "select count(*) from Material where statusId = ? and deleted = 0 and tis = '1'";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, str);
 		return ((Number)query.uniqueResult()).intValue();  
@@ -202,7 +209,7 @@ public class MaterialDaoImpl implements MaterialDao {
 	
 	@Override
 	public int delMaterial2(String id) {
-		String hql = "update Material set deleted = 1 where mid=? and statusId != 3";
+		String hql = "update Material set deleted = 1 where mid=? and statusId != '3'";
 		Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter(0, id);
 		return query.executeUpdate();
