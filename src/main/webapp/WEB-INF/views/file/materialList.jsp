@@ -351,7 +351,7 @@
 <body>
   <input type="hidden" id="videoView" value="">
   <div style="width: 14%; height:100%; float: left">
-	    <br><font  size="4"  color="red">双击打开关闭</font><br>
+<%--	    <br><font  size="4"  color="red">双击打开关闭</font><br>--%>
 	    <ul id="demo1"></ul>
   </div>
   <div style="width: 86%; height:100%; float: left">
@@ -394,6 +394,7 @@
 										<option value="2">已初审</option>
 										<option value="3">已通过</option>
 										<option value="4">未通过</option>
+										<option value="">全部</option>
 									</select>
 								</div>
 							</div>

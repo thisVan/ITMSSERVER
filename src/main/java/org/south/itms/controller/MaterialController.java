@@ -769,6 +769,7 @@ public class MaterialController {
 		return param;
 	}
 
+
 	@RequestMapping(value = "/searchMaterial")
 	public @ResponseBody Result searchMaterial(String[] params, String startDate, String endDate, int currentPage, int pageSize) throws ParseException {
 		// System.out.println(params.length);
@@ -1248,6 +1249,8 @@ public class MaterialController {
 	public @ResponseBody PageResultData<Material> searchCheckFile(Model model, HttpServletRequest request, String materialName, String fileType,
 			String statusId, String dateTime, int page, int limit) {
 		String[] param = initParam(materialName, fileType, statusId);
+
+
 
 //		if (dateTime == null || "".equals(dateTime)) {
 //			Calendar calendar = Calendar.getInstance();

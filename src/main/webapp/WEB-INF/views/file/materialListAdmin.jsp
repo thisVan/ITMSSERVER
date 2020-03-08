@@ -158,7 +158,39 @@
       		    	  }
       		      }
       		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
-      		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
+					  ,{field:'checkTime',width:180, event: 'set12', title: '一级审核时间', sort: true
+						  ,templet: function(d){
+							  if (d.checkTime == null) {
+								  return "";
+							  }
+							  var date = new Date(d.checkTime);
+							  var Y = date.getFullYear() + '-';
+							  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+							  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+							  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+							  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+							  return Y+M+D+h+m+s;
+						  }
+					  }
+					  ,{field:'checkName',width:120, event: 'set13', title: '一级审核人', sort: true}
+					  ,{field:'checkSecondTime',width:180, event: 'set14', title: '二级审核时间', sort: true
+						  ,templet: function(d){
+							  if (d.checkSecondTime == null) {
+								  return "";
+							  }
+							  var date = new Date(d.checkSecondTime);
+							  var Y = date.getFullYear() + '-';
+							  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+							  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+							  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+							  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+							  return Y+M+D+h+m+s;
+						  }
+					  }
+					  ,{field:'checkSecondName',width:120, event: 'set15', title: '二级审核人', sort: true}
+      		      ,{fixed: 'right', width:80, event: 'set16', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
     		    ,where: {"param": param,"dateTime":dateTime, "field":"materialName", "order":"asc"}
@@ -414,7 +446,7 @@
       		    	  }
       		      }
       		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
-					  ,{field:'checkTime',width:160, event: 'set13', title: '审核时间', sort: true
+					  ,{field:'checkTime',width:180, event: 'set13', title: '一级审核时间', sort: true
 						  ,templet: function(d){
 							  if(d.checkTime == null){
 							  	return "";
@@ -430,7 +462,24 @@
 							  }
 						  }
 					  }
-					  ,{field:'checkName',width:90, event: 'set14', title: '审核人', sort: true}
+					  ,{field:'checkName',width:120, event: 'set14', title: '一级审核人', sort: true}
+					  ,{field:'checkSecondTime',width:180, event: 'set15', title: '二级审核时间', sort: true
+						  ,templet: function(d){
+							  if(d.checkSecondTime == null){
+								  return "";
+							  }else {
+								  var date = new Date(d.checkSecondTime);
+								  var Y = date.getFullYear() + '-';
+								  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+								  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+								  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+								  var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+								  var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+								  return Y + M + D + h + m + s;
+							  }
+						  }
+					  }
+					  ,{field:'checkSecondName',width:120, event: 'set16', title: '二级审核人', sort: true}
       		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
@@ -491,7 +540,7 @@
 <body>
   <input type="hidden" id="videoView" value="">
   <div style="width: 14%; height:100%; float: left">
-	    <br><font  size="4"  color="red">双击打开关闭</font><br>
+<%--	    <br><font  size="4"  color="red">双击打开关闭</font><br>--%>
 	    <ul id="demo1"></ul>
   </div>
   <div style="width: 86%; height:100%; float: left">
@@ -533,6 +582,7 @@
 										<option value="1">未审核</option>
 										<option value="3">通过</option>
 										<option value="4">未通过</option>
+										<option value="">全部</option>
 									</select>
 								</div>
 							</div>
