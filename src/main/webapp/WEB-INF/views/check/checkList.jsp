@@ -37,35 +37,35 @@
 		  //时间
 		  var dateTime = $("#dateTime").val();
 
-		  if(dateTime == ""){
-			  var d = new Date();
-			  var y = d.getFullYear();
-			  var m = d.getMonth()+1;//获取当前月份的日期
-			  var d = d.getDate();
-			  var cur_date = y +"-"+m+"-"+d;
-			  var pre_date;
-			  var tmp = m-1;
-			  if(m == 1) {
-				  pre_date = y -1 + "-12-" + d;
-			  }else if(m == 3){
-			  	if(y%400==0 || (y%4==0 && y%100!=0))
-					pre_date = y+"-"+tmp+"-29";
-			  	else
-					pre_date = y+"-"+tmp+"-28";
-			  }else if(m == 5 || m == 7 || m == 8 || m == 10 || m == 12){
-				  if(d == 31)
-					  pre_date = y+"-"+tmp+"-30";
-				  else
-					  pre_date = y+"-"+tmp+"-"+d;
-			  }else{
-
-				  if(d == 30 || (m == 2 && (d == 28 || d == 29)))
-					  pre_date = y+"-"+tmp+"-31";
-				  else
-					  pre_date = y + "-" +tmp + "-" + d;
-			  }
-			  dateTime = pre_date + " - " + cur_date;
-		  }
+		  // if(dateTime == ""){
+			//   var d = new Date();
+			//   var y = d.getFullYear();
+			//   var m = d.getMonth()+1;//获取当前月份的日期
+			//   var d = d.getDate();
+			//   var cur_date = y +"-"+m+"-"+d;
+			//   var pre_date;
+			//   var tmp = m-1;
+			//   if(m == 1) {
+			// 	  pre_date = y -1 + "-12-" + d;
+			//   }else if(m == 3){
+			//   	if(y%400==0 || (y%4==0 && y%100!=0))
+			// 		pre_date = y+"-"+tmp+"-29";
+			//   	else
+			// 		pre_date = y+"-"+tmp+"-28";
+			//   }else if(m == 5 || m == 7 || m == 8 || m == 10 || m == 12){
+			// 	  if(d == 31)
+			// 		  pre_date = y+"-"+tmp+"-30";
+			// 	  else
+			// 		  pre_date = y+"-"+tmp+"-"+d;
+			//   }else{
+		  //
+			// 	  if(d == 30 || (m == 2 && (d == 28 || d == 29)))
+			// 		  pre_date = y+"-"+tmp+"-31";
+			// 	  else
+			// 		  pre_date = y + "-" +tmp + "-" + d;
+			//   }
+			//   dateTime = pre_date + " - " + cur_date;
+		  // }
     	  
     	  layui.use('table', function(){
     		  var table = layui.table;

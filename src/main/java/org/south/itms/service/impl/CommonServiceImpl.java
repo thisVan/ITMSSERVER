@@ -90,6 +90,7 @@ public class CommonServiceImpl implements CommonService {
 		}
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
+			System.out.print("sssssssllllll");
 			if (!StringUtil.isEmpty(orderBy))
 				whereSuffix += " order by " + orderBy;
 			return commonDao.pageSearchByTemplateHQL(

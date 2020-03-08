@@ -726,13 +726,14 @@ public class MaterialController {
 
 	private String[] initParam(String materialName, String fileType, String statusId) {
 		int k = 0;
+		boolean b=!"".equals(statusId) && !"5".equals(statusId)&&!"6".equals(statusId);
 		if (!"".equals(materialName)) {
 			k++;
 		}
 		if (!"".equals(fileType)) {
 			k++;
 		}
-		if (!"".equals(statusId)) {
+		if (b) {
 			k++;
 		}
 		String[] param = new String[(k + 1) * 3];
@@ -753,7 +754,7 @@ public class MaterialController {
 			param[len] = fileType;
 			len++;
 		}
-		if (!"".equals(statusId)) {
+		if (b) {
 			param[len] = "statusId";
 			len++;
 			param[len] = "=";
@@ -768,7 +769,6 @@ public class MaterialController {
 		param[len] = "1";
 		return param;
 	}
-
 
 	@RequestMapping(value = "/searchMaterial")
 	public @ResponseBody Result searchMaterial(String[] params, String startDate, String endDate, int currentPage, int pageSize) throws ParseException {
@@ -1249,9 +1249,12 @@ public class MaterialController {
 	public @ResponseBody PageResultData<Material> searchCheckFile(Model model, HttpServletRequest request, String materialName, String fileType,
 			String statusId, String dateTime, int page, int limit) {
 		String[] param = initParam(materialName, fileType, statusId);
-
-
-
+		String ws = null;
+		if("5".equals(statusId)){
+			ws = " and status_id = 1 or status_id = 2 or status_id = 4";
+		}else if("6".equals(statusId)){
+			ws = " and status_id = 2 or status_id = 3";
+		}
 //		if (dateTime == null || "".equals(dateTime)) {
 //			Calendar calendar = Calendar.getInstance();
 //			int y = calendar.get(Calendar.YEAR);
@@ -1289,7 +1292,7 @@ public class MaterialController {
 				// Page page = commonService.pageSearchByTemplateHQL(params,
 				// currentPage,
 				// pageSize, "File", "uploadTime desc", null);
-				Page pageD = commonService.pageSearchCheckByTemplateHQL(param, page, limit, "Material", "uploadTime desc", null);
+				Page pageD = commonService.pageSearchCheckByTemplateHQL(param, page, limit, "Material", "uploadTime desc", ws);
 				List<Material> listM = pageD.getList();
 				PageResultData<Material> pageResult = new PageResultData<Material>();
 				pageResult.setCount(pageD.getTotalRecord());
@@ -1314,7 +1317,7 @@ public class MaterialController {
 				// Page page = commonService.pageSearchByTemplateHQL(params,
 				// currentPage,
 				// pageSize, "File", "uploadTime desc", null);
-				Page pageD = commonService.pageSearchCheckByTemplateHQL(startDate, endDate, param, page, limit, "Material", "uploadTime desc", null);
+				Page pageD = commonService.pageSearchCheckByTemplateHQL(startDate, endDate, param, page, limit, "Material", "uploadTime desc", ws);
 				List<Material> listM = pageD.getList();
 				PageResultData<Material> pageResult = new PageResultData<Material>();
 				pageResult.setCount(pageD.getTotalRecord());
