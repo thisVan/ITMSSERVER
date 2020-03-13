@@ -63,4 +63,5 @@ public interface MaterialService {
 
 	void delFile2(String[] mid);
 
+    void updateUnAccessReason(String mid, String reason);
 }

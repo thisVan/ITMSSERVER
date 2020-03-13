@@ -196,7 +196,7 @@ public class PlayTableOperationAspect {
 
     }
 
-    //审核不通过记录
+    //审核记录
     public void completePlayTableFirstLevelReviewUnAccess(JoinPoint joinPoint){
 
         final String  currentOperation = "PLAY_TABLE_FIRST_LEVER_REVIEW_UNACCESS";

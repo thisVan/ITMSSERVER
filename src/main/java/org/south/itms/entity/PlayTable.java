@@ -56,6 +56,8 @@ public class PlayTable implements java.io.Serializable {
 	private String checkSecondName;
 	private Date checkSecondTime;
 
+	private String unAccessReason;
+
 	@Id
 	@Column(name = "pid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -273,6 +275,15 @@ public class PlayTable implements java.io.Serializable {
 	@Column(name = "check_second_time")
 	public Date getCheckSecondTime(){ return checkSecondTime; }
 	public void setCheckSecondTime(Date checkSecondTime){ this.checkSecondTime = checkSecondTime; }
+
+	@Column(name = "un_access_reason")
+	public String getUnAccessReason() {
+		return unAccessReason;
+	}
+	public void setUnAccessReason(String unAccessReason) {
+		this.unAccessReason = unAccessReason;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

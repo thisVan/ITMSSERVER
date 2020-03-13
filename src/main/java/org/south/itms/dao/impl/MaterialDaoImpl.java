@@ -310,7 +310,17 @@ public class MaterialDaoImpl implements MaterialDao {
             closeSession(session);
         }
 	}
-	
+
+	// by bobo 2020/3/12
+	@Override
+	public void updateUnAccessReason(String mid, String reason) {
+		String hql = "update Material set un_access_reason =? where mid=?";
+		Query query = this.getCurrentSession().createQuery(hql);
+		query.setParameter(0,reason);
+		query.setParameter(1, mid);
+		query.executeUpdate();
+	}
+
 	@Override
 	public List<Items> findItemByPtable(String pid) {
 		Session session = openSession();

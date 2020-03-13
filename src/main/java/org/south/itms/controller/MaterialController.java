@@ -1083,6 +1083,15 @@ public class MaterialController {
         return "true";
     }
 
+    // by bobo 2020/3/12
+	// 更新不通过的理由
+	@RequestMapping("/updateUnAccessReason")
+	@ResponseBody
+	public String updateUnAccessReason(String mid, String reason, HttpServletRequest request){
+		materialService.updateUnAccessReason(mid,reason);
+		return "true";
+	}
+
 	@RequestMapping("/checkList")
 	public String checkList(Model model, HttpServletRequest request) {
 		return "check/checkList";

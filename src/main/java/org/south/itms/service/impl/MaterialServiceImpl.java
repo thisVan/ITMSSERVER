@@ -111,7 +111,12 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 	}
 
-	
+	// by bobo 2020/3/13
+	@Override
+	public void updateUnAccessReason(String mid, String reason) {
+		materialDao.updateUnAccessReason(mid,reason);
+	}
+
 
 	@Override
 	public int getExcepTaable() {

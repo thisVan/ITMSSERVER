@@ -63,4 +63,6 @@ public interface PtableService {
 	
 	List<Material> findAllMaterialsByPlayTableId(String pid);
 	List<Material> findAllMaterialsByPlayTableIdAndFiletype(String pid,String fileType);
-}  
+
+    void updateUnAccessReason(String pid, String reason);
+}

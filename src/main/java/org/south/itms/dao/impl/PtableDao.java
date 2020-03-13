@@ -62,6 +62,7 @@ public interface PtableDao {
 	List<Material> findAllMaterialByPlayTableId(String pid);
 	
 	List<Material> findAllMaterialByPlayTableIdAndType(String pid,String file_type);
-	
 
+
+    void updateUnAccessReason(String pid, String reason);
 }

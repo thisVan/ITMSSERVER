@@ -10,6 +10,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <%-- <script type="text/javascript" src="<%=request.getContextPath()%>/st/Sortable.js"></script> --%>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/layer.js"></script>
 <script type="text/javascript" defer="defer">
 	var pid = '${pid}';
 	var Pids = '${pids}';
@@ -170,13 +173,47 @@
 	}
 
 	function ptableUnaccess() {
+
+		var unAccessReason = '';
+
 		var mark = $("#mark").val();
 		if (pids.length == 1 || pids[0] == ""){
 			if(pid != undefined && pid != ""){
 				pids[0] = pid;
 			}
 		}
-		//alert(mark);
+
+		<%--if (pids.length == 1){--%>
+		<%--	layer.prompt({--%>
+		<%--		formType: 2,--%>
+		<%--		value: '',--%>
+		<%--		title: '请输入不通过理由，200字以内',--%>
+		<%--		area: ['800px', '350px'] //自定义文本域宽高--%>
+		<%--	}, function(value, index, elem){--%>
+		<%--		unAccessReason = value;--%>
+
+		<%--		$.ajax({--%>
+		<%--			type : "POST",--%>
+		<%--			url : '<%=request.getContextPath()%>/ptable/updateUnAccessReason.do',--%>
+		<%--			data : {--%>
+		<%--				"pid" : pid,--%>
+		<%--				"reason" : unAccessReason--%>
+		<%--			},--%>
+		<%--			dataType : "json",--%>
+		<%--			success : function(msg) {--%>
+		<%--				var value = msg.toString();--%>
+		<%--				if (value == 'true') {--%>
+		<%--					alert("成功提交");--%>
+		<%--					opener.location.reload();--%>
+		<%--					window.close();--%>
+		<%--				}--%>
+		<%--			}--%>
+		<%--		});--%>
+
+		<%--		layer.close(index);--%>
+		<%--	});--%>
+		<%--}--%>
+
 		$.ajax({
 			type : "POST",
 			url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNumUn.do",
@@ -204,6 +241,8 @@
 				}
 			}
 		});
+		//alert(mark);
+
 	}
 
 	function ptableAccess() {

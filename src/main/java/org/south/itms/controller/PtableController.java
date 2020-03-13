@@ -1863,6 +1863,17 @@ public class PtableController {
 		}
 	}
 
+	// by bobo 2020/3/12
+	// 更新不通过的理由
+	@RequestMapping("/updateUnAccessReason")
+	@ResponseBody
+	public String updateUnAccessReason(String pid, String reason, HttpServletRequest request){
+		System.out.println(pid + reason);
+		ptableService.updateUnAccessReason(pid,reason);
+		return "true";
+	}
+
+
 	private int fromListItems(String dateTime) {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;

@@ -69,4 +69,6 @@ public interface MaterialDao {
 	List<Material> findAllMaterial(String pid);
 	
 	List<Items> findItemsByMidBetweenDates(String mid, String startDate, String endDate);
+
+    void updateUnAccessReason(String mid, String reason);
 }

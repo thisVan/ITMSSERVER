@@ -13,6 +13,8 @@
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/layer.js"></script>
+
 </head>
 <body onLoad="getMedia()">
 
@@ -66,13 +68,16 @@
 				</div>
 				<br>
 				<div>
-					<button type="button" class="layui-btn" onclick="unaccess()">审核不通过</button>
+					<button type="button" class="layui-btn"  id = "popUnAccessReason">审核不通过</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
 <script type="text/javascript">
+
+
+
 
 	function access() {
 		var materialId = document.getElementById("mid").value;
@@ -94,33 +99,62 @@
 		});
 	}
 
-	function unaccess() {
-		var materialId = document.getElementById("mid").value;
-		$.ajax({
-			type : "POST",
-			url : '<%=request.getContextPath()%>/material/checkUnAccess.do',
-			data : {
-				"mid" : materialId
-			},
-			dataType : "json",
-			success : function(msg) {
-				var value = msg.toString();
-				if (value == 'true') {
-					opener.location.reload();
-					window.close();
-				}
-			}
-		});
-	}
+	$('#popUnAccessReason').on("click",function () {
 
-/* 	function updateTime(video) {
-		var time = document.getElementById("lens").innerText;
-		if (time != 0) {
-			setTimeout("updateTime()", 1000);
-			var now = time - 1;
-			document.getElementById("lens").innerText = video.currentTime;
-		}
-	} */
+		var materialId = document.getElementById("mid").value;
+
+		layer.prompt({
+			formType: 2,
+			value: '',
+			title: '请输入不通过理由，200字以内',
+			area: ['800px', '350px'] //自定义文本域宽高
+		}, function(value, index, elem){
+			unAccessReason = value;
+
+			$.ajax({
+				type : "POST",
+				url : '<%=request.getContextPath()%>/material/updateUnAccessReason.do',
+				data : {
+					"mid" : materialId,
+					"reason" : unAccessReason
+				},
+				dataType : "json",
+				success : function(msg) {
+					var value = msg.toString();
+					if (value == 'true') {
+						alert("成功提交");
+						opener.location.reload();
+						window.close();
+					}
+				}
+			});
+
+			$.ajax({
+				type : "POST",
+				url : '<%=request.getContextPath()%>/material/checkUnAccess.do',
+				data : {
+					"mid" : materialId
+				},
+				dataType : "json",
+				success : function(msg) {
+					var value = msg.toString();
+					if (value == 'true') {
+						opener.location.reload();
+						window.close();
+					}
+				}
+			});
+
+
+			layer.close(index);
+
+		});
+	});
+
+
+
+
+
 	
 	function updateTime(video) {
 		var videoDuration = document.getElementById("durat").innerText;

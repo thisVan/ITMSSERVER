@@ -9,6 +9,10 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/layer.js"></script>
 <%-- <script type="text/javascript" src="<%=request.getContextPath()%>/st/Sortable.js"></script> --%>
 <script type="text/javascript" defer="defer">
 	var pid = '${pid}';
@@ -172,9 +176,12 @@
 		document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
 	}
 
-	function ptableUnaccess() {
+
+	function ptableUnAccess() {
+
 		//var ppid = document.getElementById("modifyPid").value;
 		var r = document.getElementsByName("unAccessFlag");
+		var unAccessReason = '';
 		var checkArray = [];
 		for (var i = 0; i < r.length; i++) {
 			if (r[i].checked) {
@@ -193,31 +200,92 @@
 				pids[0] = pid;
 			}
 		}
-		$.ajax({
-			type : "POST",
-			url : "<%=request.getContextPath()%>/ptable/playTableUnAccess.do",
-			data : {
-				"ppid" : pids,
-				"checkArray" : checkArray
-			},
-			traditional : true,
-			dataType : "json",
-			success : function(msg) {
-				var value = msg.toString();
-				if (value == "true") {
-					layer.msg('保存成功!', {
-						icon : 6,
-						time : 1500
-					});
-					document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
-				} else {
-					layer.msg('审核保存失败!', {
-						icon : 5,
-						time : 1500
-					});
+
+		if (pids.length == 1){
+
+			layer.prompt({
+				formType: 2,
+				value: '',
+				title: '请输入不通过理由，200字以内',
+				area: ['800px', '350px'] //自定义文本域宽高
+			}, function(value, index, elem){
+				unAccessReason = value;
+
+				$.ajax({
+					type : "POST",
+					url : '<%=request.getContextPath()%>/ptable/updateUnAccessReason.do',
+					data : {
+						"pid" : pid,
+						"reason" : unAccessReason
+					},
+					dataType : "json",
+					success : function(msg) {
+						var value = msg.toString();
+						if (value == 'true') {
+							alert("成功提交");
+							opener.location.reload();
+							window.close();
+						}
+					}
+				});
+
+				$.ajax({
+					type: "POST",
+					url: "<%=request.getContextPath()%>/ptable/playTableUnAccess.do",
+					data: {
+						"ppid": pids,
+						"checkArray": checkArray
+					},
+					traditional: true,
+					dataType: "json",
+					success: function (msg) {
+						var value = msg.toString();
+						if (value == "true") {
+							layer.msg('保存成功!', {
+								icon: 6,
+								time: 1500
+							});
+							document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
+						} else {
+							layer.msg('审核保存失败!', {
+								icon: 5,
+								time: 1500
+							});
+						}
+					}
+				});
+
+				layer.close(index);
+			});
+		}
+		else {
+			$.ajax({
+				type: "POST",
+				url: "<%=request.getContextPath()%>/ptable/playTableUnAccess.do",
+				data: {
+					"ppid": pids,
+					"checkArray": checkArray
+				},
+				traditional: true,
+				dataType: "json",
+				success: function (msg) {
+					var value = msg.toString();
+					if (value == "true") {
+						layer.msg('保存成功!', {
+							icon: 6,
+							time: 1500
+						});
+						document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
+					} else {
+						layer.msg('审核保存失败!', {
+							icon: 5,
+							time: 1500
+						});
+					}
 				}
-			}
-		});
+			});
+		}
+
 	}
 
 	function ptableAccess() {
@@ -509,7 +577,7 @@
 								</div>
 								<div class="layui-inline">
 									<button class="layui-btn layui-btn-danger" type="button"
-										onclick="ptableUnaccess()">
+											onclick="ptableUnAccess()">
 										<i class="layui-icon">&#x1006;</i>审核不通过
 									</button>
 								</div>

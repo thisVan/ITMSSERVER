@@ -298,14 +298,29 @@ public class PtableDaoImpl implements PtableDao {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 		Date date = df.parse(df.format(new Date()));
 
-		String hql = "from PlayTable where pid=? and deleted=0";
-		Query query = this.getCurrentSession().createQuery(hql);
-		query.setParameter(0, pid);
-		PlayTable pt = (PlayTable) query.uniqueResult();
-		pt.setStatusId(statusId);
-		pt.setCheckName(userName);
-		pt.setCheckTime(date);
-		this.getCurrentSession().update(pt);
+
+		// modify by bobo 2020/3/13
+		//尽量部分更新好
+		Session session = this.getCurrentSession();
+		session.beginTransaction();
+		Query query = session.createQuery("update PlayTable  set statusId = :statusId,checkName = :userName," +
+				"checkTime = :date  where pid = :pid and deleted = 0");
+		query.setParameter("statusId",statusId);
+		query.setParameter("userName",userName);
+		query.setParameter("date",date);
+		query.setParameter("pid",pid);
+		query.executeUpdate();
+		session.getTransaction().commit();
+		session.clear();
+
+//		String hql = "from PlayTable where pid=? and deleted=0";
+//		Query query = this.getCurrentSession().createQuery(hql);
+//		query.setParameter(0, pid);
+//		PlayTable pt = (PlayTable) query.uniqueResult();
+//		pt.setStatusId(statusId);
+//		pt.setCheckName(userName);
+//		pt.setCheckTime(date);
+//		this.getCurrentSession().update(pt);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -451,6 +466,16 @@ public class PtableDaoImpl implements PtableDao {
         }
 	}
 
-	
-	
+	@Override
+	public void updateUnAccessReason(String pid, String reason) {
+
+		Session session = this.getCurrentSession();
+		session.clear();
+		String hql = "update PlayTable set un_access_reason= :reason where pid=:pid";
+		session.createQuery(hql).setParameter("pid", pid).setParameter("reason",reason).executeUpdate();
+		session.clear();
+
+	}
+
+
 }

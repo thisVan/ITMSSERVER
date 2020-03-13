@@ -69,6 +69,8 @@ public class Material implements java.io.Serializable {
 	
 	private String tis;
 
+	private String unAccessReason;
+
 	@Id
 	@Column(name = "mid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -262,6 +264,15 @@ public class Material implements java.io.Serializable {
 
 	public void setTis(String tis) {
 		this.tis = tis;
+	}
+
+	@Column(name = "un_access_reason")
+	public String getUnAccessReason() {
+		return unAccessReason;
+	}
+
+	public void setUnAccessReason(String unAccessReason) {
+		this.unAccessReason = unAccessReason;
 	}
 
 	public Material() {
