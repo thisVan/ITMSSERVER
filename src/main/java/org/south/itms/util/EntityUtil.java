@@ -97,7 +97,7 @@ public class EntityUtil {
 			String periodName = checkPeriod(pt.getPeriodId(), listPeriod, 0);
 			String periodTime = checkPeriod(pt.getPeriodId(), listPeriod, 1);
 			String userName = checkName(pt.getUserId(), listUser);
-			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(), pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(), pt.getCreateTime(),pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime());
+			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(), pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(), pt.getCreateTime(),pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime(), pt.getUnAccessReason());
 			ptd.setTerminalName(terminalName);
 			ptd.setPeriodName(periodName);
 			ptd.setPeriodTime(periodTime);
@@ -228,6 +228,9 @@ public class EntityUtil {
 				dto.setDuration(m.getDuration());
 				dto.setCheckTime(m.getCheckTime());
 				dto.setCheckName(m.getCheckName());
+				dto.setCheckSecondName(m.getCheckSecondName());
+				dto.setCheckSecondTime(m.getCheckSecondTime());
+				dto.setUnAccessReason(m.getUnAccessReason());
 				list.add(dto);
 			}else if("1".equals(m.getTis())) {
 				MaterialDto dto = new MaterialDto();
@@ -248,6 +251,9 @@ public class EntityUtil {
 				dto.setDuration(m.getDuration());
 				dto.setCheckTime(m.getCheckTime());
 				dto.setCheckName(m.getCheckName());
+				dto.setCheckSecondName(m.getCheckSecondName());
+				dto.setCheckSecondTime(m.getCheckSecondTime());
+				dto.setUnAccessReason(m.getUnAccessReason());
 				dto.setTerminal(m.getTerminal());
 				list.add(dto);
 			}
@@ -403,7 +409,7 @@ public class EntityUtil {
 			String userName = checkName(pt.getUserId(), listUser);
 			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(),
 					pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(),
-					pt.getCreateTime(), pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime());
+					pt.getCreateTime(), pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime(), pt.getUnAccessReason());
 			ptd.setTerminalName(terminalName);
 			ptd.setPeriodName(periodName);
 			ptd.setPeriodTime(periodTime);

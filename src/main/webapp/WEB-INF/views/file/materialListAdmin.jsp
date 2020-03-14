@@ -190,17 +190,28 @@
 						  }
 					  }
 					  ,{field:'checkSecondName',width:120, event: 'set15', title: '二级审核人', sort: true}
-      		      ,{fixed: 'right', width:80, event: 'set16', title: '操作', align:'center', toolbar: '#barDemo'}
+					  ,{field:'unAccessReason',width:140, event: 'set16', title: '未通过的理由', sort: true}
+      		      ,{fixed: 'right', width:80, event: 'set17', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"param": param,"dateTime":dateTime, "field":"materialName", "order":"asc"}
+    		    ,where: {"param": param,"dateTime":dateTime, "field":"uploadTime", "order":"desc"}
     		    ,done: function(res, curr, count){
     		    	  //changeBg();
     		      }
     		  });
-    		  
-    		  
-    		  table.on('checkbox(tableEvent)', function(obj){
+
+			  table.on('sort(tableEvent)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				  table.reload('flagTwo', { //testTable是表格容器id
+					  initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+					  ,where: {
+						  field: obj.field //排序字段
+						  ,order: obj.type //排序方式
+					  }
+				  });
+			  });
+
+
+			  table.on('checkbox(tableEvent)', function(obj){
   			      //console.log(obj);
   		       });
     		  
@@ -480,6 +491,7 @@
 						  }
 					  }
 					  ,{field:'checkSecondName',width:120, event: 'set16', title: '二级审核人', sort: true}
+					  ,{field:'unAccessReason',width:140, event: 'set17', title: '未通过的理由', sort: true}
       		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
@@ -488,6 +500,17 @@
     		    	  //changeBg();
     		      }
     		  });
+
+			  table.on('sort(tableEvent)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				  table.reload('flagTwo', { //testTable是表格容器id
+					  initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+					  ,where: {
+						  field: obj.field //排序字段
+						  ,order: obj.type //排序方式
+					  }
+				  });
+			  });
+
     		  
     		  table.on('checkbox(tableEvent)', function(obj){
     			    //console.log(obj);

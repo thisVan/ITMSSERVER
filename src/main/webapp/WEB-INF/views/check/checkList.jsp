@@ -138,6 +138,7 @@
 							  }
 						  }
 					  }
+					  ,{field:'unAccessReason',width:120, event: 'set12', title: '未通过的理由', sort: true}
       		      ,{fixed: 'right', width:100, event: 'set8', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true

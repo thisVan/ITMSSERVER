@@ -281,7 +281,7 @@ public class Material implements java.io.Serializable {
 
 	public Material(String mid, String materialName, String fileName, String fileType, String filePath,
 			String uploadName, Date uploadTime, int deleted, int duration, String size, String md5, String checkName,
-			Date checkTime, String statusId, Terminal terminal, String resolution, String info, int usedNum) {
+			Date checkTime, String checkSecondName, Date checkSecondTime, String unAccessReason, String statusId, Terminal terminal, String resolution, String info, int usedNum) {
 		super();
 		this.mid = mid;
 		this.materialName = materialName;
@@ -296,6 +296,9 @@ public class Material implements java.io.Serializable {
 		this.md5 = md5;
 		this.checkName = checkName;
 		this.checkTime = checkTime;
+		this.checkSecondName = checkSecondName;
+		this.checkSecondTime = checkSecondTime;
+		this.unAccessReason = unAccessReason;
 		this.statusId = statusId;
 		this.terminal = terminal;
 		this.resolution = resolution;
@@ -311,6 +314,9 @@ public class Material implements java.io.Serializable {
 		int result = 1;
 		result = prime * result + ((checkName == null) ? 0 : checkName.hashCode());
 		result = prime * result + ((checkTime == null) ? 0 : checkTime.hashCode());
+		result = prime * result + ((checkSecondName == null) ? 0 : checkSecondName.hashCode());
+		result = prime * result + ((checkSecondTime == null) ? 0 : checkSecondTime.hashCode());
+		result = prime * result + ((unAccessReason == null) ? 0 : unAccessReason.hashCode());
 		result = prime * result + deleted;
 		result = prime * result + duration;
 		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
@@ -349,6 +355,21 @@ public class Material implements java.io.Serializable {
 			if (other.checkTime != null)
 				return false;
 		} else if (!checkTime.equals(other.checkTime))
+			return false;
+		if (checkSecondName == null) {
+			if (other.checkSecondName != null)
+				return false;
+		} else if (!checkSecondName.equals(other.checkSecondName))
+			return false;
+		if (checkSecondTime == null) {
+			if (other.checkSecondTime != null)
+				return false;
+		} else if (!checkSecondTime.equals(other.checkSecondTime))
+			return false;
+		if (unAccessReason == null) {
+			if (other.unAccessReason != null)
+				return false;
+		} else if (!unAccessReason.equals(other.unAccessReason))
 			return false;
 		if (deleted != other.deleted)
 			return false;
@@ -434,7 +455,8 @@ public class Material implements java.io.Serializable {
 		return "Material [mid=" + mid + ", materialName=" + materialName + ", fileName=" + fileName + ", fileType="
 				+ fileType + ", filePath=" + filePath + ", uploadName=" + uploadName + ", uploadTime=" + uploadTime
 				+ ", deleted=" + deleted + ", duration=" + duration + ", size=" + size + ", md5=" + md5 + ", checkName="
-				+ checkName + ", checkTime=" + checkTime + ", statusId=" + statusId + ", terminal=" + terminal
+				+ checkName + ", checkTime=" + checkTime + ", checkSecondName="
+				+ checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason + ", statusId=" + statusId + ", terminal=" + terminal
 				+ ", resolution=" + resolution + ", info=" + info + "]";
 	}
 }

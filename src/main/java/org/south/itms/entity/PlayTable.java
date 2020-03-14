@@ -291,7 +291,7 @@ public class PlayTable implements java.io.Serializable {
 	public String toString() {
 		return "PlayTable [pid=" + pid + ", playDate=" + playDate + ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", deleted=" + deleted
 				+ ", userId=" + userId + ", terminalId=" + terminalId + ", periodId=" + periodId + ", playTotalTime=" + playTotalTime + ", baseFrequency="
-				+ baseFrequency + ", statusId=" + statusId + "]";
+				+ baseFrequency + ", statusId=" + statusId + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason + "]";
 	}
 
 }

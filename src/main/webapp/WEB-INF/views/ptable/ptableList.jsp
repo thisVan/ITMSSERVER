@@ -200,6 +200,8 @@
                                 return Y + M + D + h + m + s;
                             }
                         }
+                        ,{field:'unAccessReason',width:140, event: 'set16', title: '一级审核未通过的理由', sort: true}
+                        ,{field:'mark',width:140, event: 'set16', title: '二级审核未通过的理由', sort: true}
                         , {
                             fixed: 'right',
                             width: 200,
@@ -222,6 +224,7 @@
                         //console.log(res.msg);
                     }
                 });
+
 
                 var active = {
                     getDeleteData: function () { //获取选中数据

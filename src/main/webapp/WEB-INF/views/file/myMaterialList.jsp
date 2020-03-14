@@ -182,6 +182,7 @@
     		    	  }
     		      }
     		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
+    		      ,{field:'unAccessReason',width:140, event: 'set13', title: '未通过的理由', sort: true}
     		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true

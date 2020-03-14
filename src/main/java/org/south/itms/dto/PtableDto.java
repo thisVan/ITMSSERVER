@@ -60,6 +60,8 @@ public class PtableDto {
 
 	private Date checkSecondTime;
 
+	private String unAccessReason;
+
 	public String getCheckName() {
 		return checkName;
 	}
@@ -90,6 +92,14 @@ public class PtableDto {
 
 	public Date getCheckSecondTime() {
 		return checkSecondTime;
+	}
+
+	public void setUnAccessReason(String unAccessReason) {
+		this.unAccessReason = unAccessReason;
+	}
+
+	public String getUnAccessReason() {
+		return unAccessReason;
 	}
 
 	public int getDuraTime() {
@@ -265,7 +275,7 @@ public class PtableDto {
 	}
 
 	public PtableDto(String TerminalId,String pid, String statusId, String playTotalTime, Date playDate, String screenRate,
-			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state, String checkName, Date checkTime, String checkSecondName, Date checkSecondTime) {
+			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state, String checkName, Date checkTime, String checkSecondName, Date checkSecondTime, String unAccessReason) {
 		super();
 		this.tid=TerminalId;
 		this.pid = pid;
@@ -284,6 +294,7 @@ public class PtableDto {
 		this.checkTime = checkTime;
 		this.checkSecondName = checkSecondName;
 		this.checkSecondTime = checkSecondTime;
+		this.unAccessReason = unAccessReason;
 	}
 
 	/*@Override
@@ -303,9 +314,9 @@ public class PtableDto {
 				+ ", allTime=" + allTime + ", ptableName=" + ptableName + ", createName=" + createName + ", createTime="
 				+ createTime + ", periodName=" + periodName + ", periodTime=" + periodTime + ", mark=" + mark
 				+ ", insertFlag=" + insertFlag + ", min=" + min + ", state=" + state + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", tid=" + tid + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + "]";
+				+ ", endTime=" + endTime + ", tid=" + tid + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason + "]";
 	}
 	
-	
+
 	
 }

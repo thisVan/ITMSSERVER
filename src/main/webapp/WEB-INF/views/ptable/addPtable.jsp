@@ -113,6 +113,9 @@
 				},
 				done : function(res, curr, count) {
 
+					if(insertFlag == '0') {
+						$("[data-field='min']").css('display','none');
+					}
 					/* LayUIDataTable.SetJqueryObj($);// 第一步：设置jQuery对象
 
 	                        //LayUIDataTable.HideField('num');// 隐藏列-单列模式

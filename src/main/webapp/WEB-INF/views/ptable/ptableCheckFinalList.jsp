@@ -98,6 +98,8 @@
   		    		  return Y+M+D+h+m+s;
   		    	  }
       		      }
+      		      ,{field:'unAccessReason',width:140, event: 'set13', title: '一级审核未通过的理由', sort: true}
+      		      ,{field:'mark',width:140, event: 'set14', title: '二级审核未通过的理由', sort: true}
       		      ,{fixed: 'right', width:100, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true

@@ -138,7 +138,7 @@
     		    	  //console.log(res.msg);
     		      }
     		  });
-   
+
    			table.on('tool(tableEvent)', function(obj) {
    				var tmpdata = obj.data;
    				var pid = tmpdata.pid;

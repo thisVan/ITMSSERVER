@@ -4,6 +4,7 @@
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/layui/css/modules/laydate/default/laydate.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/laydate.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/pinyin.js"></script>
     <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 	<link href="https://cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet"> -->

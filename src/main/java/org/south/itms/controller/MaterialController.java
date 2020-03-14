@@ -353,6 +353,7 @@ public class MaterialController {
 				List<Material> listM = pageD.getList();
 				System.out.println(listM);
 				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
+				System.out.println(list);
 				PageResultData<MaterialDto> pageResult = new PageResultData<MaterialDto>();
 				pageResult.setCount(pageD.getTotalRecord());
 				pageResult.setCode(0);
