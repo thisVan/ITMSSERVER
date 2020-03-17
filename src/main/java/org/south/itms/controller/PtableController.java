@@ -1654,11 +1654,13 @@ public class PtableController {
 		System.out.println(ppid + "=");
 		// String pid = (String) request.getSession().getAttribute("modifyPid");
 		System.out.println(checkArray.length);
+
+		// modify by bobo
+		// 有理由的默认5
 		if (checkArray.length == 0) {
-			PrintWriter out = response.getWriter();
-			out.print("false");
-			out.flush();
-			out.close();
+			for (int i = 0; i < ppid.length; i++) {
+				ptableService.playTableUnAccess(ppid[i], "5");
+			}
 		} else {
 			if (checkArray.length == 2) {
 				for (int i = 0; i < ppid.length; i++) {

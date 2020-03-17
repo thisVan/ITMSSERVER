@@ -180,21 +180,21 @@
 	function ptableUnAccess() {
 
 		//var ppid = document.getElementById("modifyPid").value;
-		var r = document.getElementsByName("unAccessFlag");
+		//var r = document.getElementsByName("unAccessFlag");
 		var unAccessReason = '';
-		var checkArray = [];
-		for (var i = 0; i < r.length; i++) {
-			if (r[i].checked) {
-				checkArray.push(r[i].value);
-			}
-		}
-		if (checkArray.length == 0) {
-			layer.msg('请选择不通过理由!', {
-				icon : 5,
-				time : 1500
-			});
-			return;
-		}
+		// var checkArray = [];
+		// for (var i = 0; i < r.length; i++) {
+		// 	if (r[i].checked) {
+		// 		checkArray.push(r[i].value);
+		// 	}
+		// }
+		// if (checkArray.length == 0) {
+		// 	layer.msg('请选择不通过理由!', {
+		// 		icon : 5,
+		// 		time : 1500
+		// 	});
+		// 	return;
+		// }
 		if (pids.length == 1 || pids[0] == ""){
 			if(pid != undefined && pid != ""){
 				pids[0] = pid;
