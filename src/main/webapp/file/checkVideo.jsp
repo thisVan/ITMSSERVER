@@ -107,7 +107,7 @@
 			formType: 2,
 			value: '',
 			title: '请输入不通过理由，200字以内',
-			area: ['800px', '350px'] //自定义文本域宽高
+			area: ['300px', '150px'] //自定义文本域宽高
 		}, function(value, index, elem){
 			unAccessReason = value;
 

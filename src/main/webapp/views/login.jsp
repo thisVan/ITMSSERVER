@@ -8,7 +8,7 @@
 <!DOCTYPE html><html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>在线排播系统</title>
+<title>联网播控系统2.0</title>
 <link rel="icon" href="../images/logo.png" type="image/x-icon" />
 <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon" />
 <link href="<%=request.getContextPath()%>/layui/css/layui.css" rel="stylesheet">
@@ -19,21 +19,13 @@
             top.location.href=location.href;
         }
         function getMedia(){
-        	/* videoName.push("倒霉熊.mp4");videoName.push("Riverside.mp4");
-        	videoName.push("Doggy-watch.mp4");videoName.push("Fire-_-Ice.mp4");
-        	videoName.push("login.mp4");videoName.push("Magazine.mp4");
-        	videoName.push("Perfect_Hour.mp4");videoName.push("Play.mp4");
-        	videoName.push("Tree-Close-Up.mp4");videoName.push("Snowy-Bench.mp4"); */
+
         	videoName.push("1 (1).mp4");
         	videoName.push("1 (2).mp4");
         	videoName.push("1 (3).mp4");
         	videoName.push("1 (4).mp4");
-        	videoName.push("1 (5).mp4");
-        	videoName.push("1 (6).mp4");
-        	videoName.push("1 (7).mp4");
-        	videoName.push("1 (8).mp4");
         	
-        	var offset = Math.floor(Math.random()*10);
+        	var offset = Math.floor(Math.random()*4);
         	var video = document.getElementById("video");
             video.src = "/ITMS/media/login/" + videoName[offset];
         }
@@ -46,7 +38,7 @@
 
 <div class="video_mask"></div>
 <div class="login">
-    <h1>在线排播系统登录</h1>
+    <h1>联网播控系统2.0</h1>
     <h2 id="tipMsg" style="text-align:center; color:red; margin-bottom:5px;clear: both"></h2>
         <div class="layui-form-item">
             <input class="layui-input" id="userAccount" name="userAccount" placeholder="用户名" value="" lay-verify="required" type="text" autocomplete="off">

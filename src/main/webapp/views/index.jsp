@@ -66,7 +66,7 @@ div[carousel-item]>*:nth-child(4n+3) {
 		<!-- 顶部 -->
 		<div class="layui-header">
 			<a href="javascript:void(0)" class="layui-hide-xs"><div
-					class="layui-logo">智能终端管理系统</div></a> <a href="javascript:;"
+					class="layui-logo">联网播控系统2.0</div></a> <a href="javascript:;"
 				class="layui-hide-xs"><div class="fsSwitchMenu">
 					<i class="fa fa-outdent"></i>
 				</div></a>
@@ -181,7 +181,7 @@ div[carousel-item]>*:nth-child(4n+3) {
 
 		<div class="layui-footer" align="center">
 			<!-- 底部固定区域 -->
-			<p>©2017 版权归scut-南方新视界所有</p>
+			<p>©2020 版权归南方新视界传媒科技有限公司所有</p>
 		</div>
 	</div>
 
