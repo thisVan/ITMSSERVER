@@ -497,7 +497,8 @@ public class PtableController {
 				Page pageD = commonService.pageSearchInsertByTemplateHQL(params, page, limit, "PlayTable", "pid asc",
 						null);
 				List<PlayTable> listPtable = pageD.getList();
-				List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+				//List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+				List<PtableDto> listDto = EntityUtil.ptableDtoInsert(list, listPeriod, listUser, listPtable, ptableDao);
 				PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
 				pageResult.setCount(pageD.getTotalRecord());
 				pageResult.setCode(0);
@@ -981,6 +982,13 @@ public class PtableController {
 	@RequestMapping(value = "/goCheckPtableFirst/{pid}")
 	public String goCheckPtable(@PathVariable String pid, ModelMap modelMap, HttpServletRequest request) {
 		modelMap.addAttribute("pid", pid);
+		PlayTable playTable = ptableDao.getById(pid);
+		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
+		modelMap.addAttribute("startTime",playTable.getStartTime());
+		modelMap.addAttribute("endTime",playTable.getEndTime());
+		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
+		modelMap.addAttribute("min",playTable.getMin());
+
 		List<Material> files = fileDao.findByPtable(pid);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -1011,6 +1019,13 @@ public class PtableController {
 	@RequestMapping(value = "/goCheckPtableFinal/{pid}")
 	public String goCheckPtableFinal(@PathVariable String pid, ModelMap modelMap, HttpServletRequest request) {
 		modelMap.addAttribute("pid", pid);
+		PlayTable playTable = ptableDao.getById(pid);
+		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
+		modelMap.addAttribute("startTime",playTable.getStartTime());
+		modelMap.addAttribute("endTime",playTable.getEndTime());
+		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
+		modelMap.addAttribute("min",playTable.getMin());
+
 		List<Material> files = fileDao.findByPtable(pid);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -1654,11 +1669,13 @@ public class PtableController {
 		System.out.println(ppid + "=");
 		// String pid = (String) request.getSession().getAttribute("modifyPid");
 		System.out.println(checkArray.length);
+
+		// modify by bobo
+		// 有理由的默认5
 		if (checkArray.length == 0) {
-			PrintWriter out = response.getWriter();
-			out.print("false");
-			out.flush();
-			out.close();
+			for (int i = 0; i < ppid.length; i++) {
+				ptableService.playTableUnAccess(ppid[i], "5");
+			}
 		} else {
 			if (checkArray.length == 2) {
 				for (int i = 0; i < ppid.length; i++) {

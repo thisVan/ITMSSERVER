@@ -119,7 +119,7 @@
     		      }
       		      ,{field:'min',width:95, event: 'set5', title: '间隔', sort: true}
       		      ,{field:'duraTime',width:120, event: 'set6', title: '视频总时间', sort: true}
-      		      ,{fiels:'frequency',width:95, event: 'set7', title: '频次',sort:true
+      		      ,{field:'frequency',width:95, event: 'set7', title: '频次',sort:true
       		    	  ,templet: function(d){
       		    		  var start = '2017/12/14 ' + d.startTime;
       		    		  var end = '2017/12/14 ' + d.endTime;

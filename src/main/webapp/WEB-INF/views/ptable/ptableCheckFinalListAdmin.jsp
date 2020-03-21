@@ -13,7 +13,7 @@
    $(function(){
 	   init();
    });
-   
+
       function init(){
     	  layui.use('layer', function(){
     		  var layer = layui.layer;
@@ -115,7 +115,7 @@
         		      }
       		    ]]
     		    ,page: true
-    		    ,where: {"statusId":statusId}
+    		    ,where: {"statusId":statusId }
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		    	  if(res.fail == 1){

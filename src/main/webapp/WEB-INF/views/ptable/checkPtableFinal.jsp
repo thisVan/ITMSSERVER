@@ -17,6 +17,12 @@
 	var pid = '${pid}';
 	var Pids = '${pids}';
 	var pids = Pids.split(',');
+	var ptdate = '${playTablePlayDate}';
+	var startTime = '${startTime}';
+	var endTime = '${endTime}';
+	var insertFlag = '${insertFlag}'
+	var min = '${min}';
+	var periodName = '${periodName}'; //时段名
 
 	$(function() {
 		initTable();
@@ -41,6 +47,7 @@
 				cols : [ [
 					//{field:'id', width:'1%'}
 					{
+						field : '序号',
 						type : 'numbers'
 					}
 					, {
@@ -63,6 +70,28 @@
 						title : '时长'
 					}
 					, {
+						field : 'min',
+						width : 140,
+						event : 'set5',
+						title : '间隔'
+						,templet: function(d){
+							if(insertFlag == '0') {
+								return " " ;
+							}else if (insertFlag == '1'){
+								return min;
+							}
+						}
+					}
+					,{field:'periodTime',width:260, event: 'set6', title: '时段范围', sort: true
+						,templet: function(d){
+							if(insertFlag == '0') {
+								return d.periodName + " " ;
+							}else if (insertFlag == '1'){
+								return startTime + "-" + endTime;
+							}
+						}
+					}//选择
+					, {
 						fixed : 'right',
 						width : 110,
 						event : 'set4',
@@ -76,6 +105,11 @@
 					"pid" : pid
 				},
 				done : function(res, curr, count) {
+					if(insertFlag == '0') {
+						$("[data-field='min']").css('display','none');
+						$("[data-field='periodTime']").css('display','none');
+					}
+
 					//document.getElementById("table1").remove();
 					if (res.fail == 1) {
 						layer.msg(res.msg, {
@@ -83,7 +117,7 @@
 							time : 2000
 						});
 					} else if (res.fail == 0) {
-						document.getElementById("ptableNameThree").innerHTML = '<font  size="4"  color="red"> 当前播表名：' + res.msg + '</font>';
+						document.getElementById("ptableNameThree").innerHTML = '<font  size="4"  color="red"> 当前播表名：' + res.msg + '</font>' + '<br>播放日期： ' + ptdate;
 					}
 
 					var arr = [];

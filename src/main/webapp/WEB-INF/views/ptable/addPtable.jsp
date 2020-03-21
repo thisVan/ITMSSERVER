@@ -46,7 +46,7 @@
 				skin : 'row', //,cellMinWidth: 120
 				title: playTableName,
 				even : true,
-				height:'full-200',
+				//height:'full-200',
 				toolbar: '#toolbarDemo',
 				limits : [ 10, 25, 50, 75, 100 ],
 				cols : [ [
@@ -140,7 +140,7 @@
 						});
 					} else if (res.fail == 0) {
 						document.getElementById("ptableNameOnce").innerHTML = '<font  size="3"  color="red"> 当前播表名：' + res.msg + '</font>' 
-						+ '<br>播表总时长: ' + ptableTotalDuration + '&nbsp;&nbsp;&nbsp;&nbsp; 播表基频: ' + ptableMaxCommonDivisor;
+						+ '<br>播表总时长: ' + ptableTotalDuration + '&nbsp;&nbsp;&nbsp;&nbsp; 播表基频: ' + ptableMaxCommonDivisor + '&nbsp;&nbsp;&nbsp;&nbsp; 播放日期: ' + ptdate;
 						//var tempstr = res.msg;
 						//var date = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(tempstr);
 						//ptdate = date[2];
@@ -242,37 +242,39 @@
 
 				}
 				if (obj.event === 'copy') {
-					$.ajax({
-						type : "POST",
-						url : "<%=request.getContextPath()%>/ptable/copyOneToPlayFile.do",
-						data : {
-							"ppid" : pid,
-							"mmid" : mid,
-							"num" : itemnum
-						},
-						traditional : true,
-						dataType : "json",
-						success : function(msg) {
-							var value = msg.toString();
-							if (value == "true") {
-								layer.msg('复制成功', {
-									icon : 6,
-									time : 1500
-								});
-								initTable();
-								reloadhtml();
-							} else {
-								layer.msg(msg.toString(), {
-									icon : 5,
-									time : 1500
-								});
+					layer.confirm('是否复制「 '+obj.data.materialName+' 」？', function(index) {
+						layer.close(index);
+						$.ajax({
+							type: "POST",
+							url: "<%=request.getContextPath()%>/ptable/copyOneToPlayFile.do",
+							data: {
+								"ppid": pid,
+								"mmid": mid,
+								"num": itemnum
+							},
+							traditional: true,
+							dataType: "json",
+							success: function (msg) {
+								var value = msg.toString();
+								if (value == "true") {
+									layer.msg('复制成功', {
+										icon: 6,
+										time: 1500
+									});
+									initTable();
+									reloadhtml();
+								} else {
+									layer.msg(msg.toString(), {
+										icon: 5,
+										time: 1500
+									});
+								}
 							}
-						}
+						});
+
 					});
-
-
 				} else if (obj.event === 'del') {
-					layer.confirm('真的删除么', function(index) {
+					layer.confirm('是否删除「 '+obj.data.materialName+' 」？', function(index) {
 
 						layer.close(index);
 						//向服务端发送删除指令
