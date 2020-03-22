@@ -316,7 +316,25 @@
 
 
 
+	}
 
+	function ptableAccess2() {
+		var noValue = "";
+		//审核通过后台代码要求的值pids为数组，修改此处代码，如果非批量审核方式，pids为[""]，此时重新赋值为pids[pid]
+		if (pids.length == 1 || pids[0] == "") {
+			if (pid != undefined && pid != "") {
+				pids[0] = pid;
+			}
+		}
+
+		layer.open({
+			title: '同组播表列表',
+			type: 2,
+			area: ['80%', '90%'],
+			//shade:false,
+			content: '<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers2.do?pid=' + pids[0] + '&checkKind=' + "2",
+
+		});
 	}
 
 	function ptableAccess() {
@@ -328,7 +346,7 @@
 			}
 		}
 
-		ptableGroupAccess();
+		//ptableGroupAccess();
 
 		$.ajax({
 			type : "POST",
@@ -465,7 +483,7 @@
 							<div class="layui-inline">
 								<div class="layui-inline">
 									<button class="layui-btn" type="button"
-										onclick="ptableAccess()">
+										onclick="ptableAccess2()">
 										<i class="layui-icon">&#xe605;</i>审核通过
 									</button>
 								</div>

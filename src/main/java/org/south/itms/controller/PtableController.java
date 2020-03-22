@@ -2088,5 +2088,13 @@ public class PtableController {
 	}
 
 
+	@RequestMapping("/getPtableGroupAndMembers2")
+	public String getPtableGroupAndMembers2(HttpServletRequest request,Model model) {
+		String pid = request.getParameter("pid");
+		String checkKind = request.getParameter("checkKind");
+		model.addAttribute("pid",pid);
+		model.addAttribute("checkKind", checkKind);
+		return "ptable/getPtableGroupAndMembers2";
+	}
 
 }
