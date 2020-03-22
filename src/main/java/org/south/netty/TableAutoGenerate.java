@@ -17,7 +17,11 @@ import java.util.Properties;
 import javax.sound.midi.Soundbank;
 
 import com.mysql.jdbc.PreparedStatement;
+import org.south.itms.dao.impl.PtableDao;
 import org.south.itms.entity.Items;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
  * @author jan
@@ -25,6 +29,9 @@ import org.south.itms.entity.Items;
  * @version V1.0
  */
 public class TableAutoGenerate {
+
+	@Autowired
+	private PtableDao ptableDao;
 
 	public static String driver;
 
@@ -106,6 +113,8 @@ public class TableAutoGenerate {
 		return ptableid;
 	}
 
+
+
 	/**
 	 * 生成同时段多播表, 轮播播表的数据库操作方法
 	 * @param terminalId
@@ -180,7 +189,7 @@ public class TableAutoGenerate {
 			statement.setString(7, playtime);
 			statement.setString(8, allTime);
 			statement.setString(9, ptableName);
-			statement.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
+			statement.setTimestamp(10, new Timestamp(currentTimeMillis()));
 			statement.setInt(11, 0);
 			statement.setInt(12, 0);
 			statement.setInt(13, 0);
@@ -609,7 +618,7 @@ public class TableAutoGenerate {
 			statement.setString(6, screenRate);
 			statement.setString(7, playtime);
 			statement.setString(8, allTime);
-			statement.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
+			statement.setTimestamp(9, new Timestamp(currentTimeMillis()));
 			statement.setInt(10, 0);
 			int count = statement.executeUpdate();
 			System.out.println(count);
@@ -679,7 +688,7 @@ public class TableAutoGenerate {
 			statement.setString(6, screenRate);
 			statement.setString(7, playtime);
 			statement.setString(8, allTime);
-			statement.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
+			statement.setTimestamp(9, new Timestamp(currentTimeMillis()));
 			statement.setInt(10, 0);
 			int count = statement.executeUpdate();
 			System.out.println(count);

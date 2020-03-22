@@ -1,6 +1,7 @@
 package org.south.itms.service.impl;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.south.itms.entity.IPTable;
@@ -65,4 +66,6 @@ public interface PtableService {
 	List<Material> findAllMaterialsByPlayTableIdAndFiletype(String pid,String fileType);
 
     void updateUnAccessReason(String pid, String reason);
+
+	List<PlayTable>  getPtableGroupAndMembers(String pid,int checkKind);
 }

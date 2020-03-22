@@ -34,11 +34,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.south.itms.dao.impl.FileDao;
-import org.south.itms.dao.impl.MarqueeDao;
-import org.south.itms.dao.impl.MaterialDao;
-import org.south.itms.dao.impl.PtableDao;
-import org.south.itms.dao.impl.UserDao;
+import org.south.itms.dao.impl.*;
 import org.south.itms.dto.MarqueeDto;
 import org.south.itms.dto.MaterialDto;
 import org.south.itms.dto.Page;
@@ -54,12 +50,7 @@ import org.south.itms.entity.Period;
 import org.south.itms.entity.PlayTable;
 import org.south.itms.entity.Terminal;
 import org.south.itms.entity.User;
-import org.south.itms.service.impl.AcctUserService;
-import org.south.itms.service.impl.CommonService;
-import org.south.itms.service.impl.MarqueeService;
-import org.south.itms.service.impl.MaterialService;
-import org.south.itms.service.impl.PtableService;
-import org.south.itms.service.impl.TerminalService;
+import org.south.itms.service.impl.*;
 import org.south.itms.util.Constant;
 import org.south.itms.util.EntityUtil;
 import org.south.itms.util.SqlUtil;
@@ -75,11 +66,14 @@ import org.south.netty.msg.MarqueeInfoDto;
 import org.south.netty.msg.MsgType;
 import org.south.netty.msg.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
@@ -2083,5 +2077,16 @@ public class PtableController {
 		}
 
 	}
+
+
+	// 返回 如 "groupId,member1,member2,..." 格式的字符串
+	@RequestMapping("/getPtableGroupAndMembers")
+	@ResponseBody
+	public List<PlayTable>  getPtableGroupAndMembers(@RequestParam String pid,@RequestParam int checkKind){
+
+		return ptableService.getPtableGroupAndMembers(pid,checkKind);
+	}
+
+
 
 }

@@ -9,9 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.Json;
 import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.SchemaOutputResolver;
 
+import com.alibaba.fastjson.JSON;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -37,13 +41,19 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @author: yezilong
  */
 
-@Repository("ptableDao")
+@Repository
 public class PtableDaoImpl implements PtableDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	private Session getCurrentSession() {
+		if (this == null){
+			System.out.println("this null");
+		}
+		if (this.sessionFactory == null){
+			System.out.println("this.sessionFactory null");
+		}
 		return this.sessionFactory.getCurrentSession();
 	}
 	
@@ -476,6 +486,81 @@ public class PtableDaoImpl implements PtableDao {
 		session.clear();
 
 	}
+
+	// 播表组机制
+	// 给定一个播表ID， 能找出所有 符合：
+	// 1.与其同组
+	// 2.符合审核层次
+	// 的播表信息
+	@Override
+	public List<PlayTable>  getPtableGroupAndMembers(String pid,int checkKind) {
+
+		// checkKind 是一级还是二级审核
+		// 用于区分
+
+		System.out.println("进入： 获取组ID和成员");
+		Session session = this.getCurrentSession();
+
+		// 查组ID
+		String sql = "select ptg.play_table_group_id from play_table_group ptg where ptg.pid = :pid ";
+		List groupId = session.createNativeQuery(sql).setParameter("pid", pid).getResultList();
+		System.out.println(groupId);
+
+		// 查该组ID对应的Pid
+		String sql2 = "select ptg.pid from play_table_group ptg where ptg.play_table_group_id = :groupId ";
+		List<String> pids = session.createNativeQuery(sql2).setParameter("groupId", groupId).getResultList();
+		System.out.println(pids);
+
+
+		// 分类，播表一级和二级
+		// 播表一级审核
+
+		List<PlayTable> playTableList = new ArrayList<>();
+
+		if (checkKind == 1){
+//			String sql3 = "select pt.ptable_name from play_table pt where pt.status_id = :status_id and pt.pid = :pid";
+//			for (int i = 0 ; i < pids.size() ; i++){
+//
+//			}
+//			List pi = session.createNativeQuery(sql3).setParameter("status_id", 1).setParameter("pid",)getResultList();
+//			System.out.println(pids);
+		}
+		// 播表二级审核
+		else if (checkKind == 2){
+			try {
+				String sql3 = "select pt.* from play_table pt where  pt.deleted = 0 and pt.pid = :pid and pt.status_Id = :status_id ";
+
+				List<PlayTable> tempList;
+				for (int i = 0 ; i < pids.size() ; i++){
+					tempList =session.createNativeQuery(sql3)
+							.setParameter("status_id", checkKind)
+							.setParameter("pid",pids.get(i)).addEntity(PlayTable.class).list();
+					//System.out.println(tempList);
+					if(tempList.size() != 0) {
+						playTableList.add(tempList.get(0));
+					}
+				}
+				// 找出了所有符合条件的播表
+				System.out.println(playTableList);
+				//System.out.println("json: " + JSON.toJSONString(playTableList));
+
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+
+
+		}
+		else{
+
+		}
+
+		return playTableList;
+
+
+	}
+
+
 
 
 }

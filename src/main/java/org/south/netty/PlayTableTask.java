@@ -22,6 +22,11 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import com.mysql.jdbc.PreparedStatement;
+import org.south.itms.dao.impl.PtableDao;
+import org.south.itms.dao.impl.PtableDaoImpl;
+import org.south.itms.service.impl.PtableService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -33,7 +38,12 @@ import javax.servlet.http.HttpSession;
  * @date 2017年11月23日 上午10:51:48
  * @version V1.0 
  */
+
 public class PlayTableTask extends TimerTask {
+
+	@Autowired
+	private PtableService ptableService;
+
 	private static Logger logger = Logger.getLogger(PlayTableTask.class);
 	
     public static String driver;
@@ -236,10 +246,58 @@ public class PlayTableTask extends TimerTask {
 		HttpSession session=attr.getRequest().getSession(true);
 		session.setAttribute("completePlayTableGeneration", true);
 
+		// modify by bobo
+		// 2020/3/20
+		// 添加播表组
+
+		// 测试
+		System.out.println("准备播表组的成员；");
+		for (int i = 0 ; i < TableAutoGenerate.playTableAutoIdList.size() ; i++){
+			System.out.println("第"+ (i+1) + "个, pid 为：" + TableAutoGenerate.playTableAutoIdList.get(i));
+		}
+
+		// 生成播表组
+		foundPtableGroup();
+
 		return ignorePids;
 //		for(AutoPlayTable a : listTable) {
 //			System.out.println(a);
 //		}
+	}
+
+	// 组成播表组
+	public void foundPtableGroup() {
+
+		// 生成播表组ID,当前时间戳
+		long groupId = System.currentTimeMillis();
+
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed())
+				System.out.println("Succeeded connecting to the Database!");
+			// statement用来执行SQL语句
+			Statement statement = conn.createStatement();
+
+			ResultSet rs = null;
+			for (int i = 0 ; i < TableAutoGenerate.playTableAutoIdList.size() ;i++){
+				long temp = Long.parseLong(TableAutoGenerate.playTableAutoIdList.get(i));
+				String sql = "insert into play_table_group(play_table_group_id, pid) values ("+groupId+", " + temp+")";
+				statement.execute(sql);
+			}
+			rs.close();
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	//一个终端时段生成多天播表
@@ -332,10 +390,13 @@ public class PlayTableTask extends TimerTask {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		PlayTableTask ps = new PlayTableTask();
-		ps.updatePeriodTable();
+//		PlayTableTask ps = new PlayTableTask();
+//		ps.updatePeriodTable();
 //		ps.getFileMessage();
 //		System.out.println(ps.setPeriod.size());
 //		ps.generateTable();
+
+
+
 	}
 }

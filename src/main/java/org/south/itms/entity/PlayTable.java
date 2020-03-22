@@ -58,6 +58,9 @@ public class PlayTable implements java.io.Serializable {
 
 	private String unAccessReason;
 
+
+	private String playTableGroupId;
+
 	@Id
 	@Column(name = "pid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,6 +70,15 @@ public class PlayTable implements java.io.Serializable {
 
 	public void setPid(String pid) {
 		this.pid = pid;
+	}
+
+	@Column(name = "play_table_group_id")
+	public String getPlayTableGroupId() {
+		return playTableGroupId;
+	}
+
+	public void setPlayTableGroupId(String playTableGroupId) {
+		this.playTableGroupId = playTableGroupId;
 	}
 
 	@Column(name = "create_time")

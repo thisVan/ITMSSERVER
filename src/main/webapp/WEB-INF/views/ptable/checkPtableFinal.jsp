@@ -9,10 +9,9 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/st/Sortable.js"></script> --%>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/layer.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/layer.js"></script>
 <script type="text/javascript" defer="defer">
 	var pid = '${pid}';
 	var Pids = '${pids}';
@@ -279,6 +278,47 @@
 
 	}
 
+	// 播表二级审核通过
+	// modify by bobo 2020/3/21
+	// 添加播表组机制，一起审核
+	function ptableGroupAccess(){
+
+		// 当审核的只有一个播表时才进入这个机制
+		if (pids.length != 1){
+			return;
+		}
+
+
+		let doGroupAccess = false;
+		let groupId = 0;
+		let groupMembers = [];
+
+		// 查播表组数据，填充groupId 和 groupMembers
+		$.ajax({
+			type : "POST",
+			url : "<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers.do",
+			data : {
+				"pid" : pids[0],
+				"checkKind" : 2,
+			},
+			traditional : true,
+			dataType : "json",
+			success : function(msg) {
+				groupMembers = msg;
+				console.log(groupMembers);
+			}
+		});
+
+		// 上面的groupMembers 就是JSON对象，直接用groupMembers[0].pid这样访问
+		//
+
+
+
+
+
+
+	}
+
 	function ptableAccess() {
 		var noValue = "";
 		//审核通过后台代码要求的值pids为数组，修改此处代码，如果非批量审核方式，pids为[""]，此时重新赋值为pids[pid]
@@ -287,6 +327,9 @@
 				pids[0] =  pid;
 			}
 		}
+
+		ptableGroupAccess();
+
 		$.ajax({
 			type : "POST",
 			url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",

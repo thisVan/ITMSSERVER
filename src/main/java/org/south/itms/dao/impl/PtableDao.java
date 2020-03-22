@@ -1,12 +1,15 @@
 package org.south.itms.dao.impl;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.south.itms.entity.IPTable;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.PlayTable;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PtableDao {
 
 	PlayTable load(String id);
@@ -65,4 +68,7 @@ public interface PtableDao {
 
 
     void updateUnAccessReason(String pid, String reason);
+
+	List<PlayTable>  getPtableGroupAndMembers(String pid, int checkKind);
+
 }

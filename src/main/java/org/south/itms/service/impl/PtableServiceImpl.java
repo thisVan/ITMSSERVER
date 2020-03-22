@@ -1,6 +1,7 @@
 package org.south.itms.service.impl;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.south.itms.dao.impl.PtableDao;
@@ -134,5 +135,11 @@ public class PtableServiceImpl implements PtableService {
 	public void updateUnAccessReason(String pid, String reason) {
 		ptableDao.updateUnAccessReason(pid,reason);
 	}
+
+	@Override
+	public List<PlayTable>  getPtableGroupAndMembers(String pid,int checkKind) {
+		return ptableDao.getPtableGroupAndMembers(pid,checkKind);
+	}
+
 
 }
