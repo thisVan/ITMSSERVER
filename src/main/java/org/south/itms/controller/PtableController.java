@@ -4,8 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.File;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.Collator;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -58,6 +57,7 @@ import org.south.itms.util.StringUtil;
 import org.south.itms.util.TimeUtil;
 import org.south.netty.NettyChannelMap;
 import org.south.netty.PlayTableTask;
+import org.south.netty.TableAutoGenerate;
 import org.south.netty.msg.DataKey;
 import org.south.netty.msg.FileDto;
 import org.south.netty.msg.FileInfoDto;
@@ -80,6 +80,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import io.netty.channel.ChannelFuture;
+
+import static org.south.netty.PlayTableTask.*;
 
 /**
  * @author: yezilong
@@ -236,32 +238,26 @@ public class PtableController {
 				savePtable(ptableName, terminalId, sqlDate, startTime, endTime, stat, mid, request, intervalTime);
 			}
 
+			// modify by bobo 2020/3/24
+			// 这里使用静态变量insertPlayTableAutoIdList，建立播表组
+			foundInsertPtableGroup();
+
+
 		} else {
 			return "1";
 		}
 		return "true";
 	}
 
-	/*private void savePtable(String terminalId, String dateTime, Time startTime, Time endTime, String stat, String mid,
-			HttpServletRequest request, String intervalTime) throws ParseException {
-		Terminal terminal = commonService.getTerminalById(terminalId);
-		Date d = TimeUtil.translateDate(dateTime);
-		PlayTable ptable = new PlayTable();
-		ptable.setCreateTime(new Timestamp(new Date().getTime()));
-		String userId = (String) request.getSession().getAttribute("userId");
-		ptable.setUserId(userId);
-		ptable.setStartTime(startTime);
-		ptable.setEndTime(endTime);
-		ptable.setPlayDate(d);
-		ptable.setDeleted(0);
-		ptable.setInsertFlag(1);
-		ptable.setState(Integer.parseInt(stat));
-		ptable.setTerminalId(terminalId);
-		ptable.setStatusId(Constant.uncheck);
-		ptable.setPtableName(terminal.getTerminalName() + " 插播  (" + dateTime + ")");
-		ptable.setMin(Integer.parseInt(intervalTime));
-		commonService.saveInsetPlayTable(ptable, mid);
-	}*/
+
+	// 组成插播播表组
+	public void foundInsertPtableGroup() {
+		System.out.println("插播已经插入完毕，准备构建组关系,成组的ID为:");
+		System.out.println(TableAutoGenerate.insertPlayTableAutoIdList);
+		ptableService.saveInsertPlayTableGroup(TableAutoGenerate.insertPlayTableAutoIdList);
+	}
+
+
 	private void savePtable(String ptableName, String terminalId, Date dateTime, Time startTime, Time endTime, String stat, String mid,
 			HttpServletRequest request, String intervalTime) throws ParseException {
 		Terminal terminal = commonService.getTerminalById(terminalId);
@@ -2079,7 +2075,7 @@ public class PtableController {
 	}
 
 
-	// 返回 如 "groupId,member1,member2,..." 格式的字符串
+
 	@RequestMapping("/getPtableGroupAndMembers")
 	@ResponseBody
 	public List<PlayTable>  getPtableGroupAndMembers(@RequestParam String pid,@RequestParam int checkKind){
@@ -2088,13 +2084,6 @@ public class PtableController {
 	}
 
 
-	@RequestMapping("/getPtableGroupAndMembers2")
-	public String getPtableGroupAndMembers2(HttpServletRequest request,Model model) {
-		String pid = request.getParameter("pid");
-		String checkKind = request.getParameter("checkKind");
-		model.addAttribute("pid",pid);
-		model.addAttribute("checkKind", checkKind);
-		return "ptable/getPtableGroupAndMembers2";
-	}
+
 
 }

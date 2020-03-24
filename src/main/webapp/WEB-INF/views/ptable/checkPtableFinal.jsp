@@ -281,8 +281,17 @@
 	// 播表二级审核通过
 	// modify by bobo 2020/3/21
 	// 添加播表组机制，一起审核
-	function ptableGroupAccess(){
 
+	function ptableAccess() {
+		var noValue = "";
+		//审核通过后台代码要求的值pids为数组，修改此处代码，如果非批量审核方式，pids为[""]，此时重新赋值为pids[pid]
+		if (pids.length == 1 || pids[0] == ""){
+			if(pid != undefined && pid != ""){
+				pids[0] =  pid;
+			}
+		}
+
+		//ptableGroupAccess();
 		// 当审核的只有一个播表时才进入这个机制
 		if (pids.length != 1){
 			return;
@@ -296,6 +305,7 @@
 		// 查播表组数据，填充groupId 和 groupMembers
 		$.ajax({
 			type : "POST",
+			async: false,
 			url : "<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers.do",
 			data : {
 				"pid" : pids[0],
@@ -306,75 +316,164 @@
 			success : function(msg) {
 				groupMembers = msg;
 				console.log(groupMembers);
-			}
-		});
+				//layer.msg(groupMembers[0].pid);
 
-		// 上面的groupMembers 就是JSON对象，直接用groupMembers[0].pid这样访问
-		//
-
-
-
-
-
-	}
-
-	function ptableAccess2() {
-		var noValue = "";
-		//审核通过后台代码要求的值pids为数组，修改此处代码，如果非批量审核方式，pids为[""]，此时重新赋值为pids[pid]
-		if (pids.length == 1 || pids[0] == "") {
-			if (pid != undefined && pid != "") {
-				pids[0] = pid;
-			}
-		}
-
-		layer.open({
-			title: '同组播表列表',
-			type: 2,
-			area: ['80%', '90%'],
-			//shade:false,
-			content: '<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers2.do?pid=' + pids[0] + '&checkKind=' + "2",
-
-		});
-	}
-
-	function ptableAccess() {
-		var noValue = "";
-		//审核通过后台代码要求的值pids为数组，修改此处代码，如果非批量审核方式，pids为[""]，此时重新赋值为pids[pid]
-		if (pids.length == 1 || pids[0] == ""){
-			if(pid != undefined && pid != ""){
-				pids[0] =  pid;
-			}
-		}
-
-		//ptableGroupAccess();
-
-		$.ajax({
-			type : "POST",
-			url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",
-			data : {
-				"ppid" : pids,
-				"sortNum" : noValue
-			},
-			traditional : true,
-			dataType : "json",
-			success : function(msg) {
-				var value = msg.toString();
-				if (value == "true") {
-					layer.msg('审核保存成功!', {
-						icon : 6,
-						time : 1500
-					});
-					document.location = "<%=request.getContextPath()%>/ptable/ptableCheckSecondList.do";
-				} else {
-					layer.msg('审核保存失败!', {
-						icon : 5,
-						time : 1500
-					});
+				let content = '<br>以下为一次排播的多天播表： </br>';
+				for (let member in groupMembers){
+					content += ('<br>播表名: ' + groupMembers[member].ptableName + ',播放日期：' + timestampToTime(groupMembers[member].playDate) + '</br>');
 				}
+				content += "<br><strong>是否合并审核?</strong></br>";
+
+				if (groupMembers.length == 1){
+					$.ajax({
+						type : "POST",
+						async : false,
+						url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",
+						data : {
+							"ppid" : pids,
+							"sortNum" : noValue
+						},
+						traditional : true,
+						dataType : "json",
+						success : function(msg) {
+							var value = msg.toString();
+							if (value == "true") {
+								layer.msg('审核保存成功!', {
+									icon : 6,
+									time : 1500
+								});
+								document.location = "<%=request.getContextPath()%>/ptable/ptableCheckSecondList.do";
+							} else {
+								layer.msg('审核保存失败!', {
+									icon : 5,
+									time : 1500
+								});
+							}
+						}
+					});
+					return;
+				}
+
+
+				layer.confirm(content, {
+					btn: ['是','否'], //按钮
+					area:['500px','600px']
+				}, function(){
+
+					// 是
+					doGroupAccess = true;
+					let accessIds= [];
+					for (let member in groupMembers){
+						accessIds.push(groupMembers[member].pid);
+					}
+
+					$.ajax({
+						type : "POST",
+						async : false,
+						url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",
+						data : {
+							"ppid" : accessIds,
+							"sortNum" : noValue
+						},
+						traditional : true,
+						dataType : "json",
+						success : function(msg) {
+							var value = msg.toString();
+							if (value == "true") {
+								layer.msg('审核保存成功!', {
+									icon : 6,
+									time : 1500
+								});
+								document.location = "<%=request.getContextPath()%>/ptable/ptableCheckSecondList.do";
+							} else {
+								layer.msg('审核保存失败!', {
+									icon : 5,
+									time : 1500
+								});
+							}
+						}
+					});
+
+
+				}, function(){
+
+					// 否
+					doGroupAccess = false;
+
+					$.ajax({
+						type : "POST",
+						async : false,
+						url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",
+						data : {
+							"ppid" : pids,
+							"sortNum" : noValue
+						},
+						traditional : true,
+						dataType : "json",
+						success : function(msg) {
+							var value = msg.toString();
+							if (value == "true") {
+								layer.msg('审核保存成功!', {
+									icon : 6,
+									time : 1500
+								});
+								document.location = "<%=request.getContextPath()%>/ptable/ptableCheckSecondList.do";
+							} else {
+								layer.msg('审核保存失败!', {
+									icon : 5,
+									time : 1500
+								});
+							}
+						}
+					});
+
+				});
+
+
 			}
+
 		});
+
+
+		<%--$.ajax({--%>
+		<%--	type : "POST",--%>
+		<%--	url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",--%>
+		<%--	data : {--%>
+		<%--		"ppid" : pids,--%>
+		<%--		"sortNum" : noValue--%>
+		<%--	},--%>
+		<%--	traditional : true,--%>
+		<%--	dataType : "json",--%>
+		<%--	success : function(msg) {--%>
+		<%--		var value = msg.toString();--%>
+		<%--		if (value == "true") {--%>
+		<%--			layer.msg('审核保存成功!', {--%>
+		<%--				icon : 6,--%>
+		<%--				time : 1500--%>
+		<%--			});--%>
+		<%--			document.location = "<%=request.getContextPath()%>/ptable/ptableCheckSecondList.do";--%>
+		<%--		} else {--%>
+		<%--			layer.msg('审核保存失败!', {--%>
+		<%--				icon : 5,--%>
+		<%--				time : 1500--%>
+		<%--			});--%>
+		<%--		}--%>
+		<%--	}--%>
+		<%--});--%>
+
 	}
-	
+
+	function timestampToTime(timestamp) {
+		var date = new Date(timestamp);
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
+		var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
+		var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
+		var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
+		return Y+M+D+h+m+s;
+	}
+
 	function testbuttonmsg() {
 		layer.msg(pid + ',' + periodName + ',' + periodID + ',' + ptdate + ',' + tid, {
 			icon : 5,
@@ -483,7 +582,7 @@
 							<div class="layui-inline">
 								<div class="layui-inline">
 									<button class="layui-btn" type="button"
-										onclick="ptableAccess2()">
+										onclick="ptableAccess()">
 										<i class="layui-icon">&#xe605;</i>审核通过
 									</button>
 								</div>

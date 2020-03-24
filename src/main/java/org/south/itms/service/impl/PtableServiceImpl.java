@@ -141,5 +141,10 @@ public class PtableServiceImpl implements PtableService {
 		return ptableDao.getPtableGroupAndMembers(pid,checkKind);
 	}
 
+	@Override
+	public void saveInsertPlayTableGroup(List<String> pids) {
+		ptableDao.saveInsertPlayTableGroup(pids);
+	}
+
 
 }

@@ -348,31 +348,188 @@
 		} 
 		console.log("播表中的pid："+pid);
 		console.log("播表中的pids："+pids);
-		$.ajax({
-			type : "POST",
-			url : "<%=request.getContextPath()%>/ptable/modifyPlayTableNum.do",
-			data : {
-				"ppid" : pids,
-				"sortNum" : listFile
-			},
-			traditional : true,
-			dataType : "json",
-			success : function(msg) {
-				var value = msg.toString();
-				if (value == "true") {
-					layer.msg('审核保存成功!', {
-						icon : 6,
-						time : 1500
+
+		if (pids.length == 1){
+
+			let doGroupAccess = false;
+			let groupId = 0;
+			let groupMembers = [];
+
+			// 查播表组数据，填充groupId 和 groupMembers
+			$.ajax({
+				type : "POST",
+				async: false,
+				url : "<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers.do",
+				data : {
+					"pid" : pids[0],
+					"checkKind" : 1,
+				},
+				traditional : true,
+				dataType : "json",
+				success : function(msg) {
+					groupMembers = msg;
+					console.log(groupMembers);
+					//layer.msg(groupMembers[0].pid);
+
+					if (groupMembers.length == 1){
+
+						$.ajax({
+							type : "POST",
+							async : false,
+							url : "<%=request.getContextPath()%>/ptable/modifyPlayTableNum.do",
+							data : {
+								"ppid" : pids,
+								"sortNum" : listFile
+							},
+							traditional : true,
+							dataType : "json",
+							success : function(msg) {
+								var value = msg.toString();
+								if (value == "true") {
+									layer.msg('审核保存成功!', {
+										icon : 6,
+										time : 1500
+									});
+									document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
+								} else {
+									layer.msg('审核保存失败!', {
+										icon : 5,
+										time : 1500
+									});
+								}
+							}
+						});
+						return;
+
+					}
+
+					let content = '<br>以下为一次排播的多天播表： </br>';
+					for (let member in groupMembers){
+						content += ('<br>播表名: ' + groupMembers[member].ptableName + ',播放日期：' + timestampToTime(groupMembers[member].playDate) + '</br>');
+					}
+					content += "<br><strong>是否合并审核?</strong></br>";
+
+					layer.confirm(content, {
+						btn: ['是','否'], //按钮
+						area:['500px','600px']
+					}, function(){
+
+						// 是
+						doGroupAccess = true;
+						let accessIds= [];
+						for (let member in groupMembers){
+							accessIds.push(groupMembers[member].pid);
+						}
+
+						$.ajax({
+							type : "POST",
+							async : false,
+							url : "<%=request.getContextPath()%>/ptable/modifyPlayTableNum.do",
+							data : {
+								"ppid" : accessIds,
+								"sortNum" : listFile
+							},
+							traditional : true,
+							dataType : "json",
+							success : function(msg) {
+								var value = msg.toString();
+								if (value == "true") {
+									layer.msg('审核保存成功!', {
+										icon : 6,
+										time : 1500
+									});
+									document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
+								} else {
+									layer.msg('审核保存失败!', {
+										icon : 5,
+										time : 1500
+									});
+								}
+							}
+						});
+
+
+					}, function(){
+
+						// 否
+						doGroupAccess = false;
+
+						$.ajax({
+							type : "POST",
+							async : false,
+							url : "<%=request.getContextPath()%>/ptable/modifyPlayTableNum.do",
+							data : {
+								"ppid" : pids,
+								"sortNum" : listFile
+							},
+							traditional : true,
+							dataType : "json",
+							success : function(msg) {
+								var value = msg.toString();
+								if (value == "true") {
+									layer.msg('审核保存成功!', {
+										icon : 6,
+										time : 1500
+									});
+									document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
+								} else {
+									layer.msg('审核保存失败!', {
+										icon : 5,
+										time : 1500
+									});
+								}
+							}
+						});
+
 					});
-					document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
-				} else {
-					layer.msg('审核保存失败!', {
-						icon : 5,
-						time : 1500
-					});
+
+
 				}
-			}
-		});
+
+			});
+
+		}
+		else{
+			$.ajax({
+				type : "POST",
+				url : "<%=request.getContextPath()%>/ptable/modifyPlayTableNum.do",
+				data : {
+					"ppid" : pids,
+					"sortNum" : listFile
+				},
+				traditional : true,
+				dataType : "json",
+				success : function(msg) {
+					var value = msg.toString();
+					if (value == "true") {
+						layer.msg('审核保存成功!', {
+							icon : 6,
+							time : 1500
+						});
+						document.location = "<%=request.getContextPath()%>/ptable/ptableCheckFirstList.do";
+					} else {
+						layer.msg('审核保存失败!', {
+							icon : 5,
+							time : 1500
+						});
+					}
+				}
+			});
+		}
+
+
+
+	}
+
+	function timestampToTime(timestamp) {
+		var date = new Date(timestamp);
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
+		var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
+		var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
+		var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
+		return Y+M+D+h+m+s;
 	}
 
 	function updateSort() {

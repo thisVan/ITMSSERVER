@@ -71,4 +71,6 @@ public interface PtableDao {
 
 	List<PlayTable>  getPtableGroupAndMembers(String pid, int checkKind);
 
+	void saveInsertPlayTableGroup(List<String> pids);
+
 }

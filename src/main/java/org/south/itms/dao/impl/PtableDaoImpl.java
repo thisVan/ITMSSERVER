@@ -518,12 +518,26 @@ public class PtableDaoImpl implements PtableDao {
 		List<PlayTable> playTableList = new ArrayList<>();
 
 		if (checkKind == 1){
-//			String sql3 = "select pt.ptable_name from play_table pt where pt.status_id = :status_id and pt.pid = :pid";
-//			for (int i = 0 ; i < pids.size() ; i++){
-//
-//			}
-//			List pi = session.createNativeQuery(sql3).setParameter("status_id", 1).setParameter("pid",)getResultList();
-//			System.out.println(pids);
+			try {
+				String sql3 = "select pt.* from play_table pt where  pt.deleted = 0 and pt.pid = :pid and pt.status_Id = :status_id ";
+
+				List<PlayTable> tempList;
+				for (int i = 0 ; i < pids.size() ; i++){
+					tempList =session.createNativeQuery(sql3)
+							.setParameter("status_id", checkKind)
+							.setParameter("pid",pids.get(i)).addEntity(PlayTable.class).list();
+					//System.out.println(tempList);
+					if(tempList.size() != 0) {
+						playTableList.add(tempList.get(0));
+					}
+				}
+				// 找出了所有符合条件的播表
+				System.out.println(playTableList);
+				//System.out.println("json: " + JSON.toJSONString(playTableList));
+
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		// 播表二级审核
 		else if (checkKind == 2){
@@ -560,7 +574,23 @@ public class PtableDaoImpl implements PtableDao {
 
 	}
 
+	@Override
+	public void saveInsertPlayTableGroup(List<String> pids) {
 
+		System.out.println("建立插播播表组");
+		Session session = this.getCurrentSession();
+
+		long groupId = System.currentTimeMillis();
+
+		for (int i = 0 ; i < TableAutoGenerate.insertPlayTableAutoIdList.size() ;i++){
+			long temp = Long.parseLong(TableAutoGenerate.insertPlayTableAutoIdList.get(i));
+			String sql = "insert into play_table_group(play_table_group_id, pid) values ("+groupId+", " + temp+")";
+			Query query = this.getCurrentSession().createNativeQuery(sql);
+			query.executeUpdate();
+		}
+
+		TableAutoGenerate.insertPlayTableAutoIdList.clear();
+	}
 
 
 }

@@ -22,6 +22,7 @@ import org.south.itms.entity.IPTable;
 import org.south.itms.entity.Material;
 import org.south.itms.entity.PlayTable;
 import org.south.netty.NettyChannelMap;
+import org.south.netty.TableAutoGenerate;
 import org.south.netty.msg.DataKey;
 import org.south.netty.msg.InsertDto;
 import org.south.netty.msg.MsgType;
@@ -339,7 +340,15 @@ public class SqlUpdate {
 			while (rs.next()) {
 				pid = Integer.parseInt(rs.getString(1));
 			}
-			
+
+
+
+			// modify by bobo 2020/3/24
+			// 把插播的也获取到播表组
+			System.out.println("插播pid被加入:" + pid);
+			TableAutoGenerate.insertPlayTableAutoIdList.add(String.valueOf(pid));
+
+
 			String[] mids = mid.split(",");
 			List<Integer> list = new ArrayList<Integer>();
 			for(String s : mids) {

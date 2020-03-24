@@ -68,4 +68,5 @@ public interface PtableService {
     void updateUnAccessReason(String pid, String reason);
 
 	List<PlayTable>  getPtableGroupAndMembers(String pid,int checkKind);
+	void saveInsertPlayTableGroup(List<String> pids);
 }

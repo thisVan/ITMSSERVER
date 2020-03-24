@@ -42,6 +42,7 @@ public class TableAutoGenerate {
 	public static String password;
 
 	public static ArrayList<String> playTableAutoIdList = new ArrayList<String>();
+	public static ArrayList<String> insertPlayTableAutoIdList = new ArrayList<String>();
 
 	public TableAutoGenerate() {
 		try {
