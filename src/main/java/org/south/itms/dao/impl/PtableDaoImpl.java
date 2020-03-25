@@ -495,7 +495,7 @@ public class PtableDaoImpl implements PtableDao {
 	@Override
 	public List<PlayTable>  getPtableGroupAndMembers(String pid,int checkKind) {
 
-		// checkKind 是一级还是二级审核
+		// checkKind 是一级还是二级审核还是其他操作
 		// 用于区分
 
 		System.out.println("进入： 获取组ID和成员");
@@ -512,12 +512,33 @@ public class PtableDaoImpl implements PtableDao {
 		System.out.println(pids);
 
 
-		// 分类，播表一级和二级
-		// 播表一级审核
-
+		// 分类，播表一级和二级和其他操作
 		List<PlayTable> playTableList = new ArrayList<>();
 
-		if (checkKind == 1){
+		// 其他操作如修改顺序
+		if (checkKind == 0){
+			try {
+				String sql3 = "select pt.* from play_table pt where  pt.deleted = 0 and pt.pid = :pid";
+
+				List<PlayTable> tempList;
+				for (int i = 0 ; i < pids.size() ; i++){
+					tempList =session.createNativeQuery(sql3)
+							.setParameter("pid",pids.get(i)).addEntity(PlayTable.class).list();
+					//System.out.println(tempList);
+					if(tempList.size() != 0) {
+						playTableList.add(tempList.get(0));
+					}
+				}
+				// 找出了所有符合条件的播表
+				System.out.println(playTableList);
+				//System.out.println("json: " + JSON.toJSONString(playTableList));
+
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		// 播表一级审核
+		else if (checkKind == 1){
 			try {
 				String sql3 = "select pt.* from play_table pt where  pt.deleted = 0 and pt.pid = :pid and pt.status_Id = :status_id ";
 

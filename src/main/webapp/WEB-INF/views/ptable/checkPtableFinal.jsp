@@ -433,34 +433,6 @@
 			}
 
 		});
-
-
-		<%--$.ajax({--%>
-		<%--	type : "POST",--%>
-		<%--	url : "<%=request.getContextPath()%>/ptable/modifyPlayTableFinalNum.do",--%>
-		<%--	data : {--%>
-		<%--		"ppid" : pids,--%>
-		<%--		"sortNum" : noValue--%>
-		<%--	},--%>
-		<%--	traditional : true,--%>
-		<%--	dataType : "json",--%>
-		<%--	success : function(msg) {--%>
-		<%--		var value = msg.toString();--%>
-		<%--		if (value == "true") {--%>
-		<%--			layer.msg('审核保存成功!', {--%>
-		<%--				icon : 6,--%>
-		<%--				time : 1500--%>
-		<%--			});--%>
-		<%--			document.location = "<%=request.getContextPath()%>/ptable/ptableCheckSecondList.do";--%>
-		<%--		} else {--%>
-		<%--			layer.msg('审核保存失败!', {--%>
-		<%--				icon : 5,--%>
-		<%--				time : 1500--%>
-		<%--			});--%>
-		<%--		}--%>
-		<%--	}--%>
-		<%--});--%>
-
 	}
 
 	function timestampToTime(timestamp) {
@@ -471,7 +443,7 @@
 		var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
 		var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
 		var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
-		return Y+M+D+h+m+s;
+		return Y+M+D;
 	}
 
 	function testbuttonmsg() {

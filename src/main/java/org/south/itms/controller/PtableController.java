@@ -1346,6 +1346,7 @@ public class PtableController {
 		} else {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 			// System.out.println(pid);
+
 			ptableService.modifyPlayTableNum(ppid, sortNum);
 			// ptableService.updateTableStatus(ppid);
 			// int num = Integer.parseInt((String)

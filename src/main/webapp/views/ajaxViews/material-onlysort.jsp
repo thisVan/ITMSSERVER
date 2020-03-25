@@ -49,7 +49,7 @@
   <hr class="layui-bg-green"/>
   <div class="layui-form-item">
     <div class="layui-input-block">
-      <button class="layui-btn" onclick="savePtableSort()"><i class="layui-icon">&#xe642;</i>保存</button>
+      <button class="layui-btn" onclick="saveSort()"><i class="layui-icon">&#xe642;</i>保存</button>
       <button type="button" class="layui-btn layui-btn-primary" onclick="closeWind()">关闭</button>
     </div>
   </div>
@@ -106,9 +106,63 @@ Sortable.create(document.getElementById('foo'), {
 	   var index = parent.layer.getFrameIndex(window.name);
 	   parent.layer.closeAll();
    }
-   
-   function savePtableSort(){
-	   var pid = $("#pid").val();
+
+   function saveSort() {
+
+	   layui.use('layer', function() {
+		   var layer = layui.layer;
+
+		   let groupMembers = [];
+
+		   // 查播表组数据，填充groupId 和 groupMembers
+		   $.ajax({
+			   type: "POST",
+			   async: false,
+			   url: "<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers.do",
+			   data: {
+				   "pid": $("#pid").val(),
+				   "checkKind": 0,
+			   },
+			   traditional: true,
+			   dataType: "json",
+			   success: function (msg) {
+				   groupMembers = msg;
+				   console.log(groupMembers);
+				   //layer.msg(groupMembers[0].pid);
+
+				   let content = '<br>以下为一次排播的多天播表： </br>';
+				   for (let member in groupMembers) {
+					   content += ('<br>播表名: ' + groupMembers[member].ptableName + ',播放日期：' + timestampToTime(groupMembers[member].playDate) + '</br>');
+				   }
+				   content += "<br><strong>是否应用修改到以上播表?</strong></br>";
+
+				   // 没有其他的只有自己
+				   if (groupMembers.length == 1) {
+					   requestPtableSort($("#pid").val());
+					   return;
+				   }
+				   layer.confirm(content, {
+					   btn: ['是', '否'], //按钮
+					   area: ['500px', '600px']
+				   }, function () {
+					   // 是
+					   for (let member in groupMembers) {
+						   requestPtableSort(groupMembers[member].pid);
+					   }
+				   }, function () {
+					   // 否
+					   requestPtableSort($("#pid").val());
+				   });
+			   }
+
+		   });
+	   });
+
+
+   }
+
+
+   function requestPtableSort(pid){
 	   $.ajax({
 			type: "POST",
 			url: "<%=request.getContextPath()%>/ptable/modifyPlayTableNumFromaddPtable.do",
@@ -127,6 +181,20 @@ Sortable.create(document.getElementById('foo'), {
 			}
 		});
    }
+
+function timestampToTime(timestamp) {
+	var date = new Date(timestamp);
+	var Y = date.getFullYear() + '-';
+	var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+	var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
+	var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
+	var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
+	var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
+	return Y+M+D;
+}
+
+
+
 </script>
 </body>
 </html>
