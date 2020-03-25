@@ -81,8 +81,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import io.netty.channel.ChannelFuture;
 
-import static org.south.netty.PlayTableTask.*;
-
 /**
  * @author: yezilong
  */
@@ -525,6 +523,7 @@ public class PtableController {
 		List<Terminal> list = commonService.getAllTerminal();
 		List<Period> listPeriod = commonService.getAllPeriod();
 		List<User> listUser = commonService.getAllUser();
+		String whereSuffix = " and insertFlag != 1";
 		if (!"".equals(startDate) && !"".equals(endDate)) {
 			Date d1 = TimeUtil.translateDate(startDate);
 			Date d2 = TimeUtil.translateDate(endDate);
@@ -539,7 +538,7 @@ public class PtableController {
 		}
 		try {
 			Page pageD = commonService.pageSearchPtableByTemplateHQL(startDate, endDate, param, page, limit,
-					"PlayTable", "play_date desc", null);
+					"PlayTable", "play_date desc", whereSuffix);
 			List<PlayTable> listPtable = pageD.getList();
 			List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
 			PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
@@ -1346,7 +1345,6 @@ public class PtableController {
 		} else {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 			// System.out.println(pid);
-
 			ptableService.modifyPlayTableNum(ppid, sortNum);
 			// ptableService.updateTableStatus(ppid);
 			// int num = Integer.parseInt((String)
