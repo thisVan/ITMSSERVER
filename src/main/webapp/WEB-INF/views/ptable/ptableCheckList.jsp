@@ -475,7 +475,7 @@
 		});
 	}
 	
-	setInterval(init, 10000);
+	setInterval(init, 30 * 60 * 1000);
 </script>
 </head>
 <body>

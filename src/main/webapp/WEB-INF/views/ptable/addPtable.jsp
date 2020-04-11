@@ -241,70 +241,112 @@
 					});
 
 				}
+
+				// 播表节目删除与复制
 				if (obj.event === 'copy') {
 					layer.confirm('是否复制「 '+obj.data.materialName+' 」？', function(index) {
-						layer.close(index);
-						$.ajax({
-							type: "POST",
-							url: "<%=request.getContextPath()%>/ptable/copyOneToPlayFile.do",
-							data: {
-								"ppid": pid,
-								"mmid": mid,
-								"num": itemnum
-							},
-							traditional: true,
-							dataType: "json",
-							success: function (msg) {
-								var value = msg.toString();
-								if (value == "true") {
-									layer.msg('复制成功', {
-										icon: 6,
-										time: 1500
-									});
-									initTable();
-									reloadhtml();
-								} else {
-									layer.msg(msg.toString(), {
-										icon: 5,
-										time: 1500
-									});
-								}
-							}
-						});
 
-					});
-				} else if (obj.event === 'del') {
-					layer.confirm('是否删除「 '+obj.data.materialName+' 」？', function(index) {
-
-						layer.close(index);
-						//向服务端发送删除指令
+						// 播表组复制
 						$.ajax({
 							type : "POST",
-							url : "<%=request.getContextPath()%>/ptable/delOneFromPlayFile.do",
+							async: false,
+							url : "<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers.do",
 							data : {
-								"ppid" : pid,
-								"mmid" : mid,
-								"num" : objnumber
+								"pid" : pid,
+								"checkKind" : 0,
 							},
 							traditional : true,
 							dataType : "json",
 							success : function(msg) {
-								var value = msg.toString();
-								if (value == "true") {
-									layer.msg('删除成功', {
-										icon : 6,
-										time : 1500
-									});
-									initTable();
-									reloadhtml();
-								} else {
-									layer.msg(msg.toString(), {
-										icon : 5,
-										time : 1500
-									});
+								groupMembers = msg;
+								console.log(groupMembers);
+								//layer.msg(groupMembers[0].pid);
+
+								let content = '<br>以下为一次排播的多天播表： </br>';
+								for (let member in groupMembers){
+									content += ('<br>播表名: ' + groupMembers[member].ptableName + ',播放日期：' + timestampToTime(groupMembers[member].playDate) + '</br>');
 								}
+								content += "<br><strong>是否一起修改?</strong></br>";
+
+								// 一个人一组，直接搞定
+								if (groupMembers.length == 1){
+									requestCopyOneToFile(pid,mid,itemnum);
+									return;
+								}
+
+								layer.confirm(content, {
+									btn: ['是','否'], //按钮
+									area:['500px','600px']
+								}, function(){
+
+									// 是
+									let accessIds= [];
+									for (let member in groupMembers){
+										requestCopyOneToFile(groupMembers[member].pid,mid,itemnum);
+									}
+
+
+								}, function(){
+									// 否
+									requestCopyOneToFile(pid,mid,itemnum);
+								});
 							}
 						});
+
+
+						layer.close(index);
+					});
+				} else if (obj.event === 'del') {
+					layer.confirm('是否删除「 '+obj.data.materialName+' 」？', function(index) {
+
+						// 播表组删除
+						$.ajax({
+							type : "POST",
+							async: false,
+							url : "<%=request.getContextPath()%>/ptable/getPtableGroupAndMembers.do",
+							data : {
+								"pid" : pid,
+								"checkKind" : 0,
+							},
+							traditional : true,
+							dataType : "json",
+							success : function(msg) {
+								groupMembers = msg;
+								console.log(groupMembers);
+								//layer.msg(groupMembers[0].pid);
+
+								let content = '<br>以下为一次排播的多天播表： </br>';
+								for (let member in groupMembers){
+									content += ('<br>播表名: ' + groupMembers[member].ptableName + ',播放日期：' + timestampToTime(groupMembers[member].playDate) + '</br>');
+								}
+								content += "<br><strong>是否一起修改?</strong></br>";
+
+								// 一个人一组，直接搞定
+								if (groupMembers.length == 1){
+									requestDeleteOneFromFile(pid,mid,objnumber);
+									return;
+								}
+
+								layer.confirm(content, {
+									btn: ['是','否'], //按钮
+									area:['500px','600px']
+								}, function(){
+									// 是
+									for (let member in groupMembers){
+										requestDeleteOneFromFile(pid,mid,objnumber);
+									}
+
+
+								}, function(){
+									// 否
+									requestDeleteOneFromFile(pid,mid,objnumber);
+								});
+							}
+						});
+
+						layer.close(index);
+
+
 					});
 
 				}
@@ -312,7 +354,80 @@
 			});
 		});
 	}
-	
+
+	function  requestCopyOneToFile(pid,mid,itemnum) {
+		$.ajax({
+			type: "POST",
+			url: "<%=request.getContextPath()%>/ptable/copyOneToPlayFile.do",
+			data: {
+				"ppid": pid,
+				"mmid": mid,
+				"num": itemnum
+			},
+			traditional: true,
+			dataType: "json",
+			success: function (msg) {
+				var value = msg.toString();
+				if (value == "true") {
+					layer.msg('复制成功', {
+						icon: 6,
+						time: 1500
+					});
+					initTable();
+					reloadhtml();
+				} else {
+					layer.msg(msg.toString(), {
+						icon: 5,
+						time: 1500
+					});
+				}
+			}
+		});
+	}
+
+	function requestDeleteOneFromFile(pid,mid,objnumber) {
+		$.ajax({
+			type : "POST",
+			url : "<%=request.getContextPath()%>/ptable/delOneFromPlayFile.do",
+			data : {
+				"ppid" : pid,
+				"mmid" : mid,
+				"num" : objnumber
+			},
+			traditional : true,
+			dataType : "json",
+			success : function(msg) {
+				var value = msg.toString();
+				if (value == "true") {
+					layer.msg('删除成功', {
+						icon : 6,
+						time : 1500
+					});
+					initTable();
+					reloadhtml();
+				} else {
+					layer.msg(msg.toString(), {
+						icon : 5,
+						time : 1500
+					});
+				}
+			}
+		});
+
+	}
+
+	function timestampToTime(timestamp) {
+		var date = new Date(timestamp);
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
+		var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
+		var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
+		var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
+		return Y+M+D;
+	}
+
+
 	function reloadhtml(){
 		window.location.reload();
 	}
@@ -349,36 +464,7 @@
     		content: contentStr //注意，如果str是object，那么需要字符拼接。
   			});
 		});
-<%-- 		console.log($("#table1")); 
-		var materialsTable = "";
-		layer.open({
-			title : '稿件列表',
-			type : 2,
-			area : [ '48%', '100%' ],
-			content : $("#show-distinct-material").html(),
-			success: function(layero, index){
-                layui.use('table', function(){
-                    var table = layui.table;
-                    var cols =  [[ //标题栏
-                        {field:'num', title: '序号',align: 'center'},
-                        {field:'name', title: '稿件名',align: 'center'},
-                        {field:'frequncy', title: '频次',align: 'center'},
-                        {field:'duration', title: '时长',align: 'center'}
-                    ]]
-                    //展示已知数据
-                    table.render({
-                        elem: '#view-meterials-table',
-                        url: '<%=request.getContextPath()%>/ptable/getDistinctMaterialsByPidSortByName.do?pid='+pid,
-                        size:'sm',
-                        cols:cols,
-                        even: true,
-                        height: '300',
-                        page: true //是否显示分页
-                    });
 
-                });
-            }
-		}); --%>
 	}
 
 	function updateSort() {
@@ -455,8 +541,8 @@
 			document.getElementById("showScreenShot").innerHTML = "";
 			document.getElementById("showScreenShot").appendChild(canvas);
 		});
-	
-		/* 	
+
+		/*
 		html2canvas(document.querySelector("#playTableMaterialsDiv"), {
 	        onrendered: function(canvas) {
 	            //document.getElementById("showScreenShot").innerHTML = "";
@@ -465,7 +551,7 @@
 	        // height: 300
 	        ignoreElements: function() {
 	        	document.querySelector(".ayui-table-tool-temp") => false
-	        } 
+	        }
 	    });*/
 
 		layer.open({

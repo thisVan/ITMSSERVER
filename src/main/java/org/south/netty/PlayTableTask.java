@@ -280,14 +280,11 @@ public class PlayTableTask extends TimerTask {
 				System.out.println("Succeeded connecting to the Database!");
 			// statement用来执行SQL语句
 			Statement statement = conn.createStatement();
-
-			ResultSet rs = null;
 			for (int i = 0 ; i < TableAutoGenerate.playTableAutoIdList.size() ;i++){
 				long temp = Long.parseLong(TableAutoGenerate.playTableAutoIdList.get(i));
 				String sql = "insert into play_table_group(play_table_group_id, pid) values ("+groupId+", " + temp+")";
 				statement.execute(sql);
 			}
-			rs.close();
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Sorry,can`t find the Driver!");
