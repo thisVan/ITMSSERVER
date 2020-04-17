@@ -135,4 +135,7 @@ public interface CommonDao {
 	//7.15
     boolean delOneFromPlayFile(String pid, String mid, int num);
 
+
+    int getCountByIP(String ip);
+
 }

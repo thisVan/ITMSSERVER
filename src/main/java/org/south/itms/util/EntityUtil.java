@@ -157,7 +157,7 @@ public class EntityUtil {
 		for(User u : listU) {
 			UserDto dto = new UserDto(
 					u.getUserId(), u.getUserName(), u.getUserAccount(), u.getUserPassword(),
-					u.getCellphone(), u.getEmail(), u.getState(), u.getDeleted(), u.getRole().getRoleName()
+					u.getCellphone(), u.getEmail(), u.getState(), u.getDeleted(), u.getRole().getRoleName(),u.getRemoteSwitch()
 					);
 			list.add(dto);
 		}

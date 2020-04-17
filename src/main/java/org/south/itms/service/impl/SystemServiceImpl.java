@@ -150,8 +150,13 @@ public class SystemServiceImpl implements SystemService {
 		for(String id : ids) {
 			userDao.delete(id);
 		}
-	}  
-	
+	}
+
+	@Transactional
+	@Override
+	public void updateRemoteSwitch(String userAccount , int remoteSwitch){
+		userDao.updateRemoteSwitch(userAccount,remoteSwitch);
+	}
 	
 	@Transactional
 	@Override

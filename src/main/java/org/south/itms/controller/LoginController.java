@@ -1,11 +1,14 @@
 package org.south.itms.controller;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
+import org.south.itms.dao.impl.CommonDao;
 import org.south.itms.dao.impl.ResourceDao;
 import org.south.itms.dao.impl.UserDao;
 import org.south.itms.dto.Result;
@@ -15,6 +18,7 @@ import org.south.itms.util.StringUtil;
 import org.south.itms.util.UserLoginListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +37,8 @@ public class LoginController {
 	  @Autowired
 	  private ResourceDao resourceDao;
 	
+	  @Autowired
+	  private CommonDao commonDao;
 	  
 	  
 	  @RequestMapping
@@ -51,7 +57,25 @@ public class LoginController {
 	  
 	  @RequestMapping(value = "/loginIn")
 	  @ResponseBody
-	  public Result loginIn(String userAccount, String userPassword, HttpSession session){
+	  public Result loginIn(String userAccount, String userPassword, HttpSession session , HttpServletRequest request){
+
+
+	  	  // modify by bobo by 2020/4/11
+		  // 远程登录模块
+
+		  // 检查是否允许远程登录，不允许则看ip是否允许
+		  if (!checkCanRemoteLogin(userAccount)){
+		  	  System.out.println("该用户已经禁止远程登录，将查看是否是允许的ip");
+
+		  	  // 看ip是否是允许的
+		  	  if(!checkAllowIPValid(request)){
+				  return new Result("登录失败，该用户不允许远程使用，请在办公室使用");
+			  }
+		  }
+
+
+
+
 		  System.out.println(userAccount + "==" + userPassword);
 
 		  if(StringUtil.isEmpty(userPassword) || StringUtil.isEmpty(userAccount)) {
@@ -165,8 +189,52 @@ public class LoginController {
 	    	  return new Result("用户名或密码错误，当前账户还剩" + canTryLoginTimes + "次尝试机会");
 	      }  
 	  }
-	  
-	  @RequestMapping(value="/reqLogin", method=RequestMethod.POST)  
+
+
+	  // 检测远程登录权限
+	private boolean checkCanRemoteLogin(String userAccount) {
+
+		User user = userDao.getUserByUserAccount(userAccount);
+
+		System.out.println(userAccount+ "remoteSwitch: " + user.getRemoteSwitch());
+
+		return (user.getRemoteSwitch() != 0);
+	}
+
+
+	// 允许的IP检测
+	private boolean checkAllowIPValid(HttpServletRequest request) {
+
+	  	// 获取源ip
+	  	String ip = getSourceIP(request);
+
+	  	System.out.println("source ip : " + ip);
+
+	  	// 是否存在该允许ip
+		return commonDao.getCountByIP(ip) > 0;
+	}
+
+	private String getSourceIP(HttpServletRequest request) {
+		String ip = request.getHeader("X-Forwarded-For");
+		if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+			// 多次反向代理后会有多个ip值，第一个ip才是真实ip
+			int index = ip.indexOf(",");
+			if (index != -1) {
+				return ip.substring(0, index);
+			} else {
+				return ip;
+			}
+		}
+		ip = request.getHeader("X-Real-IP");
+		if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+			return ip;
+		}
+		return request.getRemoteAddr();
+	}
+
+
+
+	@RequestMapping(value="/reqLogin", method=RequestMethod.POST)
 	  public @ResponseBody Result reqLogin(User reqUser, HttpSession session) {
 		  if(reqUser == null || StringUtil.isEmpty(reqUser.getUserAccount()) || StringUtil.isEmpty(reqUser.getUserPassword())) {
 			  return new Result("登录失败, 请输入用户名和密码");

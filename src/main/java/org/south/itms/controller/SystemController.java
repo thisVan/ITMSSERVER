@@ -37,7 +37,9 @@ import org.south.itms.util.SqlUtil;
 import org.south.itms.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -176,11 +178,21 @@ public class SystemController {
 	  }
 
 
+	@ResponseBody
+	@RequestMapping("/user/updateRemoteSwitch")
+	public void updateRemoteSwitch(String userAccount,int remoteSwitch){
+	  	System.out.println(userAccount + remoteSwitch);
+	  	systemService.updateRemoteSwitch(userAccount,remoteSwitch);
+	  	return;
+	}
+
+
 	@RequestMapping("/user/userList")  
 	  public String userList(){  
 	     return "system/user/userList";
 	  }
-	  
+
+
 	  
 	  @RequestMapping(value="/resource/addResource")  
 	  public @ResponseBody Result addResource(Resource resource) {
@@ -375,6 +387,7 @@ public class SystemController {
 			   pageResult.setCode(0);
 			   pageResult.setMsg("");
 			   pageResult.setData(list);
+			  System.out.println(list);
 			   return pageResult;
 		   } catch(Exception e) {
 			   e.printStackTrace();

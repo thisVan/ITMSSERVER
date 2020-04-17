@@ -27,6 +27,7 @@ public class User implements java.io.Serializable{
 	private String email;
 	private String state;
 	private int deleted;
+	private int remoteSwitch;
     //一对一的关联
 	private Role role;
 
@@ -102,6 +103,15 @@ public class User implements java.io.Serializable{
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	@Column(name = "remote_switch")
+	public int getRemoteSwitch() {
+		return remoteSwitch;
+	}
+
+	public void setRemoteSwitch(int remoteSwitch) {
+		this.remoteSwitch = remoteSwitch;
 	}
 
 	@OneToOne  

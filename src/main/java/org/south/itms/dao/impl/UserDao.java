@@ -33,5 +33,8 @@ public interface UserDao {
 	void updateAuthor(String roleId, String authorityList);
 
 
+	User getUserByUserAccount(String userAccount);
+
+	void updateRemoteSwitch(String userAccount, int remoteSwitch);
 
 }

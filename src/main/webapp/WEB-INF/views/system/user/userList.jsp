@@ -9,6 +9,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+
+
    <script type="text/javascript" defer="defer">
    $(function(){
 	   init();
@@ -37,9 +39,23 @@
 		   if(value != "") {
 			   params = params + "userName" + ",like,%" + value + "%,";
 		   }
-    	  
-    	  layui.use('table', function(){
+
+		  var statusTpl = function (d) { // 参数d是当前行数据
+			  // if else判断
+			  if (d.remoteSwitch == 1) {
+
+				  return '<input lay-filter="remoteSwitch" type="checkbox" lay-skin="switch" lay-text="启用|禁用" checked> ';
+			  } else {
+
+				  return '<input lay-filter="remoteSwitch" type="checkbox" lay-skin="switch" lay-text="启用|禁用"> ';
+			  }
+		  };
+
+
+		  layui.use(['form', 'table','layer'], function(){
     		  var table = layui.table;
+			  var form = layui.form;
+			  var layer = layui.layer;
     		  table.render({
     		    elem: '#table1'
     		    ,id: 'flagOne'
@@ -57,6 +73,7 @@
       		     ,{field:'cellphone',width:200, event: 'set5', title: '电话', sort: true}
       		     ,{field:'email',width:200, event: 'set6', title: '邮箱', sort: true}
       		     ,{field:'state',width:100, event: 'set7', title: '状态', sort: true}
+      		     ,{field :'remoteSwitch', title :'远程登录' , minWidth : 100, templet : statusTpl, unresize : true}
       		    ]]
     		    ,page: true
     		    ,where: {"param": params}
@@ -64,8 +81,46 @@
     		    	  //document.getElementById("table1").remove();
     		      }
     		  });
-    		  
-    		  var active = {
+
+			  form.on('switch(remoteSwitch)', function(data){
+
+				  // 获取当前控件
+				  var selectIfKey=data.othis;
+				  // 获取当前所在行
+				  var parentTr = selectIfKey.parents("tr");
+				  //eq(2): 代表的是表头字段位置    .layui-table-cell: 这个元素是我找表格div找出来的..
+				  var userAccount = $(parentTr).find("td:eq(1)").find(".layui-table-cell").text();
+
+				  if(data.elem.checked == true){
+					  console.log("启用");
+				     $.ajax({
+				  	   type: "POST",
+				  	   url: '<%=request.getContextPath()%>/system/user/updateRemoteSwitch.do',
+				  	   data:{
+				  		   "userAccount": userAccount,
+				  		   "remoteSwitch" : 1
+				  	   },
+				  	   success : function(data){
+				  	   }
+				     });
+
+				  }else{
+					console.log("禁用")
+				     $.ajax({
+				  	   type: "POST",
+				  	   url: '<%=request.getContextPath()%>/system/user/updateRemoteSwitch.do',
+				  	   data: {
+						   "userAccount": userAccount,
+						   "remoteSwitch": 0
+					   },
+				  	   success : function(data){
+				  	   }
+				     });
+				  }
+			  });
+
+
+			  var active = {
     				  getDeleteData: function(){ //获取选中数据
     				      var checkStatus = table.checkStatus('flagOne')
     				      ,data = checkStatus.data;
@@ -167,6 +222,8 @@
 
     		});
       }
+
+
       
       function myTrim(x) {
     	    return x.replace(/^\s+|\s+$/gm,'');
@@ -176,7 +233,22 @@
       function refresh() {
         init();
       }
-      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    </script>
    
 </head>
@@ -252,5 +324,7 @@
 		  var form = layui.form;
 		});
 	</script>
+
+
 </body>
 </html>

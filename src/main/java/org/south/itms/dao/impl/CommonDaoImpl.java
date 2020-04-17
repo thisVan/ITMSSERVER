@@ -1239,4 +1239,27 @@ public class CommonDaoImpl implements CommonDao {
 		return new Page(currentPage, totalPage, pageSize, totalRecord, list);
 	}
 
+
+
+	@Override
+	public int getCountByIP(String ip) {
+		Session session = this.getCurrentSession();
+
+		Object count = null;
+		int result = 0;
+		try{
+			String sql = "select count(*) from allow_ip aip where aip.ip =:ip";
+			count = session.createNativeQuery(sql).setParameter("ip", ip).uniqueResult();
+			result = Integer.valueOf(count.toString());
+
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
+		System.out.println(count);
+		return result;
+	}
+
+
 }

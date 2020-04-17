@@ -16,6 +16,7 @@ import org.south.itms.util.SqlUpdate;
 import org.south.itms.util.TreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: yezilong
@@ -144,6 +145,13 @@ public class UserDaoImpl implements UserDao{
 	}
 
 	@Override
+	public User getUserByUserAccount(String userAccount) {
+		String hql = "from User where userAccount=:userAccount and deleted = 0";
+		User user =  (User) this.getCurrentSession().createQuery(hql).setParameter("userAccount", userAccount).uniqueResult();
+		return user;
+	}
+
+	@Override
 	public String getuserNameByid(String id) {
 		String hql = "from User where userId=:userId and deleted = 0";
 		User user =  (User) this.getCurrentSession().createQuery(hql).setParameter("userId", id).uniqueResult();
@@ -155,5 +163,19 @@ public class UserDaoImpl implements UserDao{
 		String hql = "from User where userId=:userId and deleted = 0";
 		User user =  (User) this.getCurrentSession().createQuery(hql).setParameter("userId", id).uniqueResult();
 		return user;
+	}
+
+
+	@Override
+	public void updateRemoteSwitch(String userAccount , int remoteSwitch){
+		try{
+			String hql = "update User set remoteSwitch = :remoteSwitch where userAccount=:userAccount";
+			this.getCurrentSession().createQuery(hql).setParameter("remoteSwitch", remoteSwitch).setParameter("userAccount",userAccount).executeUpdate();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return;
 	}
 }

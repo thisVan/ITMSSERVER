@@ -41,5 +41,7 @@ public interface SystemService {
 	String[] saveTerminalPowerUrl(String roleId, String[] urls);
 
 	boolean checkPower(List<Resource> resources, String[] urls);
+
+	void updateRemoteSwitch(String userAccount , int remoteSwitch);
  
 }  

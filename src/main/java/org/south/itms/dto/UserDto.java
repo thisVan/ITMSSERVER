@@ -17,9 +17,15 @@ public class UserDto {
 	
 	private String roleName;
 
+
+
+	private int remoteSwitch;
+
 	public String getUserId() {
 		return userId;
 	}
+
+
 
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -89,8 +95,16 @@ public class UserDto {
 		this.roleName = roleName;
 	}
 
+	public int getRemoteSwitch() {
+		return remoteSwitch;
+	}
+
+	public void setRemoteSwitch(int remoteSwitch) {
+		this.remoteSwitch = remoteSwitch;
+	}
+
 	public UserDto(String userId, String userName, String userAccount, String userPassword, String cellphone,
-			String email, String state, int deleted, String roleName) {
+			String email, String state, int deleted, String roleName,int remoteSwitch) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -101,6 +115,7 @@ public class UserDto {
 		this.state = state;
 		this.deleted = deleted;
 		this.roleName = roleName;
+		this.remoteSwitch = remoteSwitch;
 	}
 
 	public UserDto() {
@@ -111,7 +126,7 @@ public class UserDto {
 	public String toString() {
 		return "UserDto [userId=" + userId + ", userName=" + userName + ", userAccount=" + userAccount
 				+ ", userPassword=" + userPassword + ", cellphone=" + cellphone + ", email=" + email + ", state="
-				+ state + ", deleted=" + deleted + ", roleName=" + roleName + "]";
+				+ state + ", deleted=" + deleted + ", roleName=" + roleName + ", remoteSwitch=" + remoteSwitch +"]";
 	}
 	
 	
