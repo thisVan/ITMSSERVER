@@ -97,7 +97,7 @@ public class EntityUtil {
 			String periodName = checkPeriod(pt.getPeriodId(), listPeriod, 0);
 			String periodTime = checkPeriod(pt.getPeriodId(), listPeriod, 1);
 			String userName = checkName(pt.getUserId(), listUser);
-			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(), pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(), pt.getCreateTime(),pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime(), pt.getUnAccessReason());
+			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(), pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(), pt.getCreateTime(),pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime(), pt.getUnAccessReason(), pt.getPeriodSName(), pt.getStartInterval(), pt.getEndInterval());
 			ptd.setTerminalName(terminalName);
 			ptd.setPeriodName(periodName);
 			ptd.setPeriodTime(periodTime);
@@ -409,7 +409,7 @@ public class EntityUtil {
 			String userName = checkName(pt.getUserId(), listUser);
 			PtableDto ptd = new PtableDto(pt.getTerminalId(),pt.getPid(), pt.getStatusId(), pt.getPlayTotalTime(),
 					pt.getPlayDate(), pt.getScreenRate(), pt.getAllTime(), pt.getPtableName(),
-					pt.getCreateTime(), pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime(), pt.getUnAccessReason());
+					pt.getCreateTime(), pt.getModifyTime(), pt.getMin(), pt.getInsertFlag(), pt.getState(), pt.getCheckName(), pt.getCheckTime(), pt.getCheckSecondName(), pt.getCheckSecondTime(), pt.getUnAccessReason(), pt.getPeriodSName(), pt.getStartInterval(), pt.getEndInterval());
 			ptd.setTerminalName(terminalName);
 			ptd.setPeriodName(periodName);
 			ptd.setPeriodTime(periodTime);

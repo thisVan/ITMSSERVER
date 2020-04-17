@@ -96,9 +96,10 @@
 						title : '时段范围',
 						sort : true,
 						templet : function(d) {
-							var periodName = d.periodName;
-							var periodTime = d.periodTime;
-							return periodName + " " + periodTime;
+							// var periodName = d.periodName;
+							// var periodTime = d.periodTime;
+							// return periodName + " " + periodTime;
+							return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
 						}
 					}
 					, {

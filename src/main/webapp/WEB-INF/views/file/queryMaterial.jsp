@@ -69,13 +69,14 @@
 			   params = params +"terminal_id" + ",=,"+terminalvalue+",";
 		   }
 		   if(timePeriodValue==""){
-			   timePeriodValue = 30;
+			   timePeriodValue = 0;
 		   }
 		   
 		   params = params + "statusId" + ",=," + "3" + ","+"file_type"+",=,"+"vedio";
     	  layui.use('table', function(){
     		  var table = layui.table;
     		  table.render({
+				  autoSort: false,
     		    elem: '#table1'
     		    ,id: 'flagOne'
     		    ,url:'<%=request.getContextPath()%>/material/getAllMaterialInfo2.do'
@@ -84,9 +85,10 @@
     		    //,cellMinWidth: 120
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
-    		      {type: 'radio', event: 'set1', fixed: true}
+    		      {type: 'checkbox', event: 'set1', fixed: true}
+    		      ,{field:'terminalId',width:200, event: 'set2', title: '稿件名', fixed: true, sort: true,hide:true}
     		      ,{field:'materialName',width:200, event: 'set2', title: '稿件名', fixed: true, sort: true}
-    		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: true
+    		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: false
     		    	  ,templet: function(d){
     		    		  var name = d.terminal;
     		    		  return '<span style="color: #1E9FFF;">' + name.terminalName + '</span>';
@@ -167,50 +169,102 @@
     							
     					    }
     					});
-    			  }else if(obj.event === 'checkMaterial'){
-    				  //var index = parent.layer.getFrameIndex(window.name);
-    				 /*  var mainIframeName=getQueryString("parentName");
-    				  //console.log(mid);
-    				  //console.log(materialName);
-    				  var ifrc=window.parent.frames[mainIframeName];
-    				  var winc=ifrc.window;
-    				  winc.document.getElementById("mid").value=mid;
-    				  winc.document.getElementById("materialName").value=materialName;
-    				  winc.document.getElementById("terminalId").value=tmpdata.terminal.terminalId;
-    				   */
-    				  var index=layer.open({
-    						title:'排播稿件',
-    						type:2,
-    						area:['70%','80%'],
-    						//shade:false,
-    						content:'<%=request.getContextPath()%>/views/ajaxViews/material-broad.jsp',
-    						//zIndex: layer.zIndex, //重点1
-    						success: function(layero, index){
-    							var body = layer.getChildFrame('body',index);//建立父子联系
-    				            var iframeWin = window[layero.find('iframe')[0]['name']];
-    				            // console.log(arr); //得到iframe页的body内容
-    				            // console.log(body.find('input'));
-    				            var inputList = body.find('input');
-    				            //var labelList = body.find('label');
-    				            //$(inputList[0]).val(mmid);
-    				            //$(inputList[1]).val(materialName);
-    				            body.find('#mid').val(mid);
-    				            body.find('#materialName').val(materialName);
-    				            body.find('#terminalId').val(tmpdata.terminal.terminalId);
-    				            layer.iframeAuto(index);
-    				            //layer.setTop(layero); //重点2
-    						} 
-    				  });
-    				  /* window.parent.$("#layui-layer-iframe"+idx).contents().find("mid").val(mid);
+    			  }else if(obj.event === 'checkMaterial') {
+					  //var index = parent.layer.getFrameIndex(window.name);
+					  /*  var mainIframeName=getQueryString("parentName");
+					   //console.log(mid);
+					   //console.log(materialName);
+					   var ifrc=window.parent.frames[mainIframeName];
+					   var winc=ifrc.window;
+					   winc.document.getElementById("mid").value=mid;
+					   winc.document.getElementById("materialName").value=materialName;
+					   winc.document.getElementById("terminalId").value=tmpdata.terminal.terminalId;
+						*/
+					  var index = layer.open({
+						  title: '排播稿件',
+						  type: 2,
+						  area: ['70%', '80%'],
+						  //shade:false,
+						  content: '<%=request.getContextPath()%>/views/ajaxViews/material-broad.jsp',
+						  //zIndex: layer.zIndex, //重点1
+						  success: function (layero, index) {
+							  var body = layer.getChildFrame('body', index);//建立父子联系
+							  var iframeWin = window[layero.find('iframe')[0]['name']];
+							  // console.log(arr); //得到iframe页的body内容
+							  // console.log(body.find('input'));
+							  var inputList = body.find('input');
+							  //var labelList = body.find('label');
+							  //$(inputList[0]).val(mmid);
+							  //$(inputList[1]).val(materialName);
+							  body.find('#mid').val(mid);
+							  body.find('#materialName').val(materialName);
+							  body.find('#terminalId').val(tmpdata.terminal.terminalId);
+							  layer.iframeAuto(index);
+							  //layer.setTop(layero); //重点2
+						  }
+					  });
+					  /* window.parent.$("#layui-layer-iframe"+idx).contents().find("mid").val(mid);
     				  window.parent.$("#layui-layer-iframe"+idx).contents().find("materialName").val(materialName);
     				  window.parent.$("#layui-layer-iframe"+idx).contents().find("terminalId").val(tmpdata.terminal.terminalId); */
-    				  //parent.$('#materialName').val(materialName);
-    				  //parent.$('#terminalId').val(tmpdata.terminal.terminalId);
-    				  //parent.layer.close(index);
-    			  }
+					  //parent.$('#materialName').val(materialName);
+					  //parent.$('#terminalId').val(tmpdata.terminal.terminalId);
+					  //parent.layer.close(index);
+				  }
     		  });
     		});
       }
+
+      function getBroadData(){
+		  var table=layui.table;
+		  var checkStatus = table.checkStatus('flagOne')
+				  ,data = checkStatus.data;
+		  var mids = [];
+		  for(var i = 0; i < data.length; i++){
+			  mids.push(data[i].mid);
+		  }
+		  if(mids.length == 0){
+			  layer.msg('请选择要排播的稿件!',{icon:6,time:1500});
+			  return ;
+		  }
+		  var materialName ="";
+		  for(var i = 0; i < data.length; i++){
+		  	if(i==0){
+				materialName += data[i].materialName;
+			}else{
+				materialName+= "," + data[i].materialName;
+			}
+		  }
+		  for(var i = 1; i < data.length; i++){
+			  if(data[i].terminal.terminalId != data[0].terminal.terminalId){
+				  layer.msg('请选择相同终端的稿件!',{icon:6,time:1500});
+				  return ;
+			  }
+		  }
+		  //批量排播
+		  var index=layer.open({
+			  title:'排播稿件',
+			  type:2,
+			  area:['70%','80%'],
+			  //shade:false,
+			  content:'<%=request.getContextPath()%>/views/ajaxViews/material-broad2.jsp',
+			  //zIndex: layer.zIndex, //重点1
+			  success: function(layero, index){
+				  var body = layer.getChildFrame('body',index);//建立父子联系
+				  var iframeWin = window[layero.find('iframe')[0]['name']];
+				  // console.log(arr); //得到iframe页的body内容
+				  // console.log(body.find('input'));
+				  var inputList = body.find('input');
+				  //var labelList = body.find('label');
+				  //$(inputList[0]).val(mmid);
+				  //$(inputList[1]).val(materialName);
+				  body.find('#mid').val(mids);
+				  body.find('#materialName').val(materialName);
+				  body.find('#terminalId').val(data[0].terminal.terminalId);
+				  layer.iframeAuto(index);
+				  //layer.setTop(layero); //重点2
+			  }
+		  });
+	  }
       
       function myTrim(x) {
     	    return x.replace(/^\s+|\s+$/gm,'');
@@ -269,6 +323,13 @@
 								<div class="layui-inline">
 									<button class="layui-btn" type="button" onclick="init()">
 										<i class="layui-icon">&#xe615;</i>查询
+									</button>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<div class="layui-inline">
+									<button class="layui-btn" type="button" onclick="getBroadData()">
+										<i class="layui-icon"></i>批量排播
 									</button>
 								</div>
 							</div>

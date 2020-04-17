@@ -62,6 +62,13 @@ public class PtableDto {
 
 	private String unAccessReason;
 
+	private String periodSName;
+
+	private Time startInterval;
+
+	private Time endInterval;
+
+
 	public String getCheckName() {
 		return checkName;
 	}
@@ -261,7 +268,31 @@ public class PtableDto {
 	public void setEndTime(Time endTime) {
 		this.endTime = endTime;
 	}
-	
+
+	public String getPeriodSName() {
+		return periodSName;
+	}
+
+	public void setPeriodSName(String periodSName) {
+		this.periodSName = periodSName;
+	}
+
+	public Time getStartInterval() {
+		return startInterval;
+	}
+
+	public void setStartInterval(Time startInterval) {
+		this.startInterval = startInterval;
+	}
+
+	public Time getEndInterval() {
+		return endInterval;
+	}
+
+	public void setEndInterval(Time endInterval) {
+		this.endInterval = endInterval;
+	}
+
 	public String gettid() {
 		return tid;
 	}
@@ -275,7 +306,7 @@ public class PtableDto {
 	}
 
 	public PtableDto(String TerminalId,String pid, String statusId, String playTotalTime, Date playDate, String screenRate,
-			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state, String checkName, Date checkTime, String checkSecondName, Date checkSecondTime, String unAccessReason) {
+			String allTime, String ptableName, Date createTime, Date modifyTime, int min, int insertFlag, int state, String checkName, Date checkTime, String checkSecondName, Date checkSecondTime, String unAccessReason, String periodSName,Time startInterval, Time endInterval) {
 		super();
 		this.tid=TerminalId;
 		this.pid = pid;
@@ -295,6 +326,10 @@ public class PtableDto {
 		this.checkSecondName = checkSecondName;
 		this.checkSecondTime = checkSecondTime;
 		this.unAccessReason = unAccessReason;
+
+		this.periodSName = periodSName;
+		this.startInterval = startInterval;
+		this.endInterval = endInterval;
 	}
 
 	/*@Override
@@ -314,7 +349,9 @@ public class PtableDto {
 				+ ", allTime=" + allTime + ", ptableName=" + ptableName + ", createName=" + createName + ", createTime="
 				+ createTime + ", periodName=" + periodName + ", periodTime=" + periodTime + ", mark=" + mark
 				+ ", insertFlag=" + insertFlag + ", min=" + min + ", state=" + state + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", tid=" + tid + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason + "]";
+				+ ", endTime=" + endTime + ", tid=" + tid + ", checkName=" + checkName + ", checkTime=" + checkTime
+				+ ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason
+				+ ", periodSName=" + periodSName + ", startInterval=" + startInterval + ", endInterval=" + endInterval + "]";
 	}
 	
 

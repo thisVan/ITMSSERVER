@@ -515,7 +515,57 @@ public class PtableController {
 		out.flush();
 		out.close();
 	}
-
+	//包括插播
+	@RequestMapping(value = "/searchAllPtable")
+	public @ResponseBody PageResultData<PtableDto> searchAllPtable(String terminalId, String statusId, String startDate,
+																String endDate, int page, int limit) throws ParseException {
+		String[] param = initParam(terminalId, statusId);
+		List<Terminal> list = commonService.getAllTerminal();
+		List<Period> listPeriod = commonService.getAllPeriod();
+		List<User> listUser = commonService.getAllUser();
+		//String whereSuffix = " and insertFlag != 1";
+		if (!"".equals(startDate) && !"".equals(endDate)) {
+			Date d1 = TimeUtil.translateDate(startDate);
+			Date d2 = TimeUtil.translateDate(endDate);
+			if (!TimeUtil.dateValidate(d1, d2)) {
+				PageResultData<PtableDto> pageResult1 = new PageResultData<PtableDto>();
+				pageResult1.setCount(0);
+				pageResult1.setFail(1);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("时间前后有误!!");
+				return pageResult1;
+			}
+		}
+		try {
+			Page pageD = commonService.pageSearchPtableByTemplateHQL(startDate, endDate, param, page, limit,
+					"PlayTable", "play_date desc", null);
+			List<PlayTable> listPtable = pageD.getList();
+			List<PtableDto> listDto = EntityUtil.ptableDto(list, listPeriod, listUser, listPtable);
+			PageResultData<PtableDto> pageResult = new PageResultData<PtableDto>();
+			pageResult.setCount(pageD.getTotalRecord());
+			pageResult.setCode(0);
+			pageResult.setMsg("");
+			pageResult.setData(listDto);
+			return pageResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+			PageResultData<PtableDto> pageResult1 = new PageResultData<PtableDto>();
+			pageResult1.setCount(0);
+			pageResult1.setCode(0);
+			pageResult1.setFail(1);
+			pageResult1.setMsg("查询失败");
+			return pageResult1;
+		}
+		// try {
+		// Page page = commonService.pageSearchByTemplateHQL(params, currentPage,
+		// pageSize, "PlayTable", "pid asc", null);
+		// return new Result(true, page);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// return new Result("查询失败");
+		// }
+	}
+	//除去插播
 	@RequestMapping(value = "/searchPtable")
 	public @ResponseBody PageResultData<PtableDto> searchPtable(String terminalId, String statusId, String startDate,
 			String endDate, int page, int limit) throws ParseException {

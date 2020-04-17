@@ -85,9 +85,9 @@
                             , templet: function (d) {
                                 var flag = d.insertFlag;
                                 if (flag == '0') {
-                                    var periodName = d.periodName;
-                                    var periodTime = d.periodTime;
-                                    return periodName + " " + periodTime;
+                                    // var periodName = d.periodName;
+                                    // var periodTime = d.periodTime;
+                                    return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
                                 } else if (flag == '1') {
                                     var periodStart = d.startTime;
                                     var periodEnd = d.endTime;

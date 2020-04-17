@@ -61,6 +61,10 @@ public class PlayTable implements java.io.Serializable {
 
 	private String playTableGroupId;
 
+	private String periodSName;
+	private Time startInterval;
+	private Time endInterval;
+
 	@Id
 	@Column(name = "pid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -296,6 +300,29 @@ public class PlayTable implements java.io.Serializable {
 		this.unAccessReason = unAccessReason;
 	}
 
+	@Column(name = "period_name")
+	public String getPeriodSName() {
+		return periodSName;
+	}
+	public void setPeriodSName(String periodSName) {
+		this.periodSName = periodSName;
+	}
+
+	@Column(name = "start_interval")
+	public Time getStartInterval() {
+		return startInterval;
+	}
+	public void setStartInterval(Time startInterval) {
+		this.startInterval = startInterval;
+	}
+
+	@Column(name = "end_interval")
+	public Time getEndInterval() {
+		return endInterval;
+	}
+	public void setEndInterval(Time endInterval) {
+		this.endInterval = endInterval;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -303,7 +330,7 @@ public class PlayTable implements java.io.Serializable {
 	public String toString() {
 		return "PlayTable [pid=" + pid + ", playDate=" + playDate + ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", deleted=" + deleted
 				+ ", userId=" + userId + ", terminalId=" + terminalId + ", periodId=" + periodId + ", playTotalTime=" + playTotalTime + ", baseFrequency="
-				+ baseFrequency + ", statusId=" + statusId + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason + "]";
+				+ baseFrequency + ", statusId=" + statusId + ", checkName=" + checkName + ", checkTime=" + checkTime + ", checkSecondName=" + checkSecondName + ", checkSecondTime=" + checkSecondTime + ", unAccessReason=" + unAccessReason + ", periodSName=" + periodSName + ", startInterval=" + startInterval + ", endInterval=" + endInterval + "]";
 	}
 
 }

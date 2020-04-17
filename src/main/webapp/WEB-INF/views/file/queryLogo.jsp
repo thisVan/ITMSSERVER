@@ -88,7 +88,7 @@
       		      ,{fixed: 'right', width:140, event: 'set8', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"param": params}
+    		    ,where: {"param": params,"field":"materialName","order":"desc"}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		      }

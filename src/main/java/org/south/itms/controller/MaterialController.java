@@ -291,14 +291,18 @@ public class MaterialController {
 		System.out.println(param);
 		//String timePeriod=timePeriodValue;
 		//System.out.println(timePeriod);
-		Date date = new Date();
-		Calendar ca = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String timePeriod = null;
+		if(timePeriodValue != 0){
+			Date date = new Date();
+			Calendar ca = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		ca.add(Calendar.DATE, -timePeriodValue);//一个月内的订单
-		date = ca.getTime();
+			ca.add(Calendar.DATE, -timePeriodValue);//一个月内的订单
+			date = ca.getTime();
 
-		String timePeriod = " and upload_time >='"+ sdf.format(date) +"'";
+			timePeriod = " and upload_time >='"+ sdf.format(date) +"'";
+		}
+
 		//timePeriodValue = " and date_sub(curdate(),interval 30 day) <= date(upload_time)";
 		System.out.println(timePeriodValue);
 		String[] params = param.split(",");
@@ -1671,18 +1675,13 @@ public class MaterialController {
 					if (list.size() == 0) {
 						materialService.saveItem(item);
 						
-						
 						//modify by bobo 2019/11/4
 						//传出新增的节目来
 						session.setAttribute("newItem", item);
 						session.setAttribute("completeItemAdd",true);
-						
-						
+
 					} else if (list.size() > 0) {
-						
 						//直接加入,和复制一样
-						
-						
 						PrintWriter out = response.getWriter();
 						// 返回字符串，前台回显，稿件在选定时间段已经排播，最好返回json数据，提示信息也在后台做
 						out.print("true");
@@ -1698,6 +1697,114 @@ public class MaterialController {
 					out.print("true");
 					out.flush();
 					out.close();
+				}
+			} else {
+				PrintWriter out = response.getWriter();
+				out.print("1");
+				out.flush();
+				out.close();
+			}
+		}
+	}
+
+	@RequestMapping(value = "/addMaterial2")
+	public void addMaterial2(String frequency, String testDate, String periodId, String[] mid, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println(mid + " " + periodId + " " + frequency + " ");
+//		Material material = materialService.getById(mid);
+//		System.out.println("material=" + material);
+		String startTime = "";
+		String endTime = "";
+
+		//modify by bobo 2019 / 11/4
+		//处理添加失败的空指针异常
+		ServletRequestAttributes attr = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
+		HttpSession session=attr.getRequest().getSession(true);
+		session.setAttribute("completeItemAdd",false);
+		session.setAttribute("newItem", null);
+
+		if (!"".equals(testDate) && testDate != null) {
+			System.out.println("testdate: "+testDate);
+			String[] date = testDate.split(" / ");
+			startTime = date[0];
+			endTime = date[1];
+		}
+		if ("".equals(startTime) || "".equals(endTime)) {
+			PrintWriter out = response.getWriter();
+			out.print("1");
+			out.flush();
+			out.close();
+		} else {
+			Date d1 = TimeUtil.translateDate(startTime);
+			Date d2 = TimeUtil.translateDate(endTime);
+			if (TimeUtil.dateValidate(d1, d2)) {
+				String name = (String) request.getSession().getAttribute("userName");
+				if (name == null || "".equals(name) || request.getSession().getAttribute("userName") == null) {
+					PrintWriter out = response.getWriter();
+					out.print("2");
+					out.flush();
+					out.close();
+				} else {
+
+					for(int i=0;i<mid.length;i++){
+
+						Items item = new Items();
+
+						if ("".equals(frequency)) {
+							item.setFrequency(60);
+						} else {
+							item.setFrequency(Integer.parseInt(frequency));
+						}
+
+						item.setEndDate(d2);
+						item.setStartDate(d1);
+						item.setPeriodId(periodId);
+						item.setCreateName(name);
+						item.setCreateTime(new Timestamp(new Date().getTime()));
+						item.setDeleted(0);
+
+						Material material = materialService.getById(mid[i]);
+						System.out.println("你material=" + material);
+
+						item.setMaterial(material);
+						item.setTerminalId(material.getTerminal().getTerminalId());
+						item.setMaterialName(material.getMaterialName());
+						item.setDuration(material.getDuration());
+						item.setItemName(material.getMaterialName());
+						System.out.println("将item=" + item);
+
+						// 检查是否是已经排播，且在播表范围内
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						List<Items> list = materialDao.findItemsByMidBetweenDates(mid[i], sdf.format(d1), sdf.format(d2));
+						if (list.size() == 0) {
+							System.out.println("将item=");
+							materialService.saveItem(item);
+
+							//modify by bobo 2019/11/4
+							//传出新增的节目来
+							session.setAttribute("newItem", item);
+							session.setAttribute("completeItemAdd",true);
+
+						} else if (list.size() > 0) {
+							System.out.println("将i+++");
+							//直接加入,和复制一样
+							PrintWriter out = response.getWriter();
+							// 返回字符串，前台回显，稿件在选定时间段已经排播，最好返回json数据，提示信息也在后台做
+							out.print("true");
+							out.flush();
+							out.close();
+							continue;
+						}
+						// materialService.saveItem(item);
+						material.setInfo("1"); // 是否排播
+						material.setUsedNum(material.getUsedNum() + 1);
+						materialService.updateMaterial(material);
+						PrintWriter out = response.getWriter();
+						out.print("true");
+						out.flush();
+						out.close();
+					}
+
 				}
 			} else {
 				PrintWriter out = response.getWriter();

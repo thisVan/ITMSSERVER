@@ -1,12 +1,7 @@
 package org.south.netty;
 
 import java.io.FileInputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -162,8 +157,14 @@ public class TableAutoGenerate {
 		String allTime = screenTime / 60 + "分" + (screenTime - allTimeMin * 60) + "秒";
 		String ptableName = getNameById(terminalId, periodId);
 		ptableName = ptableName + "(" + format.format(nextDate) + ")";
-		
+
 		Integer baseFrequency = Playlist.arrGcd(freqencyList);
+		System.out.println("开始查询时段信息");
+		String periodName = getPeriodNameById(periodId);
+		Time startInterval = getStartTimeById(periodId);
+		Time endInterval = getEndTimeById(periodId);
+		System.out.println("结束查询"+periodName);
+
 		try {
 			// 加载驱动程序
 			Class.forName(driver);
@@ -173,8 +174,8 @@ public class TableAutoGenerate {
 				System.out.println("Succeeded connecting to the Database!");
 			// statement用来执行SQL语句
 			String insertSql = "INSERT INTO play_table"
-					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state, base_frequency)"
-					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state, base_frequency, period_name, start_interval, end_interval)"
+					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
 			String sql = "INSERT INTO play_table (user_id, period_id, terminal_id, status_id, create_time, deleted)"
 					+ " VALUES (" + 1 + ", " + periodId + ", " + terminalId + ", " + 1 + ", " + timestamp + ", " + 0
@@ -196,6 +197,9 @@ public class TableAutoGenerate {
 			statement.setInt(13, 0);
 			statement.setInt(14, 0);
 			statement.setInt(15, baseFrequency);
+			statement.setString(16, periodName);
+			statement.setTime(17,startInterval);
+			statement.setTime(18,endInterval);
 			int count = statement.executeUpdate();
 			System.out.println(count);
 			conn.close();
@@ -778,6 +782,104 @@ public class TableAutoGenerate {
 			e.printStackTrace();
 		}
 		return city + "-" + periodName;
+	}
+
+	//Lou 获取时段信息
+	public static String getPeriodNameById(int periodId) {
+		String periodName = "";
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed())
+				System.out.println("Succeeded connecting to the Database!");
+			// statement用来执行SQL语句
+			Statement statement = conn.createStatement();
+			ResultSet rs = null;
+			// String sql = "select start_interval, end_interval from period where deleted =
+			// 0 and " + " period_id = " + periodId;
+			String sql = "select period_name from period where deleted = 0 and period_id = " + periodId;
+			System.out.println(sql);
+			rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				periodName = rs.getString(1);
+			}
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return periodName;
+	}
+
+	//Lou 获取时段信息
+	public static Time getStartTimeById(int periodId) {
+		Time startTime = null;
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed())
+				System.out.println("Succeeded connecting to the Database!");
+			// statement用来执行SQL语句
+			Statement statement = conn.createStatement();
+			ResultSet rs = null;
+			// String sql = "select start_interval, end_interval from period where deleted =
+			// 0 and " + " period_id = " + periodId;
+			String sql = "select start_interval from period where deleted = 0 and period_id = " + periodId;
+			System.out.println(sql);
+			rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				startTime = rs.getTime(1);
+			}
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return startTime;
+	}
+
+	public static Time getEndTimeById(int periodId) {
+		Time endTime = null;
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed())
+				System.out.println("Succeeded connecting to the Database!");
+			// statement用来执行SQL语句
+			Statement statement = conn.createStatement();
+			ResultSet rs = null;
+			// String sql = "select start_interval, end_interval from period where deleted =
+			// 0 and " + " period_id = " + periodId;
+			String sql = "select end_interval from period where deleted = 0 and period_id = " + periodId;
+			System.out.println(sql);
+			rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				endTime = rs.getTime(1);
+			}
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return endTime;
 	}
 
 	// 7.14
