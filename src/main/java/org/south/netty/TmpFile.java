@@ -7,6 +7,9 @@ package org.south.netty;
  */
 public class TmpFile {
 
+
+	private int itemId;
+
 	private int fileId;
 	
 	private int periodId;
@@ -20,8 +23,16 @@ public class TmpFile {
 	private String endTime;
 	
 	private Integer duration;
-		
-	
+
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
 
 	public Integer getDuration() {
 		return duration;
@@ -134,7 +145,7 @@ public class TmpFile {
 	 */
 	@Override
 	public String toString() {
-		return "TmpFile [fileId=" + fileId + ", periodId=" + periodId + ", terminalId=" + terminalId + ", frequency="
+		return "TmpFile [itemId = "+ itemId +"fileId=" + fileId + ", periodId=" + periodId + ", terminalId=" + terminalId + ", frequency="
 				+ frequency + "]";
 	}
 

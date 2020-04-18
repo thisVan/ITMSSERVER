@@ -8,6 +8,10 @@ package org.south.netty;
 public class Ad {
 
 	private int fileId;
+
+	// 广告的节目id
+	private int itemId;
+
 	private String adName;
 	private Integer freq;
 	private Integer duration;
@@ -17,6 +21,7 @@ public class Ad {
 		this.adName = ad.adName;
 		this.freq = ad.freq;
 		this.duration = ad.duration;
+		this.itemId = ad.itemId;
 	}
 
 	/**
@@ -97,6 +102,15 @@ public class Ad {
 		this.freq = freq;
 	}
 
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
 //	@Override
 //	public boolean equals(Object obj) {
 //		if (obj == null)
@@ -125,6 +139,8 @@ public class Ad {
 
 	@Override
 	public String toString() {
-		return "Ad [fileId=" + fileId + ", adName=" + adName + ", freq=" + freq + ", duration=" + duration + "]";
+		return "Ad [fileId=" + fileId + ", adName=" + adName + ", freq=" + freq + ", duration=" + duration + ",itemId=" + itemId +"]";
 	}
+
+
 }

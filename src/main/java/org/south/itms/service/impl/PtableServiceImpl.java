@@ -52,6 +52,11 @@ public class PtableServiceImpl implements PtableService {
 	}
 
 	@Override
+	public void modifyPlayTableNumByMidSortAndItemIdSort(String pid, String sortNum, String itemIdSort) {
+		ptableDao.modifyPlayTableNumByMidSortAndItemIdSort(pid,sortNum,itemIdSort);
+	}
+
+	@Override
 	public void updateTableStatusFinal(String pid) throws ParseException {
 		ptableDao.updateTableStatusFinal(pid);
 	}
@@ -98,10 +103,11 @@ public class PtableServiceImpl implements PtableService {
 
 	//7.15
 	@Override
-	public void modifyPlayTableNumbyDelAll(String ppid, String sortNum) {
-		ptableDao.modifyPlayTableNumbyDelAll(ppid, sortNum);
-	}  
-	
+	public void modifyPlayTableNumbyDelAll(String ppid, String sortNum,String itemIdSeq) {
+		ptableDao.modifyPlayTableNumbyDelAll(ppid, sortNum,itemIdSeq);
+	}
+
+	@Override
 	public PlayTable getPlayTableByPid(String pid) {
 		return ptableDao.getById(pid);
 	}

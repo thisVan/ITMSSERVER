@@ -175,7 +175,7 @@ public class PlayTableTask extends TimerTask {
 			// statement用来执行SQL语句
 			Statement statement = conn.createStatement();
 			ResultSet rs = null;
-			String sql = "select i.mid, i.period_id, i.terminal_id, i.frequency, i.start_date, i.end_date, i.duration from items i left join material m on i.mid = m.mid where m.deleted = 0 and i.deleted = 0 and i.period_id = " + periodId;
+			String sql = "select i.item_id, i.mid, i.period_id, i.terminal_id, i.frequency, i.start_date, i.end_date, i.duration from items i left join material m on i.mid = m.mid where m.deleted = 0 and i.deleted = 0 and i.period_id = " + periodId;
 			rs = statement.executeQuery(sql);
 			while (rs.next()) {
 				// 输出结果
@@ -183,16 +183,21 @@ public class PlayTableTask extends TimerTask {
 					
 				}else {
 					file = new TmpFile();
-					file.setFileId(Integer.parseInt(rs.getString(1)));
-					file.setPeriodId(Integer.parseInt(rs.getString(2)));
-					file.setTerminalId(Integer.parseInt(rs.getString(3)));
-					file.setFrequency(Integer.parseInt(rs.getString(4)));
-					file.setStartTime(rs.getString(5));
-					file.setEndTime(rs.getString(6));
-					file.setDuration(Integer.parseInt(rs.getString(7)));
+					file.setItemId(Integer.parseInt(rs.getString(1)));
+					file.setFileId(Integer.parseInt(rs.getString(2)));
+					file.setPeriodId(Integer.parseInt(rs.getString(3)));
+					file.setTerminalId(Integer.parseInt(rs.getString(4)));
+					file.setFrequency(Integer.parseInt(rs.getString(5)));
+					file.setStartTime(rs.getString(6));
+					file.setEndTime(rs.getString(7));
+					file.setDuration(Integer.parseInt(rs.getString(8)));
 					listFile.add(file);
-					setTerminal.add(rs.getString(3));
-					setPeriod.add(rs.getString(2));
+					setTerminal.add(rs.getString(4));
+					setPeriod.add(rs.getString(3));
+
+					System.out.println("临时文件: ");
+					System.out.println(file.toString());
+
 				}
 			}
 			rs.close();
@@ -345,7 +350,8 @@ public class PlayTableTask extends TimerTask {
 		for(TmpFile f : listFile) {
 			if(f.getPeriodId() == pId && f.getTerminalId() == tId) {
 				if(checkDate(f.getStartTime(), f.getEndTime(), len)) {
-					ad = new Ad();				
+					ad = new Ad();
+					ad.setItemId(f.getItemId());
 					ad.setFileId(f.getFileId());
 					ad.setAdName("" + f.getFileId());
 					ad.setFreq(f.getFrequency());

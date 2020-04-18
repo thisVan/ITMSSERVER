@@ -183,13 +183,13 @@
 		</aop:aspect>
 	</aop:config>
 
-	<!-- 添加用户-->
-<!--	<aop:config>-->
-<!--		<aop:aspect ref="systemOperationAspectPoint">-->
-<!--			<aop:after method="completeAddUser"-->
-<!--					   pointcut="execution(* org.south.itms.controller.SystemController.addUser(..))"/>-->
-<!--		</aop:aspect>-->
-<!--	</aop:config>-->
+	<!--添加用户-->
+	<aop:config>
+		<aop:aspect ref="systemOperationAspectPoint">
+			<aop:after method="completeAddUser"
+					   pointcut="execution(* org.south.itms.controller.SystemController.addUser(..))"/>
+		</aop:aspect>
+	</aop:config>
 
 	<!-- 编辑用户-->
 	<aop:config>

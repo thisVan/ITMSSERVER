@@ -218,7 +218,7 @@
 			
 			table.on('tool(tableEvent)', function(obj) {
 				var tmpdata = obj.data;
-				var mid = tmpdata.material.mid;
+				var mid = obj.data.material.mid;
 				var objnumber = obj.tr[0].rowIndex;
 				var filePath = tmpdata.material.filePath;
 				var name = filePath.split("/");
@@ -244,7 +244,7 @@
 
 				// 播表节目删除与复制
 				if (obj.event === 'copy') {
-					layer.confirm('是否复制「 '+obj.data.materialName+' 」？', function(index) {
+					layer.confirm('是否复制「 '+ mid + ': '+obj.data.materialName+' 」？', function(index) {
 
 						// 播表组复制
 						$.ajax({
@@ -333,7 +333,7 @@
 								}, function(){
 									// 是
 									for (let member in groupMembers){
-										requestDeleteOneFromFile(pid,mid,objnumber);
+										requestDeleteOneFromFile(groupMembers[member].pid,mid,objnumber);
 									}
 
 

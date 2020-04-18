@@ -5,83 +5,6 @@ package org.south.netty;
 import java.util.ArrayList;
 import java.util.List;
 
-// class Ad{
-//     char ad;
-//     int freq;
-//     void print(){
-//         System.out.println(ad + " ");
-//     }
-//     int getFreq(){
-//         return this.freq;
-//     }
-//     public Ad(char c, int freq){
-//         this.ad = c;
-//         this.freq = freq;
-//     }
-// }
-// class Ad {
-//     private int no;
-//     private String adName;
-//     private Integer freq;
-
-//     public Ad(int no, String adName, Integer freq) {
-//         this.no = no;
-//         this.adName = adName;
-//         this.freq = freq;
-//     }
-
-//     public Ad(Ad ad) {
-//         this.no = ad.no;
-//         this.adName = ad.adName;
-//         this.freq = ad.freq;
-//     }
-
-//     public Integer getNo() {
-//         return no;
-//     }
-
-//     public void setNo(int no) {
-//         this.no = no;
-//     }
-
-//     public String getAdName() {
-//         return adName;
-//     }
-
-//     public void setAdName(String adName) {
-//         this.adName = adName;
-//     }
-
-//     public Integer getFreq() {
-//         return freq;
-//     }
-
-//     public void setFreq(Integer freq) {
-//         this.freq = freq;
-//     }
-
-//     @Override
-//     public String toString() {
-//         return getAdName() + "\t" + getFreq();
-//     }
-
-//     @Override
-//     public boolean equals(Object obj) {
-//         if(obj == null) return false;
-//         if(this == obj) return true;
-//         if(obj instanceof Ad) {
-//             Ad ad = (Ad) obj;
-//             if(ad.getAdName().equals(this.adName)) return true;
-//         }
-//         return false;
-//     }
-
-//     @Override
-//     public int hashCode() {
-//         return adName.hashCode();
-//     }
-// }
-
 
 /**
  * Created by free_ion on 2017/6/23.
@@ -98,7 +21,7 @@ public class Playlist {
     	if(equalsFlag == 0) {
     		return ads;
     	}
-    	
+
         //按频次排序
         ads = insertSort(ads);
 
@@ -232,16 +155,19 @@ public class Playlist {
     public static int arrGcd(List<Integer> arr) {
         int temp = 0;
         for (int i = 0; i < arr.size(); i++){
-            if(i == 0)
+            if(i == 0) {
                 temp = arr.get(0);
-            else
+            } else {
                 temp = gcd(temp, arr.get(i));
+            }
         }
         return temp;
     }
 
     public static int gcd(int a, int b) {
-        if (a == 0) return b;
+        if (a == 0) {
+            return b;
+        }
         return gcd(b % a, a);
     }
 
@@ -282,8 +208,7 @@ public class Playlist {
         a[2] = a3;
         a[3] = a4;
         a[4] = a5;
-        Playlist p = new Playlist();
-        Ad[] d = p.generatePlaylist(a);
+        Ad[] d = generatePlaylist(a);
         System.out.println(d.length);
         for(int i = 0; i < d.length; i++){
             System.out.print(d[i].getAdName() + " ");

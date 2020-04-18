@@ -153,8 +153,24 @@ public class PtableDaoImpl implements PtableDao {
 //		}
 //		System.out.println();
 		String[] nums = sortNum.split(",");
+
+		System.out.println("修改顺序的sortNum如下: ");
+		System.out.println(nums);
 		SqlUpdate su = new SqlUpdate();
 		su.updateFile(pid, nums);
+	}
+
+	@Override
+	public void modifyPlayTableNumByMidSortAndItemIdSort(String pid, String sortNum, String itemIdSort) {
+		String[] nums = sortNum.split(",");
+		String[] itemIds = itemIdSort.split(",");
+
+		System.out.println("修改顺序的两个num如下: ");
+		System.out.println(nums);
+		System.out.println(itemIds);
+
+		SqlUpdate su = new SqlUpdate();
+		su.updateFile(pid, nums,itemIds);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -379,13 +395,17 @@ public class PtableDaoImpl implements PtableDao {
 
 	//7.15
 	@Override
-	public void modifyPlayTableNumbyDelAll(String ppid, String sortNum) {
+	public void modifyPlayTableNumbyDelAll(String ppid, String sortNum,String itemIdSeq) {
 		// TODO Auto-generated method stub
+
+		// modify by bobo 2020/4/18
+		// 新增itemIds
 		String[] nums = sortNum.split(",");
+		String[] itemIds = itemIdSeq.split(",");
 		TableAutoGenerate tableAutoGenerate=new TableAutoGenerate();
 		tableAutoGenerate.delAllSqlPlayFile(ppid);
 		SqlUpdate su = new SqlUpdate();
-		su.updateFilebydelAll(ppid, nums);
+		su.updateFilebydelAll(ppid, nums, itemIds);
 		
 	}
 	

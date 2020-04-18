@@ -30,6 +30,8 @@ public interface PtableDao {
 
 	void modifyPlayTableNum(String pid, String sortNum);
 
+	void modifyPlayTableNumByMidSortAndItemIdSort(String  pid ,String sortNum, String itemIdSort);
+
 	void updateTableStatus(String pid) throws ParseException;
 	
 	void updateTableStatusFinal(String pid) throws ParseException;
@@ -53,7 +55,7 @@ public interface PtableDao {
 	List<PlayTable> getTableByTwoId(String statusId1, String statusId2);
 	
 	//7.15
-	void modifyPlayTableNumbyDelAll(String ppid, String sortNum);
+	void modifyPlayTableNumbyDelAll(String ppid, String sortNum,String itemIdSeq);
 	
 	//2018.11.27
 	List<PlayTable> findPlayTable(String terminalId, String startTime, String endTime, String statusId);

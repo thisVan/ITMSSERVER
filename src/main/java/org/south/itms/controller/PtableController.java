@@ -1097,7 +1097,9 @@ public class PtableController {
 	public void getTableSortNum(String ppid, ModelMap modelMap, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		modelMap.addAttribute("pid", ppid);
-		List<Material> files = fileDao.findByPtable(ppid);
+
+		//List<Material> files = fileDao.findByPtable(ppid);
+		List<Items> files = materialDao.findByPidAndItemsIdInPtableFile(ppid);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
 		request.getSession().setAttribute("modifyPid", ppid);
@@ -1179,7 +1181,12 @@ public class PtableController {
 			System.out.println(playTable.getPtableName());
 			String name = playTable.getPtableName();
 			if (playTable.getInsertFlag() == 0) {
-				List<Items> files = materialDao.findByPtable(pid);
+
+				// modify by bobo 2020/4/18
+				// 修正查询节目的逻辑
+				//List<Items> files = materialDao.findByPtable(pid);
+
+				List<Items> files = materialDao.findByPidAndItemsIdInPtableFile(pid);
 				request.getSession().setAttribute("modifyPid", pid);
 
 				System.out.println("下面是从pid = "+pid +  "中查到的对应item：");
@@ -1380,12 +1387,15 @@ public class PtableController {
 	// 添加仅修改播表顺序的接口
 	@RequestMapping(value = "/modifyPlayTableNumFromaddPtable")
 	public void modifyPlayTableNumFromaddPtable(String ppid, Model model, HttpServletRequest request,
-			HttpServletResponse response, String sortNum) throws IOException {
+			HttpServletResponse response, String sortNum,String itemIdSort) throws IOException {
 		System.out.println(ppid + "=" + sortNum);
+		System.out.println("================itemIdSort!!!=======================");
+		System.out.println(itemIdSort);
+		System.out.println("=======================================");
 		// System.out.println("pid=" + (String)
 		// request.getSession().getAttribute("modifyPid"));
 		logger.info("修改播表顺序");
-		if ("".equals(sortNum)) {
+		if ("".equals(sortNum) || "".equals(itemIdSort)) {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 
 			PrintWriter out = response.getWriter();
@@ -1395,7 +1405,7 @@ public class PtableController {
 		} else {
 			// String pid = (String) request.getSession().getAttribute("modifyPid");
 			// System.out.println(pid);
-			ptableService.modifyPlayTableNum(ppid, sortNum);
+			ptableService.modifyPlayTableNumByMidSortAndItemIdSort(ppid, sortNum,itemIdSort);
 			// ptableService.updateTableStatus(ppid);
 			// int num = Integer.parseInt((String)
 			// request.getSession().getAttribute("playNum"));
@@ -1818,7 +1828,7 @@ public class PtableController {
 			if (commonService.copyOneToPlayFile(ppid, mmid, insertnum)) {
 				// 更新播表时间
 				System.out.println("copy one to playFile !!!!!");
-				List<Items> itemsList = materialDao.findByPtable(ppid);
+				List<Items> itemsList = materialDao.findByPidAndItemsIdInPtableFile(ppid);
 				PlayTable playTable = ptableService.getPlayTableByPid(ppid); 
 				int allTime = 0;
 				String terminalId = "";
@@ -1873,16 +1883,36 @@ public class PtableController {
 			int deltnum = Integer.parseInt(num) + 1;
 			if (commonService.delOneFromPlayFile(ppid, mmid, deltnum)) {
 				// 删除成功后，更新file表的序号
-				List<Items> itemsList  = materialDao.findByPtable(ppid);// 获取播表id对应剩余的所有稿件item
-			
+
+				// 获取播表id对应剩余的所有稿件item
+				List<Items> itemsList  = materialDao.findByPidAndItemsIdInPtableFile(ppid);
+
+				System.out.println("在delOneFromPtableFile方法里，用item_id查法查出来的itemList：");
+				for (Items item:itemsList ) {
+					System.out.println(item.toString());
+				}
+
 				String sortNum = "";// 当前ppid所存在的所有稿件mid
+
+
+				// modify by bobo 2020/4/18
+				// 类似的itemId序列字符串，为了重新插入的时候有item_id
+				String itemIdSeq = "";
+
 				for (Items item:itemsList ) {
 					sortNum += "," + item.getMaterial().getMid();
+					itemIdSeq += "," + item.getItemId();
 				}
+
 				//判断sortNum是否为空
-				if (!"".equals(sortNum)) {
+				if (!"".equals(sortNum) && !"".equals(itemIdSeq)) {
 					sortNum = sortNum.substring(1);
-					ptableService.modifyPlayTableNumbyDelAll(ppid, sortNum);
+					itemIdSeq = itemIdSeq.substring(1);
+
+					System.out.println("itemId序列: ");
+					System.out.println(itemIdSeq);
+
+					ptableService.modifyPlayTableNumbyDelAll(ppid, sortNum,itemIdSeq);
 				}
 				
 				

@@ -85,10 +85,12 @@ public class TableAutoGenerate {
 				Ad[] d = Playlist.generatePlaylist(adArray);
 
 				System.out.println(d.length);
+				System.out.println("打乱最后生成的： [");
 				for(int i = 0; i < d.length; i++){
-					System.out.print(d[i].getFileId() + " ");
+					System.out.print( "itemId: " +d[i].getItemId() + "---mid: "+ d[i].getFileId() + " ");
 				 }
-				 System.out.println();
+				System.out.print("]");
+				System.out.println();
 
 				writeSqlPlayFile(pid, d);
 			} else if (apt.getListAd().size() == 1) {
@@ -497,35 +499,20 @@ public class TableAutoGenerate {
 			for (Ad a : ad) {
 				System.out.println(a.getFileId() + "----");
 			}
-//##################################高能区##########################################################
+//##################################高能区,插入item_id,改正系统最大的bug##########################################################
 
-//	原来的版本
 			for (int i = 1; i <= ad.length; i++) {
 				// statement用来执行SQL语句
-				String insertSql = "INSERT INTO ptable_file" + "(mid, pid, num, deleted)" + "values(?,?,?,?)";
+				String insertSql = "INSERT INTO ptable_file" + "(mid, pid, num, deleted,item_id)" + "values(?,?,?,?,?)";
 				PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
 				System.out.println(insertSql);
 				statement.setInt(1, ad[i - 1].getFileId());
 				statement.setInt(2, pid);
 				statement.setInt(3, i);
 				statement.setInt(4, 0);
+				statement.setInt(5,ad[i-1].getItemId());
 				statement.executeUpdate();
 			}
-
-//	新版本，解决ptable_file问题,删除与显示问题，目标一个ptable_file就对应一个item
-			//先将Ad[i]去重
-			//从items表中找到所有的是Ad[i]中对应mid的且符合pid中播放日期，时段的item
-			//将以上的item全部插入ptable_file
-
-			System.out.println("#####################################");
-			System.out.println("开始制作有itemid的ptable_file!!!!!!!!");
-			//在这之前,先针对ad[]稿件找到对应的mid ID的item，返回一个itemList
-			//把itemID写入ptabefile
-//			String sql = "select it.* from items it  where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid) and (select p.play_date from play_table p where p.deleted = 0 and p.pid = :pid) between it.start_date and it.end_date order by pf.num asc";
-//			session.createNativeQuery(sql, Items.class).setParameter("pid", pid).getResultList();
-//########################################################################################################
-
-
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			System.out.println("Sorry,can`t find the Driver!");
@@ -890,17 +877,34 @@ public class TableAutoGenerate {
 			Class.forName(driver);
 			// 连续数据库
 			Connection conn = DriverManager.getConnection(url, user, password);
-			if (!conn.isClosed())
+			if (!conn.isClosed()) {
 				System.out.println("Succeeded connecting to the Database!");
+			}
+
+			System.out.println("pid + mid + num ---"+pid + " " + mid+ " " + num);
+			String querySql = "select pf.item_id from ptable_file pf where pf.mid = ? and pf.pid = ?";
+			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(querySql);
+			System.out.println(querySql);
+			statement.setInt(1, Integer.parseInt(mid));
+			statement.setInt(2, Integer.parseInt(pid));
+			ResultSet rs = statement.executeQuery();
+
+			int itemId = 0;
+			while(rs.next()){
+				itemId = rs.getInt("item_id");
+				break;
+			}
+
 
 			// statement用来执行SQL语句
-			String insertSql = "INSERT INTO ptable_file" + "(mid, pid, num, deleted)" + "values(?,?,?,?)";
-			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
+			String insertSql = "INSERT INTO ptable_file" + "(mid, pid, num, deleted,item_id)" + "values(?,?,?,?,?)";
+			statement = (PreparedStatement) conn.prepareStatement(insertSql);
 			System.out.println(insertSql);
 			statement.setInt(1, Integer.parseInt(mid));
 			statement.setInt(2, Integer.parseInt(pid));
 			statement.setInt(3, num);
 			statement.setInt(4, 0);
+			statement.setInt(5,itemId);
 			statement.executeUpdate();
 
 			conn.close();

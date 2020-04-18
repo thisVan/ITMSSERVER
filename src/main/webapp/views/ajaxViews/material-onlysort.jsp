@@ -36,12 +36,18 @@
    -->
   <div>
 	<ul style="padding: 5px 40px; max-width: 360px;">
-	  <li><span style="width: 30%; float: left">序号</span><span style="width: 70%; float: left">顺序列表</span></li>
+	  <li>
+		  <span style="width: 30%; float: left">序号</span>
+		  <span style="width: 70%; float: left">顺序列表</span>
+	  </li>
 	</ul>
 	
 	<ul id="foo" class="block__list block__list_words">
 		<c:forEach items="${sessionScope.tableFirst}" var="table" varStatus="status">
-			<li drag-id="${table.mid}"><span  style="width: 30%;float: left;">${status.count}</span><span style="width: 70%; float: left;">${table.materialName}</span></li>
+			<li drag-id="${table.material.mid},${table.itemId}">
+				<span  style="width: 30%;float: left;">${status.count}</span>
+				<span style="width: 70%; float: left;">${table.materialName}</span>
+			</li>
 		</c:forEach>
 	</ul>
   </div>
@@ -59,6 +65,7 @@ layui.use('layer', function(){
 	});
 
    var listSort='';
+   var itemIdSort ='';
    
 Sortable.create(document.getElementById('foo'), {
 	animation : 150, //动画参数
@@ -80,9 +87,15 @@ Sortable.create(document.getElementById('foo'), {
 	onEnd : function(evt) { //拖拽完毕之后发生该事件
 		console.log('onEnd.foo:', [ evt.item, evt.from ]);
 		var id_arr = '';
+		var item_id_arr = '';
 		for (var i = 0, len = evt.from.children.length; i < len; i++) {
+
+			var sortIdStr = evt.from.children[i].getAttribute('drag-id');
+			var sortIds = sortIdStr.split(",");
 			id_arr += ','
-					+ evt.from.children[i].getAttribute('drag-id');	
+					+  sortIds[0];
+			item_id_arr += ','
+					+ sortIds[1];
 		}
 		//移动的时候更新序号
 		var num = 0;
@@ -94,7 +107,10 @@ Sortable.create(document.getElementById('foo'), {
 		});
 		//alert(id_arr);
 		id_arr = id_arr.substr(1);
+		item_id_arr = item_id_arr.substr(1);
+
 		listSort = id_arr;
+		itemIdSort = item_id_arr;
 		//然后请求后台ajax 这样就完成了拖拽排序
 		//alert(id_arr);
 		//console.log(id_arr);
@@ -166,7 +182,11 @@ Sortable.create(document.getElementById('foo'), {
 	   $.ajax({
 			type: "POST",
 			url: "<%=request.getContextPath()%>/ptable/modifyPlayTableNumFromaddPtable.do",
-			data: {"ppid" : pid,"sortNum":listSort},
+			data: {
+				"ppid" : pid,
+				"sortNum":listSort,
+				"itemIdSort" : itemIdSort
+			},
 			traditional: true,
 			dataType : "json",
 			success : function(msg){

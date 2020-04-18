@@ -300,6 +300,18 @@ public class MaterialDaoImpl implements MaterialDao {
         }
 	}
 
+	@Override
+	public List<Items> findByPidAndItemsIdInPtableFile(String pid){
+		Session session = openSession();
+		try {
+			//String sql = "select it.* from ptable_file pf left join items it on pf.mid = it.mid where it.deleted = 0 and pf.deleted = 0 and pf.pid = :pid and it.period_id = (select p.period_id from play_table p where p.deleted = 0 and p.pid = :pid)  order by pf.num asc";
+			String sql = "select it.* from  ptable_file pf left join items it on pf.item_id = it.item_id where it.deleted = 0 and pf.pid = :pid order by pf.num asc";
+			return session.createNativeQuery(sql, Items.class).setParameter("pid",pid).getResultList();
+		} finally {
+			closeSession(session);
+		}
+	}
+
 	public List<Items> findItemsByMidBetweenDates(String mid, String startDate, String endDate) {
 		Session session = openSession();
         try {

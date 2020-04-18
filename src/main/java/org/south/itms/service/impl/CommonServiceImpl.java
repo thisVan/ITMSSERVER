@@ -65,8 +65,9 @@ public class CommonServiceImpl implements CommonService {
 		}
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -91,8 +92,9 @@ public class CommonServiceImpl implements CommonService {
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
 			System.out.print("sssssssllllll");
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -116,8 +118,9 @@ public class CommonServiceImpl implements CommonService {
 		}
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchByTemplateHQL(start, end,
 					SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap,
 					currentPage, pageSize);
@@ -142,8 +145,9 @@ public class CommonServiceImpl implements CommonService {
 		}
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchPtableByTemplateHQL(start, end,
 					SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap,
 					currentPage, pageSize);
@@ -168,8 +172,9 @@ public class CommonServiceImpl implements CommonService {
 		}
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchUserActionLogByTemplateHQL(start, end,
 				SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap,
 					currentPage, pageSize);
@@ -193,8 +198,9 @@ public class CommonServiceImpl implements CommonService {
 		}
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -265,8 +271,9 @@ public class CommonServiceImpl implements CommonService {
 		// whereMap.put("statusId", new ValueParam("=", "1"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchCheckByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -291,8 +298,9 @@ public class CommonServiceImpl implements CommonService {
 		// whereMap.put("statusId", new ValueParam("=", "1"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchCheckByTemplateHQL(start, end,
 					SqlUtil.growSearchHqlTemplate(start, end, className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -317,8 +325,9 @@ public class CommonServiceImpl implements CommonService {
 		// whereMap.put("statusId", new ValueParam("=", "1"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchCheckByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -343,8 +352,9 @@ public class CommonServiceImpl implements CommonService {
 		// whereMap.put("statusId", new ValueParam("=", "1"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchInsertByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -390,8 +400,9 @@ public class CommonServiceImpl implements CommonService {
 		whereMap.put("statusId", new ValueParam("=", "2"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchCheckFinalByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -417,8 +428,9 @@ public class CommonServiceImpl implements CommonService {
 		whereMap.put("statusId", new ValueParam("=", "3"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchMaterialByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -443,8 +455,9 @@ public class CommonServiceImpl implements CommonService {
 		whereMap.put("statusId", new ValueParam("=", "2"));
 
 		if (!StringUtil.isEmpty(whereSuffix)) { // whereSuffix不为空，表示需要额外增加where的条件筛选
-			if (!StringUtil.isEmpty(orderBy))
+			if (!StringUtil.isEmpty(orderBy)) {
 				whereSuffix += " order by " + orderBy;
+			}
 			return commonDao.pageSearchCheckFinalByTemplateHQL(
 					SqlUtil.growSearchHqlTemplate(className, whereMap, "") + whereSuffix, whereMap, currentPage,
 					pageSize);
@@ -713,10 +726,12 @@ public class CommonServiceImpl implements CommonService {
 			}
 			int totalRecord = listM.size();
 			int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-			if (currentPage > totalPage)
+			if (currentPage > totalPage) {
 				currentPage = totalPage;
-			if (currentPage < 1)
+			}
+			if (currentPage < 1) {
 				currentPage = 1;
+			}
 			int total = pageSize * (currentPage - 1) + pageSize;
 			if (total < listM.size()) {
 				for (int i = pageSize * (currentPage - 1); i < total; i++) {
@@ -808,16 +823,18 @@ public class CommonServiceImpl implements CommonService {
 	// 7.14
 	@Override
 	public boolean copyOneToPlayFile(String pid, String mid, int num) {
-		if (commonDao.copyOneToPlayFile(pid, mid, num))
+		if (commonDao.copyOneToPlayFile(pid, mid, num)) {
 			return true;
+		}
 		return false;
 	}
 
 	// 7.15
 	@Override
 	public boolean delOneFromPlayFile(String pid, String mid, int num) {
-		if (commonDao.delOneFromPlayFile(pid, mid, num))
+		if (commonDao.delOneFromPlayFile(pid, mid, num)) {
 			return true;
+		}
 		return false;
 	}
 

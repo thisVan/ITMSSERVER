@@ -19,6 +19,8 @@ public interface PtableService {
 
 	void modifyPlayTableNum(String pid, String sortNum);
 
+	void modifyPlayTableNumByMidSortAndItemIdSort(String pid, String sortNum,String itemIdSort);
+
 	void updateTableStatusFinal(String pid) throws ParseException;
 
 	void updateTableStatus(String pid) throws ParseException;
@@ -44,7 +46,7 @@ public interface PtableService {
 	List<PlayTable> getTableByTwoId(String statusId1, String statusId2);
 	
 	//7.15
-	void modifyPlayTableNumbyDelAll(String ppid, String sortNum);
+	void modifyPlayTableNumbyDelAll(String ppid, String sortNum,String itemIdSeq);
 	
 	/**
 	 * 根据pid取出播表

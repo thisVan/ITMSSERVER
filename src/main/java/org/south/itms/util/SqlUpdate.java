@@ -77,8 +77,9 @@ public class SqlUpdate {
 			Class.forName(driver);
 			// 连续数据库
 			Connection conn = DriverManager.getConnection(url, user, password);
-			if (!conn.isClosed())
+			if (!conn.isClosed()) {
 				System.out.println("Succeeded connecting to the Database!");
+			}
 			
 			for(int i = 1; i <= nums.length; i++) {
 				String hql = "update ptable_file set mid=" + nums[i - 1] +  " where pid=" + pid + " and num=" + i + " and deleted=0";
@@ -95,7 +96,42 @@ public class SqlUpdate {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// modify by bobo 2020/4/18
+	// 修改顺序的dao，根据srotNum（mid） 和 itemIdSort(item_id)两个同时更新ptable_file
+	public void updateFile(String pid, String[] nums,String[] itemIds) {
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed()) {
+				System.out.println("Succeeded connecting to the Database!");
+			}
+
+			for(int i = 1; i <= nums.length; i++) {
+
+				// 修改mid
+				String hql = "update ptable_file set mid=" + nums[i - 1] +  " where pid=" + pid + " and num=" + i + " and deleted=0";
+				Statement statement = conn.createStatement();
+				statement.executeUpdate(hql);
+
+				// 修改itemId
+				hql = "update ptable_file set item_id=" + itemIds[i - 1] +  " where pid=" + pid + " and num=" + i + " and deleted=0";
+				statement = conn.createStatement();
+				statement.executeUpdate(hql);
+
+			}
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public void saveInsertTable(IPTable insert) {
 		System.out.println(insert);
 		try {
@@ -103,8 +139,9 @@ public class SqlUpdate {
 			Class.forName(driver);
 			// 连续数据库
 			Connection conn = DriverManager.getConnection(url, user, password);
-			if (!conn.isClosed())
+			if (!conn.isClosed()) {
 				System.out.println("Succeeded connecting to the Database!");
+			}
 			
 			String sql = "insert into ps_table (insert_date, start_time, end_time, min, mid, terminal_id, create_name, create_time, deleted, material_name, status) values (?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(sql);
@@ -388,7 +425,7 @@ public class SqlUpdate {
 	}
 	
 	//7.15
-	public void updateFilebydelAll(String pid, String[] nums) {
+	public void updateFilebydelAll(String pid, String[] nums,String[] itemIds) {
 		try {
 			// 加载驱动程序
 			Class.forName(driver);
@@ -401,14 +438,15 @@ public class SqlUpdate {
 				int num=i+1;
 				// statement用来执行SQL语句
 				String insertSql = "INSERT INTO ptable_file"+
-						"(mid, pid, num, deleted)"+
-						"values(?,?,?,?)";
+						"(mid, pid, num, deleted,item_id)"+
+						"values(?,?,?,?,?)";
 				PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
 				System.out.println(insertSql);
 				statement.setInt(1, Integer.parseInt(nums[i]));
 				statement.setInt(2, Integer.parseInt(pid));
 				statement.setInt(3, num);
 				statement.setInt(4, 0);
+				statement.setInt(5,Integer.parseInt(itemIds[i]));
 				statement.executeUpdate();
 			}
 			conn.close();
