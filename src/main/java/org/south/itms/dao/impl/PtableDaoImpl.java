@@ -325,19 +325,23 @@ public class PtableDaoImpl implements PtableDao {
 		Date date = df.parse(df.format(new Date()));
 
 
+		System.out.println("不通过！！！！pid" + pid + " statusId: "+statusId);
 		// modify by bobo 2020/3/13
 		//尽量部分更新好
-		Session session = this.getCurrentSession();
-		session.beginTransaction();
-		Query query = session.createQuery("update PlayTable  set statusId = :statusId,checkName = :userName," +
-				"checkTime = :date  where pid = :pid and deleted = 0");
-		query.setParameter("statusId",statusId);
-		query.setParameter("userName",userName);
-		query.setParameter("date",date);
-		query.setParameter("pid",pid);
-		query.executeUpdate();
-		session.getTransaction().commit();
-		session.clear();
+		try{
+			Session session = this.getCurrentSession();
+			Query query = session.createQuery("update PlayTable set statusId = :statusId,checkName = :userName," +
+					"checkTime = :date  where pid = :pid and deleted = 0");
+			query.setParameter("statusId",statusId);
+			query.setParameter("userName",userName);
+			query.setParameter("date",date);
+			query.setParameter("pid",pid);
+			query.executeUpdate();
+			session.clear();
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 
 //		String hql = "from PlayTable where pid=? and deleted=0";
 //		Query query = this.getCurrentSession().createQuery(hql);

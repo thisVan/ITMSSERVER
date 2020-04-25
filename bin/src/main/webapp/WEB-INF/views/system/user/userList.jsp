@@ -42,8 +42,8 @@
 		
 		
 		//实现对DataGird控件的绑定操作  
-		function initGrid() {  
-		    $('#MyDatagrid').datagrid({   //定位到Table标签，Table标签的ID是grid   
+		function initGrid() {
+			$('#MyDatagrid').datagrid({   //定位到Table标签，Table标签的ID是grid
 		        title: '用户列表',  
 		        iconCls: 'icon-save',  
 		        nowrap: true,  
@@ -67,8 +67,9 @@
 					 },
 		             { title: '电话', field: 'cellphone', width: 100},
 		             { title: '邮箱', field: 'email', width: 100},
-		             { title: '状态', field: 'state', width: 100}
-		        ]],  
+		             { title: '状态', field: 'state', width: 100},
+					 { title: '远程登录', field: 'remoteSwitch', width: 100}
+				]],
                 toolbar: '#tb'
 		    });
 		    

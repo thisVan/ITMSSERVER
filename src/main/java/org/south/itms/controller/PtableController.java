@@ -911,8 +911,9 @@ public class PtableController {
 
 			// 先检验播表名称有无占用
 			PlayTable playTable = ptableDao.load(pid);
-			if (ptableService.countByName(playTable) > 0)
+			if (ptableService.countByName(playTable) > 0) {
 				return new Result("播表名称已经被占用");
+			}
 
 			// 开始更新播表的数据
 			// 更新的参数
@@ -1558,8 +1559,9 @@ public class PtableController {
 
 			if (playsRs.size() != 0) {
 				for (PlayTable pt : playsRs) {
-					if (pt.getInsertFlag() == 1)
+					if (pt.getInsertFlag() == 1) {
 						continue; // 是插播的话直接跳过
+					}
 					List<Material> fs = fileDao.findByPtable(pt.getPid());
 					for (Material f : fs) {
 						System.out.println(f);
@@ -1713,38 +1715,41 @@ public class PtableController {
 	}
 
 	@RequestMapping(value = "/playTableUnAccess")
-	public void playTableUnAccess(String[] ppid, Model model, String[] checkArray, HttpServletRequest request,
+	public void playTableUnAccess(String[] ppid, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ParseException {
 		System.out.println(ppid + "=");
 		// String pid = (String) request.getSession().getAttribute("modifyPid");
-		System.out.println(checkArray.length);
-
 		// modify by bobo
 		// 有理由的默认5
-		if (checkArray.length == 0) {
-			for (int i = 0; i < ppid.length; i++) {
-				ptableService.playTableUnAccess(ppid[i], "5");
-			}
-		} else {
-			if (checkArray.length == 2) {
-				for (int i = 0; i < ppid.length; i++) {
-					ptableService.playTableUnAccess(ppid[i], "7");
-				}
-			} else if (checkArray.length == 1 && "1".equals(checkArray[0])) {
-				for (int i = 0; i < ppid.length; i++) {
-					ptableService.playTableUnAccess(ppid[i], "5");
-				}
-			} else if (checkArray.length == 1 && "2".equals(checkArray[0])) {
-				for (int i = 0; i < ppid.length; i++) {
-					ptableService.playTableUnAccess(ppid[i], "6");
-				}
-			}
+		for (int i = 0; i < ppid.length; i++) {
+			ptableService.playTableUnAccess(ppid[i], "5");
+		}
+
+
+//		if (checkArray.length == 0) {
+//			for (int i = 0; i < ppid.length; i++) {
+//				ptableService.playTableUnAccess(ppid[i], "5");
+//			}
+//		} else {
+//			if (checkArray.length == 2) {
+//				for (int i = 0; i < ppid.length; i++) {
+//					ptableService.playTableUnAccess(ppid[i], "7");
+//				}
+//			} else if (checkArray.length == 1 && "1".equals(checkArray[0])) {
+//				for (int i = 0; i < ppid.length; i++) {
+//					ptableService.playTableUnAccess(ppid[i], "5");
+//				}
+//			} else if (checkArray.length == 1 && "2".equals(checkArray[0])) {
+//				for (int i = 0; i < ppid.length; i++) {
+//					ptableService.playTableUnAccess(ppid[i], "6");
+//				}
+//			}
 			PrintWriter out = response.getWriter();
 			out.print("true");
 			out.flush();
 			out.close();
-		}
 	}
+
 
 	@RequestMapping("/broadCheckList")
 	public String broadCheckList(Model model, HttpServletRequest request) {

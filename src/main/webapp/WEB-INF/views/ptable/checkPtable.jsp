@@ -216,7 +216,7 @@
 		//var ppid = document.getElementById("modifyPid").value;
 		//var r = document.getElementsByName("unAccessFlag");
 		var unAccessReason = '';
-		// var checkArray = [];
+		var checkArray = [];
 		// for (var i = 0; i < r.length; i++) {
 		// 	if (r[i].checked) {
 		// 		checkArray.push(r[i].value);
@@ -256,7 +256,6 @@
 					success : function(msg) {
 						var value = msg.toString();
 						if (value == 'true') {
-							alert("成功提交");
 							opener.location.reload();
 							window.close();
 						}
@@ -267,8 +266,7 @@
 					type: "POST",
 					url: "<%=request.getContextPath()%>/ptable/playTableUnAccess.do",
 					data: {
-						"ppid": pids,
-						"checkArray": checkArray
+						"ppid": pids
 					},
 					traditional: true,
 					dataType: "json",
@@ -288,7 +286,6 @@
 						}
 					}
 				});
-
 				layer.close(index);
 			});
 		}
@@ -323,13 +320,13 @@
 	}
 
 	function ptableAccess() {
-		var r = document.getElementsByName("unAccessFlag");
-		var checkArray = [];
-		for (var i = 0; i < r.length; i++) {
-			if (r[i].checked) {
-				checkArray.push(r[i].value);
-			}
-		}
+		// var r = document.getElementsByName("unAccessFlag");
+		 var checkArray = [];
+		// for (var i = 0; i < r.length; i++) {
+		// 	if (r[i].checked) {
+		// 		checkArray.push(r[i].value);
+		// 	}
+		// }
 		if (checkArray.length > 0) {
 			layer.msg('审核通过, 不应该提交不通过理由!', {
 				icon : 5,
@@ -747,18 +744,18 @@
 							<br>
 						</div>
 						<div class="layui-col-md12 layui-col-space1">
-							<form class="layui-form" id="query_form">
-								<div class="layui-form-item">
-									<div class="layui-inline">
-										<label class="layui-form-mid layui-bg-green">审核不通过理由：</label>
-										<div class="layui-input-inline"
-											style="width: 150px; height: 35px;">
-											<input type="checkbox" name="unAccessFlag" title="排播有误"
-												value="1">
-										</div>
-									</div>
-								</div>
-							</form>
+<%--							<form class="layui-form" id="query_form">--%>
+<%--								<div class="layui-form-item">--%>
+<%--									<div class="layui-inline">--%>
+<%--										<label class="layui-form-mid layui-bg-green">审核不通过理由：</label>--%>
+<%--										<div class="layui-input-inline"--%>
+<%--											style="width: 150px; height: 35px;">--%>
+<%--											<input type="checkbox" name="unAccessFlag" title="排播有误"--%>
+<%--												value="1">--%>
+<%--										</div>--%>
+<%--									</div>--%>
+<%--								</div>--%>
+<%--							</form>--%>
 							<div class="layui-inline">
 								<div class="layui-inline">
 									<button class="layui-btn" type="button"
