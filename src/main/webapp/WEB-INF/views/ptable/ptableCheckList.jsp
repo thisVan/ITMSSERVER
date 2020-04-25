@@ -99,7 +99,12 @@
 							// var periodName = d.periodName;
 							// var periodTime = d.periodTime;
 							// return periodName + " " + periodTime;
-							return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
+							var flag = d.insertFlag;
+							if(flag == '0'){
+								return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
+							}else if(flag == '1'){
+								return d.startTime +"-"+d.endTime;
+							}
 						}
 					}
 					, {
@@ -351,9 +356,15 @@
 						title : '时段范围',
 						sort : true,
 						templet : function(d) {
-							var periodName = d.periodName;
-							var periodTime = d.periodTime;
-							return periodName + " " + periodTime;
+							// var periodName = d.periodName;
+							// var periodTime = d.periodTime;
+							// return periodName + " " + periodTime;
+							var flag = d.insertFlag;
+							if(flag == '0'){
+								return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
+							}else if(flag == '1'){
+								return d.startTime +"-"+d.endTime;
+							}
 						}
 					}
 					, {

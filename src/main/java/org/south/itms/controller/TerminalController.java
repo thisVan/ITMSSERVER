@@ -213,7 +213,11 @@ public class TerminalController {
   		Page pageD = (Page) result.getObj();
   		List<Terminal> terminals = pageD.getList();
   		for(Terminal terminal : terminals) {  //检查每个终端，检查其是否在线与否
-  			if(NettyChannelMap.containsKey(terminal.getTerminalId())) terminal.setOnline("在线");
+  			if(NettyChannelMap.containsKey(terminal.getTerminalId())){
+  				terminal.setOnline("在线");
+			}else {
+				terminal.setOnline("离线");
+			}
   		}
   	}
   	

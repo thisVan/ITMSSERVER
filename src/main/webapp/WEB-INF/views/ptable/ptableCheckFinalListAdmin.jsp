@@ -54,7 +54,12 @@
         		    		// var periodName = d.periodName;
         		    		// var periodTime = d.periodTime;
         		    		// return periodName + " " + periodTime;
-							  return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
+							  var flag = d.insertFlag;
+							  if(flag == '0'){
+								  return d.periodSName + " " +d.startInterval+"-"+d.endInterval;
+							  }else if(flag == '1'){
+								  return d.startTime +"-"+d.endTime;
+							  }
         		    	}
         		      }
         		  ,{field:'insertFlag',width:100, event: 'set5', title: '播表类型', sort: true
