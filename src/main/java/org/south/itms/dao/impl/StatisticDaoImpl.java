@@ -92,8 +92,8 @@ public class StatisticDaoImpl implements StatisticDao {
 		if (material_name != null && !"".equals(material_name)) {
 			sql += "and material_name like :material_name ";
 		}
-		sql += "and str_to_date(play_start_time, '%Y-%m-%d %H:%i:%S') >= :startTime "
-				+ "and str_to_date(play_end_time, '%Y-%m-%d %H:%i:%S') <= :endTime ORDER BY play_end_time desc";
+		sql += "and play_start_time >= :startTime "
+				+ "and play_end_time <= :endTime ORDER BY play_end_time desc";
 		// 先计算出在数据库总共有多少条数据
 		Query countQuery = getCurrentSession().createNativeQuery(sql, PlayLog.class);
 		countQuery.setParameter("terminalId", terminalId);
