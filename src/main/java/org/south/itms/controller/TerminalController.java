@@ -220,7 +220,7 @@ public class TerminalController {
   	PageResultData<Terminal> pageResult = new PageResultData<Terminal>();
   	Page pp = (Page)result.getObj();
   	System.out.println("what is=" + pp);
-//  	pp.getList().sort(new Comparator() {
+//  pp.getList().sort(new Comparator() {
 //		@Override
 //		public int compare(Object o1, Object o2) {
 //			return ((Terminal)o1).getOnline() - ((Terminal)o2).getOnline();
