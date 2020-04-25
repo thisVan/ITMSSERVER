@@ -77,7 +77,7 @@
     		    //,height: 420
 				  ,height:'full-200'
     		    ,initSort: {
-		              field: 'deleted' 
+		              field: 'online'
 		              ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
 		          }
     		    //,cellMinWidth: 120
@@ -85,11 +85,11 @@
     		    ,limit:25
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'deleted', width:120, event: 'set1', title: '在线情况', fixed: 'left'
+    		      {field:'online', width:120, event: 'set1', title: '在线情况',fixed: 'left'
     		    	  ,templet: function(d){
-    		    		  if(d.deleted == 0){
+    		    		  if(d.online == 0){
     		    			  return '<span style="color: #FF6347;">' + '离线' + '</span>';
-    		    		  }else if(d.deleted == 1){
+    		    		  }else if(d.online == 1){
     		    			  return '<span style="color: #90EE90;">' + '在线' + '</span>';
     		    		  }
     		    		}
@@ -109,7 +109,7 @@
     		      ,{fixed: 'right', width:180, event: 'set13', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
-    		    ,where: {"terminalName": terminalName, "ip":ip, "state":state}
+    		    ,where: {"terminalName": terminalName, "ip":ip, "state":state,"params":params}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		          changeBg();

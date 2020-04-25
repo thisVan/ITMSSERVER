@@ -41,7 +41,7 @@ public class Terminal implements java.io.Serializable{// 终端类
 	private String detailAddress;
 	private String state;
 	private int deleted;
-	
+	private int online;
 	
 	
 	//逻辑外键关联
@@ -206,6 +206,15 @@ public class Terminal implements java.io.Serializable{// 终端类
 		this.deleted = deleted;
 	}
 
+	@Column(name = "online")
+	public int getOnline() {
+		return online;
+	}
+
+	public void setOnline(int online) {
+		this.online = online;
+	}
+
 	@Column(name = "run_start_time")
 	@Temporal(TemporalType.TIME) 
 	public Date getRunStartTime() {
@@ -264,6 +273,7 @@ public class Terminal implements java.io.Serializable{// 终端类
 		result = prime * result + ((areaName == null) ? 0 : areaName.hashCode());
 		result = prime * result + ((connectPassword == null) ? 0 : connectPassword.hashCode());
 		result = prime * result + deleted;
+		result = prime * result + online;
 		result = prime * result + ((detailAddress == null) ? 0 : detailAddress.hashCode());
 		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
 		result = prime * result + ledLength;
@@ -308,6 +318,8 @@ public class Terminal implements java.io.Serializable{// 终端类
 		} else if (!connectPassword.equals(other.connectPassword))
 			return false;
 		if (deleted != other.deleted)
+			return false;
+		if (online != other.online)
 			return false;
 		if (detailAddress == null) {
 			if (other.detailAddress != null)
@@ -382,7 +394,7 @@ public class Terminal implements java.io.Serializable{// 终端类
 				+ ledLength + ", ledWidth=" + ledWidth + ", startSpotTop=" + startSpotTop + ", startSpotLeft="
 				+ startSpotLeft + ", runStartTime=" + runStartTime + ", runEndTime=" + runEndTime + ", areaCode="
 				+ areaCode + ", areaName=" + areaName + ", detailAddress=" + detailAddress + ", state=" + state
-				+ ", deleted=" + deleted + ", connectPassword=" + connectPassword
+				+ ", deleted=" + deleted + ", online=" + online+ ", connectPassword=" + connectPassword
 				+ "]";
 	}
 

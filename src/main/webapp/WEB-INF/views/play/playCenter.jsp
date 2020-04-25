@@ -77,15 +77,19 @@
     		    //,height: 420
     		    //,cellMinWidth: 120
 				  ,height:'full-200'
+				  ,initSort: {
+					  field: 'online'
+					  ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+				  }
     		    ,limits:[25,50,75,100]
     		    ,limit:25
     		    ,cols: [[
     		      //{field:'id', width:'1%'}
-    		      {field:'deleted', width:100, event: 'set1', title: '在线情况', fixed: 'left'
+    		      {field:'online', width:100, event: 'set1', title: '在线情况', fixed: 'left'
     		    	  ,templet: function(d){
-    		    		  if(d.deleted == 0){
+    		    		  if(d.online == 0){
     		    			  return '<span style="color: #FF6347;">' + '离线' + '</span>';
-    		    		  }else if(d.deleted == 1){
+    		    		  }else if(d.online == 1){
     		    			  return '<span style="color: #90EE90;">' + '在线' + '</span>';
     		    		  }
     		    		}
@@ -104,7 +108,7 @@
     		      ,{field:'state',width:100, event: 'set12', title: '启用状态' }
     		    ]]
     		    ,page: true
-    		    ,where: {"terminalName": terminalName, "ip":ip, "state":state}
+    		    ,where: {"terminalName": terminalName, "ip":ip, "state":state,"params":params}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		          changeBg();
