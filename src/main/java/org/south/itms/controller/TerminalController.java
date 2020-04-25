@@ -213,19 +213,19 @@ public class TerminalController {
   		Page pageD = (Page) result.getObj();
   		List<Terminal> terminals = pageD.getList();
   		for(Terminal terminal : terminals) {  //检查每个终端，检查其是否在线与否
-  			if(NettyChannelMap.containsKey(terminal.getTerminalId())) terminal.setOnline(1);
+  			if(NettyChannelMap.containsKey(terminal.getTerminalId())) terminal.setOnline("在线");
   		}
   	}
   	
   	PageResultData<Terminal> pageResult = new PageResultData<Terminal>();
   	Page pp = (Page)result.getObj();
   	System.out.println("what is=" + pp);
-  	pp.getList().sort(new Comparator() {
-		@Override
-		public int compare(Object o1, Object o2) {
-			return ((Terminal)o1).getOnline() - ((Terminal)o2).getOnline();
-		}
-	});
+//  	pp.getList().sort(new Comparator() {
+//		@Override
+//		public int compare(Object o1, Object o2) {
+//			return ((Terminal)o1).getOnline() - ((Terminal)o2).getOnline();
+//		}
+//	});
 	pageResult.setCount(pp.getTotalRecord());
 	pageResult.setCode(0);
 	pageResult.setMsg("");

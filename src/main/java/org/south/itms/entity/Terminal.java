@@ -41,7 +41,7 @@ public class Terminal implements java.io.Serializable{// 终端类
 	private String detailAddress;
 	private String state;
 	private int deleted;
-	private int online;
+	private String online;
 	
 	
 	//逻辑外键关联
@@ -207,11 +207,11 @@ public class Terminal implements java.io.Serializable{// 终端类
 	}
 
 	@Column(name = "online")
-	public int getOnline() {
+	public String getOnline() {
 		return online;
 	}
 
-	public void setOnline(int online) {
+	public void setOnline(String online) {
 		this.online = online;
 	}
 
@@ -273,7 +273,6 @@ public class Terminal implements java.io.Serializable{// 终端类
 		result = prime * result + ((areaName == null) ? 0 : areaName.hashCode());
 		result = prime * result + ((connectPassword == null) ? 0 : connectPassword.hashCode());
 		result = prime * result + deleted;
-		result = prime * result + online;
 		result = prime * result + ((detailAddress == null) ? 0 : detailAddress.hashCode());
 		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
 		result = prime * result + ledLength;
@@ -287,6 +286,7 @@ public class Terminal implements java.io.Serializable{// 终端类
 		result = prime * result + startSpotLeft;
 		result = prime * result + startSpotTop;
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((online == null) ? 0 : online.hashCode());
 		result = prime * result + ((terminalDescribe == null) ? 0 : terminalDescribe.hashCode());
 		result = prime * result + ((terminalId == null) ? 0 : terminalId.hashCode());
 		result = prime * result + ((terminalName == null) ? 0 : terminalName.hashCode());
@@ -318,8 +318,6 @@ public class Terminal implements java.io.Serializable{// 终端类
 		} else if (!connectPassword.equals(other.connectPassword))
 			return false;
 		if (deleted != other.deleted)
-			return false;
-		if (online != other.online)
 			return false;
 		if (detailAddress == null) {
 			if (other.detailAddress != null)
@@ -367,6 +365,11 @@ public class Terminal implements java.io.Serializable{// 终端类
 			if (other.state != null)
 				return false;
 		} else if (!state.equals(other.state))
+			return false;
+		if (online == null) {
+			if (other.online != null)
+				return false;
+		} else if (!online.equals(other.online))
 			return false;
 		if (terminalDescribe == null) {
 			if (other.terminalDescribe != null)

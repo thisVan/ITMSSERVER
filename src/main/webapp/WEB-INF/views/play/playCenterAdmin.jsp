@@ -87,11 +87,11 @@
     		      //{field:'id', width:'1%'}
     		      {field:'online', width:120, event: 'set1', title: '在线情况',fixed: 'left'
     		    	  ,templet: function(d){
-    		    		  if(d.online == 0){
-    		    			  return '<span style="color: #FF6347;">' + '离线' + '</span>';
-    		    		  }else if(d.online == 1){
-    		    			  return '<span style="color: #90EE90;">' + '在线' + '</span>';
-    		    		  }
+						  if(d.online == "离线"){
+							  return '<span style="color: #FF6347;">' + d.online + '</span>';
+						  }else if(d.online == "在线"){
+							  return '<span style="color: #90EE90;">' + d.online + '</span>';
+						  }
     		    		}
     		       }
     		      ,{field:'terminalName',width:130, event: 'set2', title: '播放端名称'}
