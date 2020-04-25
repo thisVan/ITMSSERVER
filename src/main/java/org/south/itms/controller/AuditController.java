@@ -181,6 +181,9 @@ public class AuditController {
 			pageResult.setCode(0);
 			pageResult.setMsg("");
 			pageResult.setData(logList);
+
+			System.out.println("查到的logList:");
+			System.out.println(pageResult);
 			return pageResult;
 		} catch (Exception e) {
 			e.printStackTrace();

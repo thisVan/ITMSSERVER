@@ -165,6 +165,8 @@ public class CommonServiceImpl implements CommonService {
 			int pageSize, String className, String orderBy, String whereSuffix) {
 		// 组装查询条件
 		Map<String, ValueParam> whereMap = new HashMap<String, ValueParam>();
+
+		System.out.println("审计参数"+ params.toString());
 		if (params != null && (params.length % 3 == 0)) {
 			for (int i = 0; i < params.length; i += 3) {
 				whereMap.put(params[i], new ValueParam(params[i + 1], params[i + 2]));
