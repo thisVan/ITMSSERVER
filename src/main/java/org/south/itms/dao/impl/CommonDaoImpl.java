@@ -1097,8 +1097,9 @@ public class CommonDaoImpl implements CommonDao {
 	@Override
 	public Page pageSearchUserActionLogByTemplateHQL(String start, String end, String hql,
 			Map<String, ValueParam> whereMap, int currentPage, int pageSize) {
-		if (pageSize < 1)
+		if (pageSize < 1) {
 			pageSize = 20;
+		}
 
 		int len = whereMap.size();
 		System.out.println("pageHql=" + start + "--" + end + "=====" + hql + "--" + whereMap.size());
@@ -1157,7 +1158,8 @@ public class CommonDaoImpl implements CommonDao {
 
 			// 把结果包装成page返回
 			return new Page(currentPage, totalPage, pageSize, totalRecord, list);
-		} else if (!"".equals(end) && "".equals(start)) {
+		}
+		else if (!"".equals(end) && "".equals(start)) {
 //			String hqlEnd = str[0] + " and uploadTime <= ? " + " order " + str[1];
 //			System.out.println("endHql=" + hqlEnd);
 			String hqlEnd = str[0] + " and operationTime <=:end " + " order " + str[1];
@@ -1184,7 +1186,8 @@ public class CommonDaoImpl implements CommonDao {
 
 			// 把结果包装成page返回
 			return new Page(currentPage, totalPage, pageSize, totalRecord, list);
-		} else if (!"".equals(start) && !"".equals(end)) {
+		}
+		else if (!"".equals(start) && !"".equals(end)) {
 			// String hqlst = str[0] + " and uploadTime >= ? and uploadTime <= ? " + " order
 			// " + str[1];
 			// System.out.println("st=" + hqlst);

@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <%@ include file="/layui/header.jsp"%>
-    <title>播表审计列表</title>
+    <title>系统审计列表</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -54,9 +54,7 @@
 
             //操作类型
             var operation=$("#operation").val();
-            //稿件ID
-            var modifyObjectId = $("#modifyObjectId").val();
-            var params = "modifyObjectType, = ,PLAY_TABLE,";
+            var params = "modifyObjectType, = ,SYSTEM,";
 
             if(userName!="")
                 params=params+"userName"+",=,"+userName+",";
@@ -64,8 +62,6 @@
                 params=params+"roleName"+",=,"+roleName+",";
             if(operation!="")
                 params=params+"operation"+",=,"+operation+",";
-            if(modifyObjectId!="")
-                params=params+"modifyObjectId"+",=,"+modifyObjectId+",";
 
 
             layui.use('table', function(){
@@ -78,10 +74,6 @@
                     //,cellMinWidth: 120
                     ,height:'full-200'
                     ,limits:[10,25,50,75,100,500]
-                    , initSort: {
-                        field: 'statusId' //排序字段，对应 cols 设定的各字段名
-                        ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
-                    }
                     ,cols: [[
                         {field:'modifyObjectName',width:300, event: 'set6', title: '操作对象名称', fixed:true,sort: true}
                         ,{field:'operation',width:320, event: 'set4', title: '操作类型', sort: true}
