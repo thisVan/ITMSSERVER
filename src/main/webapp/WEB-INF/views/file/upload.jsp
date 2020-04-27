@@ -47,7 +47,7 @@
 <div region="center" border="false" style="padding:5px;">
 
 	 <div style="width: 20%; float: left">
-	    <br><font  size="4"  color="red">双击打开关闭</font><br>
+	    <br>
 	    <ul id="demo2"></ul>
 	 </div>
 	 
@@ -67,17 +67,16 @@
 			  </div>
 			  
 			   <div class="layui-inline">
-				<label class="layui-form-mid"><font size="4">&nbsp;&nbsp;&nbsp;当前已选终端：</font></label>
+				<label class="layui-form-mid"><font size="4">&nbsp;&nbsp;当前已选终端：</font></label>
 				<div class="layui-input-inline" style="width: 90px; height: 35px;">
 					<!--  <input id="terminalName" type="button" class="layui-btn layui-btn-jan" style="margin: 2px;" value="无" />-->
 				 <input id="terminalName" type="text" class="layui-form-mid" style="border-style:none;height=20px;line-hight=20px;font-size:18px" value="无" />
+				 
 				</div>
 			  </div>
 			  
-			  <div class="layui-inline">
-			     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			     <font  size="4"  color="red">选择大文件上传时请等待提示</font>
+			  <div class="layui-inline pull-right">
+			     <label class="layui-form-mid"><i>Tip: 大文件上传时请耐心等待上传完成提示</i></label>
 			  </div>
 			</div>
 			<br>
@@ -168,7 +167,14 @@ function stateChange(){
 	for(var i=0;i<patharry.length;i++)
 	{
 		patharry[i]=patharry[i].replace(/\\/g,"/");
+		var suffix = patharry[i].substring(patharry[i].lastIndexOf(".")+1,patharry[i].length);
+		if(suffix == "wmv" || suffix == "mp4" || suffix == "jpg" || suffix == "png" || suffix == "jpeg"){
 		pathFile.push(patharry[i]);
+                } else {
+		layer.msg('不支持的文件类型，请重新选择文件！',{icon:5,time:2000});
+		return;
+		}
+		
 	}
 	//objFile.push(obj);
 	console.log(patharry);
@@ -248,7 +254,7 @@ function uploadFile(){
 			//var tid = document.getElementById("treeId").value;
 			var tttid = tidVal[start];
 			fileData.append("tid",tttid);
-			//console.log(objFile[start].name);
+			console.log(objFile[start].name);
 			//隐藏button按钮
 			var labelVal1 = document.getElementById("stat"+start);
 			labelVal1.innerHTML = '<span style="color: #5FB878;">正在上传..</span>';
