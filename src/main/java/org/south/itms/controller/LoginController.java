@@ -59,23 +59,6 @@ public class LoginController {
 	  @ResponseBody
 	  public Result loginIn(String userAccount, String userPassword, HttpSession session , HttpServletRequest request){
 
-
-	  	  // modify by bobo by 2020/4/11
-		  // 远程登录模块
-
-		  // 检查是否允许远程登录，不允许则看ip是否允许
-		  if (!checkCanRemoteLogin(userAccount)){
-		  	  System.out.println("该用户已经禁止远程登录，将查看是否是允许的ip");
-
-		  	  // 看ip是否是允许的
-		  	  if(!checkAllowIPValid(request)){
-				  return new Result("登录失败，该用户不允许远程使用，请在办公室使用");
-			  }
-		  }
-
-
-
-
 		  System.out.println(userAccount + "==" + userPassword);
 
 		  if(StringUtil.isEmpty(userPassword) || StringUtil.isEmpty(userAccount)) {
@@ -85,6 +68,19 @@ public class LoginController {
 		  User user = userDao.getUserByAccountAndPassword(userAccount, userPassword);
 		  // 正确登录
 	      if(user != null) {
+
+			  // modify by bobo by 2020/4/11
+			  // 远程登录模块
+
+			  // 检查是否允许远程登录，不允许则看ip是否允许
+			  if (!checkCanRemoteLogin(userAccount)){
+				  System.out.println("该用户已经禁止远程登录，将查看是否是允许的ip");
+
+				  // 看ip是否是允许的
+				  if(!checkAllowIPValid(request)){
+					  return new Result("登录失败，该用户不允许远程使用，请在办公室使用");
+				  }
+			  }
 
 			  // modify by bobo 2020/3/5
 	      	  // 达到限制后，就算正确也不能登录了
@@ -205,6 +201,14 @@ public class LoginController {
 	// 允许的IP检测
 	private boolean checkAllowIPValid(HttpServletRequest request) {
 
+		System.out.println("X-Forwarded-For: " + request.getHeader("X-Forwarded-For"));
+		System.out.println("X-Real-IP: " + request.getHeader("X-Real-IP"));
+		System.out.println("Proxy-Client-IP: " + request.getHeader("Proxy-Client-IP"));
+		System.out.println("WL-Proxy-Client-IP" + request.getHeader("WL-Proxy-Client-IP"));
+		System.out.println("HTTP_CLIENT_IP: " + request.getHeader("HTTP_CLIENT_IP"));
+		System.out.println("HTTP_X_FORWARDED_FOR: " + request.getHeader("HTTP_X_FORWARDED_FOR"));
+		System.out.println("RemoteAddr: " + request.getRemoteAddr());
+
 	  	// 获取源ip
 	  	String ip = getSourceIP(request);
 
@@ -216,6 +220,8 @@ public class LoginController {
 
 	private String getSourceIP(HttpServletRequest request) {
 		String ip = request.getHeader("X-Forwarded-For");
+
+
 		if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
 			// 多次反向代理后会有多个ip值，第一个ip才是真实ip
 			int index = ip.indexOf(",");
