@@ -44,8 +44,18 @@ function depose(){
 	
 	    var materialExist = '${sessionScope.materialExist}';
 	    if(materialExist == "false") {  //视频不存在的话
-	       $("#tipMsg").show();
-	       $("#div2").hide();
+
+	    	// 判断是否是ie
+			if(!!window.ActiveXObject||"ActiveXObject" in window){
+				$("#ieTipMsg").show();
+				$("#div2").hide();
+			} else{
+
+				$("#tipMsg").show();
+				$("#div2").hide();
+			}
+
+
 	       return;
 	    } 
 		var myDate = new Date();
@@ -84,6 +94,7 @@ function depose(){
 <input type="hidden" id="vdo">
 
      <h2 id="tipMsg" hidden  align="center" style="color:red; margin-top:20px;">视频已被删除</h2>
+     <h2 id="ieTipMsg" hidden  align="center" style="color:red; margin-top:20px;">不支持IE内核浏览器，请更换浏览器</h2>
      
      <div id="div2">
      <div id="showwmv" align="center"></div>
