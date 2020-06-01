@@ -111,7 +111,57 @@ public class TableAutoGenerate {
 		return ptableid;
 	}
 
+	// 生成同时段多播表//by anqi 20200521
+	public int PlayTableGenerate(List<AutoPlayTable> listTable, String uid, int length, ArrayList<Integer> nums) throws ParseException {
+		// deleteNewPlayTable(listTable.get(0).getPeriodId());
+		int ptableid = 0;
+		for (AutoPlayTable apt : listTable) {
+			if (apt.getListAd().size() > 1) {
+				writeSqlTable(apt.getTerminalId(), apt.getPeriodId(), apt.getListAd(), uid, length, nums);
+				int pid = getReadSqlTable(apt.getTerminalId(), apt.getPeriodId());
+				ptableid = pid;
+				Ad[] adArray = new Ad[apt.getListAd().size()];
+				int len = 0;
 
+				for (Ad a : apt.getListAd()) {
+					adArray[len] = a;
+					len++;
+				}
+
+				System.out.println("生成播表！！！广告视频在没处理之前是这样的：");
+				for(int i = 0; i < adArray.length; i++){
+					System.out.print(adArray[i].getFileId() + " ");
+				}
+				System.out.println();
+
+				Ad[] d = Playlist.generatePlaylist(adArray);
+
+				System.out.println(d.length);
+				System.out.println("打乱最后生成的： [");
+				for(int i = 0; i < d.length; i++){
+					System.out.print( "itemId: " +d[i].getItemId() + "---mid: "+ d[i].getFileId() + " ");
+				}
+				System.out.print("]");
+				System.out.println();
+
+				writeSqlPlayFile(pid, d);
+			} else if (apt.getListAd().size() == 1) {
+				writeSqlTable(apt.getTerminalId(), apt.getPeriodId(), apt.getListAd(), uid, length, nums);
+				int pid = getReadSqlTable(apt.getTerminalId(), apt.getPeriodId());
+				ptableid = pid;
+				Ad[] d = new Ad[1];
+				d[0] = apt.getListAd().get(0);
+				writeSqlPlayFile(pid, d);
+			} else {
+
+			}
+
+			//modify by bobo 2019/11/4
+			//把pid给传出来，放在一个静态变量里
+			playTableAutoIdList.add(String.valueOf(ptableid));
+		}
+		return ptableid;
+	}
 
 	/**
 	 * 生成同时段多播表, 轮播播表的数据库操作方法
@@ -159,6 +209,103 @@ public class TableAutoGenerate {
 		String allTime = screenTime / 60 + "分" + (screenTime - allTimeMin * 60) + "秒";
 		String ptableName = getNameById(terminalId, periodId);
 		ptableName = ptableName + "(" + format.format(nextDate) + ")";
+
+		Integer baseFrequency = Playlist.arrGcd(freqencyList);
+		System.out.println("开始查询时段信息");
+		String periodName = getPeriodNameById(periodId);
+		Time startInterval = getStartTimeById(periodId);
+		Time endInterval = getEndTimeById(periodId);
+		System.out.println("结束查询"+periodName);
+
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed())
+				System.out.println("Succeeded connecting to the Database!");
+			// statement用来执行SQL语句
+			String insertSql = "INSERT INTO play_table"
+					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state, base_frequency, period_name, start_interval, end_interval)"
+					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
+			String sql = "INSERT INTO play_table (user_id, period_id, terminal_id, status_id, create_time, deleted)"
+					+ " VALUES (" + 1 + ", " + periodId + ", " + terminalId + ", " + 1 + ", " + timestamp + ", " + 0
+					+ ")";
+
+			System.out.println(sql);
+			statement.setInt(1, Integer.parseInt(uid));
+			statement.setInt(2, periodId);
+			statement.setInt(3, terminalId);
+			statement.setInt(4, 1);
+			statement.setDate(5, sqlDate);
+			statement.setString(6, screenRate);
+			statement.setString(7, playtime);
+			statement.setString(8, allTime);
+			statement.setString(9, ptableName);
+			statement.setTimestamp(10, new Timestamp(currentTimeMillis()));
+			statement.setInt(11, 0);
+			statement.setInt(12, 0);
+			statement.setInt(13, 0);
+			statement.setInt(14, 0);
+			statement.setInt(15, baseFrequency);
+			statement.setString(16, periodName);
+			statement.setTime(17,startInterval);
+			statement.setTime(18,endInterval);
+			int count = statement.executeUpdate();
+			System.out.println(count);
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			System.out.println("Sorry,can`t find the Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	//by anqi 20200521
+	public static void writeSqlTable(int terminalId, int periodId, List<Ad> ad, String uid, int len,ArrayList<Integer> nums)
+			throws ParseException {
+		Date date = new Date();
+		Timestamp timestamp = new Timestamp(date.getTime());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, len);
+		Date nextDate = cal.getTime();
+		java.sql.Date sqlDate = new java.sql.Date(nextDate.getTime());
+		int sum = 0;
+		List<Integer> freqencyList = new ArrayList<Integer>();
+		for (Ad a : ad) {
+			int d = a.getDuration();
+			int f = a.getFreq();
+			freqencyList.add(f);
+			System.out.println(a.getDuration() + "=" + a.getFreq());
+			sum = sum + d * f;
+		}
+		int min = (int) sum / 60;
+		String playtime = sum / 60 + "分" + (sum - min * 60) + "秒";
+		int screenTime = getScreenTime(periodId);
+		if (screenTime <= 0)
+			screenTime = 24 * 60 * 60 * 1000;
+		DecimalFormat df = new DecimalFormat("#0.00");
+		DecimalFormat df2 = new DecimalFormat("0.00%");
+		int tosum = sum * 1000;
+		double rate = (float) tosum / (float) screenTime;
+		// System.out.println(playtime + "=" + screenTime + "=" + rate);
+		String screenRate = df2.format(rate);
+		screenTime = screenTime / 1000;
+		int allTimeMin = (int) screenTime / 60;
+		String allTime = screenTime / 60 + "分" + (screenTime - allTimeMin * 60) + "秒";
+		String ptableName = getNameById(terminalId, periodId);
+		if(nums.get(len) != 0){
+			ptableName = ptableName + "(" + format.format(nextDate) + ")" + "(" + nums.get(len) + ")";
+		}else{
+			ptableName = ptableName + "(" + format.format(nextDate) + ")" ;
+		}
+
 
 		Integer baseFrequency = Playlist.arrGcd(freqencyList);
 		System.out.println("开始查询时段信息");
@@ -320,8 +467,9 @@ public class TableAutoGenerate {
 	 * @param start
 	 * @param end
 	 */
-	public ArrayList<String> deleteNewPlayTb(int periodId, int start, int end) {
+	public ArrayList<Integer> deleteNewPlayTb(int periodId, int start, int end) {
 		ArrayList<String> ignorePids = new ArrayList<String>();
+		ArrayList<Integer> nums = new ArrayList<Integer>();
 		try {
 			Class.forName(driver);
 			Connection conn = DriverManager.getConnection(url, user, password);
@@ -334,31 +482,34 @@ public class TableAutoGenerate {
 					Date nextDate = cal.getTime();
 					java.sql.Date sqlDate = new java.sql.Date(nextDate.getTime());
 					System.out.println(sqlDate);
-					String sql = "select pid,status_id from play_table where period_id = " + periodId
+					String sql = "select * from play_table where period_id = " + periodId
 							+ " and date_format(play_date, '%Y-%m-%d')='" + sqlDate + "' and deleted = 0";
 					Statement statement = conn.createStatement();
 					ResultSet rs = statement.executeQuery(sql);
-					while (rs.next()) {// 判空
-						String id = rs.getString(1);
-						String statusId = rs.getString(2);
-						System.out.println("deleteNewPlayTb -> pid=" + id + ",statusId=" + statusId);
-						//如果已经审核，跳过该播表
-						if ("2".equals(statusId) || "3".equals(statusId)) {
-							ignorePids.add(id);
-						} else {
-							PreparedStatement stmt = (PreparedStatement) conn
-									.prepareStatement("update ptable_file set deleted = 1 where pid = ?");
-							stmt.setInt(1, Integer.parseInt(id));
-							stmt.executeUpdate();
-
-							String delSqlp = "update play_table set deleted = 1 where pid = ?";
-							PreparedStatement pst1 = (PreparedStatement) conn.prepareStatement(delSqlp);
-							pst1.setInt(1, Integer.parseInt(id));
-							pst1.executeUpdate();
-							System.out.println("deleteNewPlayTb -> 生成新播表前，删除播表pid=" + id + ",statusId=" + statusId);
-						}
-						
-					}
+					rs.last();
+					System.out.println(rs.getRow());
+					nums.add(rs.getRow());
+//					while (rs.next()) {// 判空
+//						String id = rs.getString(1);
+//						String statusId = rs.getString(2);
+//						System.out.println("deleteNewPlayTb -> pid=" + id + ",statusId=" + statusId);
+//						//如果已经审核，跳过该播表
+//						if ("2".equals(statusId) || "3".equals(statusId)) {
+//							ignorePids.add(id);
+//						} else {
+//							PreparedStatement stmt = (PreparedStatement) conn
+//									.prepareStatement("update ptable_file set deleted = 1 where pid = ?");
+//							stmt.setInt(1, Integer.parseInt(id));
+//							stmt.executeUpdate();
+//
+//							String delSqlp = "update play_table set deleted = 1 where pid = ?";
+//							PreparedStatement pst1 = (PreparedStatement) conn.prepareStatement(delSqlp);
+//							pst1.setInt(1, Integer.parseInt(id));
+//							pst1.executeUpdate();
+//							System.out.println("deleteNewPlayTb -> 生成新播表前，删除播表pid=" + id + ",statusId=" + statusId);
+//						}
+//
+//					}
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -369,7 +520,7 @@ public class TableAutoGenerate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ignorePids;
+		return nums;
 	}
 
 	// 生成一个播表

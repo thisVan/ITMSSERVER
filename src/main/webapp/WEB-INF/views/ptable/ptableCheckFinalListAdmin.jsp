@@ -21,7 +21,9 @@
 		   		   
 		   //状态
 		   var statusId = "";
-    	  
+
+		  var terminalId = $("#terminal").val();
+
     	  layui.use('table', function(){
     		  var table = layui.table;
     		  table.render({
@@ -121,7 +123,7 @@
         		      }
       		    ]]
     		    ,page: true
-    		    ,where: {"statusId":statusId }
+    		    ,where: {"terminalId":terminalId, "statusId":statusId }
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		    	  if(res.fail == 1){
@@ -223,8 +225,28 @@
 				<div class="layui-form-query">
 					<form class="layui-form" id="query_form">
 						<div class="layui-form-item">
-							
-							
+							<div class="layui-inline">
+								<label class="layui-form-mid">终端：</label>
+								<div class="layui-input-inline"
+									 style="width: 140px; height: 35px;">
+									<select name="terminal" id="terminal" lay-verify="required" lay-search=""
+											style="width: 140px; height: 35px;">
+										<option value="">直接选择或搜索</option>
+										<c:forEach items="${terminalPtable}" var="terminal" varStatus="status">
+											<option value="${terminal.terminalId}">${terminal.terminalName}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+
+							<div class="layui-inline">
+								<div class="layui-inline">
+									<button class="layui-btn" type="button" onclick="init()">
+										<i class="layui-icon">&#xe615;</i>查询
+									</button>
+								</div>
+							</div>
+
 						</div>
 					</form>
 				</div>

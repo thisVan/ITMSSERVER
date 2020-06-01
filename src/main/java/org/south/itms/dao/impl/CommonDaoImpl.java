@@ -581,7 +581,7 @@ public class CommonDaoImpl implements CommonDao {
 		if (!"".equals(start) && "".equals(end)) {
 			// String hqlStart = str[0] + " and uploadTime >= ? " + " order " + str[1];
 			// System.out.println("startHql=" + hqlStart);
-			String hqlStart = str[0] + " and uploadTime >=:start " + " order " + str[1];
+			String hqlStart = str[0] + " and checkTime >=:start " + " order " + str[1];
 			// 先计算出在数据库总共有多少条数据
 			Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hqlStart));
 			SqlUtil.setQueryParamForSearch(countQuery, whereMap);
@@ -608,7 +608,7 @@ public class CommonDaoImpl implements CommonDao {
 		} else if (!"".equals(end) && "".equals(start)) {
 //			String hqlEnd = str[0] + " and uploadTime <= ? " + " order " + str[1];
 //			System.out.println("endHql=" + hqlEnd);
-			String hqlEnd = str[0] + " and uploadTime <=:end " + " order " + str[1];
+			String hqlEnd = str[0] + " and checkTime <=:end " + " order " + str[1];
 			// 先计算出在数据库总共有多少条数据
 			Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hqlEnd));
 			SqlUtil.setQueryParamForSearch(countQuery, whereMap);
@@ -636,7 +636,7 @@ public class CommonDaoImpl implements CommonDao {
 			// String hqlst = str[0] + " and uploadTime >= ? and uploadTime <= ? " + " order
 			// " + str[1];
 			// System.out.println("st=" + hqlst);
-			String hqlst = str[0] + " and uploadTime >=:start and uploadTime <=:end " + " order " + str[1];
+			String hqlst = str[0] + " and checkTime >=:start and checkTime <=:end " + " order " + str[1];
 			// 先计算出在数据库总共有多少条数据
 			Query countQuery = this.getCurrentSession().createQuery(SqlUtil.modifyToCountSql(hqlst));
 			SqlUtil.setQueryParamForSearch(countQuery, whereMap);

@@ -10,6 +10,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+    <style>
+        .layui-laydate-content .laydate-day-mark::after {
+            background-color: red;
+        }
+        .layui-laydate-content td.layui-this .laydate-day-mark::after {
+            display: block !important;
+            background-color: red;
+        }
+    </style>
     <script type="text/javascript" defer="defer">
         $(function () {
             init();
@@ -21,13 +30,16 @@
             });
             layui.use('laydate', function () {
                 var laydate = layui.laydate;
-
+                var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
+                obj[nowDate] = nowDate.split("-")[2];
                 laydate.render({
                     elem: '#startTime' //指定元素
+                    ,mark:obj
                 });
                 //执行一个laydate实例
                 laydate.render({
                     elem: '#endTime' //指定元素
+                    ,mark:obj
                 });
             });
 
@@ -58,7 +70,8 @@
                     ,
                     cols: [[
                         //{field:'id', width:'1%'}
-                        {field: 'ptableName', width: 250, event: 'set1', title: '播表名', fixed: true, sort: true}
+                        {checkbox: true, fixed: true}
+                        ,{field: 'ptableName', width: 250, event: 'set1', title: '播表名', fixed: true, sort: true}
                         , {
                             field: 'playDate', width: 110, event: 'set2', title: '播放日期', sort: true
                             , templet: function (d) {
@@ -188,7 +201,36 @@
                 });
             });
         }
-
+        function resetSelectPtable() {
+            var table=layui.table;
+            var checkStatus = table.checkStatus('flagOne')
+                ,data = checkStatus.data;
+            var pids = [];
+            for(var i = 0; i < data.length; i++){
+                pids.push(data[i].pid);
+            }
+            if(pids.length == 0){
+                layer.msg('请选择要重置的播表!',{icon:6,time:1500});
+                return ;
+            }
+            layer.confirm('真的重置所选播表么', function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "POST",
+                    url: "<%=request.getContextPath()%>/ptable/resetPLayTableState1.do",
+                    data: {"pids": pids},
+                    traditional: true,
+                    dataType: "json",
+                    success: function (msg) {
+                        var value = msg.toString();
+                        if (value == "true") {
+                            init();
+                            layer.msg('重置成功!', {icon: 6, time: 4000});
+                        }
+                    }
+                });
+            });
+        }
 
     </script>
 
@@ -249,6 +291,13 @@
                             <div class="layui-inline">
                                 <button class="layui-btn" type="button" onclick="init()">
                                     <i class="layui-icon">&#xe615;</i>查询
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-inline">
+                                <button class="layui-btn" type="button" onclick="resetSelectPtable()">
+                                    <i class="layui-icon"></i>批量播表重置
                                 </button>
                             </div>
                         </div>

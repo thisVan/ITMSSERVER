@@ -9,6 +9,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+	<style>
+		.layui-laydate-content .laydate-day-mark::after {
+			background-color: red;
+		}
+		.layui-laydate-content td.layui-this .laydate-day-mark::after {
+			display: block !important;
+			background-color: red;
+		}
+	</style>
    <script type="text/javascript" defer="defer">
    var node = [];
    $(function(){
@@ -23,10 +32,13 @@
     	  
     	  layui.use('laydate', function(){
     		  var laydate = layui.laydate;
+			  var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
+			  obj[nowDate] = nowDate.split("-")[2];
     		  //执行一个laydate实例
     		  laydate.render({
     		    elem: '#dateTime' //指定元素
     		    ,range: true
+				  ,mark : obj
     		  });
     		});
     	  
@@ -96,9 +108,9 @@
     		    		  }
     		    	  }
     		      }
-    		      ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
+					  ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
     		      ,{field:'size',width:130, event: 'set6', title: '稿件大小'}
-    		      ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
+					  ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
     		      ,{field:'usedNum',width:100, event: 'set8', title: '使用次数', sort: true}
     		      ,{field:'info',width:100, event: 'set9', title: '排播状态', sort: true
     		    	  ,templet: function(d){
@@ -272,9 +284,10 @@
     		    		  }
     		    	  }
     		      }
-    		      ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
+					  ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
     		      ,{field:'size',width:130, event: 'set6', title: '稿件大小'}
-    		      ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
+
+					  ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
     		      ,{field:'usedNum',width:100, event: 'set8', title: '使用次数', sort: true}
     		      ,{field:'info',width:100, event: 'set9', title: '排播状态', sort: true
     		    	  ,templet: function(d){

@@ -162,6 +162,8 @@ public class MaterialController {
 
 	@RequestMapping("/insteadMaterial")
 	public String insteadMaterial(Model model, HttpServletRequest request) {
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminals", listTerminal);
 		return "instead/insteadMaterialList";
 	}
 
@@ -188,9 +190,13 @@ public class MaterialController {
 
 	@RequestMapping("/searchMyFile")
 	@ResponseBody
-	public PageResultData<MaterialDto> searchMyFile(int page, int limit, Model model, HttpServletRequest request, String param, String dateTime) {
+	public PageResultData<MaterialDto> searchMyFile(int page, int limit, Model model, HttpServletRequest request, String param, String dateTime, String terminalId) {
 		// String[] params = new String[3];
 		String name = (String) request.getSession().getAttribute("userName");
+		String ws = null;
+		if(!StringUtil.isEmpty(terminalId)){
+			ws = " and m.terminal.terminalId = " + terminalId;
+		}
 		if (name == null || "".equals(name)) {
 			PageResultData<MaterialDto> pageResult1 = new PageResultData<MaterialDto>();
 			pageResult1.setCount(0);
@@ -205,7 +211,7 @@ public class MaterialController {
 			String[] params = param.split(",");
 			if (dateTime == null || "".equals(dateTime)) {
 				try {
-					Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", null);
+					Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", "uploadTime desc", ws);
 					List<Material> listM = pageD.getList();
 					System.out.println(listM);
 					List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
@@ -232,7 +238,7 @@ public class MaterialController {
 				String endDate = time[2];
 
 				try {
-					Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material", "uploadTime desc", null);
+					Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material", "uploadTime desc", ws);
 					List<Material> listM = pageD.getList();
 					List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
 					// System.out.println("listM" + listM);
@@ -381,6 +387,68 @@ public class MaterialController {
 
 			try {
 				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material", "uploadTime desc", null);
+				List<Material> listM = pageD.getList();
+				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
+				// System.out.println("listM" + listM);
+				// System.out.println("size=" + pageD.getTotalRecord());
+				PageResultData<MaterialDto> pageResult = new PageResultData<MaterialDto>();
+				pageResult.setCount(pageD.getTotalRecord());
+				pageResult.setCode(0);
+				pageResult.setMsg("");
+				pageResult.setData(list);
+				return pageResult;
+			} catch (Exception e) {
+				e.printStackTrace();
+				PageResultData<MaterialDto> pageResult1 = new PageResultData<MaterialDto>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("查询异常");
+				pageResult1.setFail(1);
+				return pageResult1;
+			}
+		}
+	}
+	//20200521 by anqi 添加终端搜索
+	@RequestMapping(value = "/searchFile1")
+	public @ResponseBody PageResultData<MaterialDto> searchFile1(Model model, String param, String dateTime, int page, int limit, String field, String order,String terminalId) throws ParseException {
+		System.out.println("param=" + param + " dateTime=" + dateTime);
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("listTerminal", listTerminal);
+		String[] params = param.split(",");
+		String ws = null;
+		if(!StringUtil.isEmpty(terminalId)){
+			ws = " and m.terminal.terminalId = " + terminalId;
+		}
+		if (dateTime == null || "".equals(dateTime)) {
+			try {
+				Page pageD = commonService.pageSearchByTemplateHQL(params, page, limit, "Material", field+" "+order, ws);
+				List<Material> listM = pageD.getList();
+				System.out.println(listM);
+				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
+				System.out.println(list);
+				PageResultData<MaterialDto> pageResult = new PageResultData<MaterialDto>();
+				pageResult.setCount(pageD.getTotalRecord());
+				pageResult.setCode(0);
+				pageResult.setMsg("");
+				pageResult.setData(list);
+				return pageResult;
+			} catch (Exception e) {
+				e.printStackTrace();
+				PageResultData<MaterialDto> pageResult1 = new PageResultData<MaterialDto>();
+				pageResult1.setCount(0);
+				pageResult1.setCode(0);
+				pageResult1.setMsg("查询异常");
+				pageResult1.setFail(1);
+				return pageResult1;
+			}
+		} else {
+			// List<Terminal> listTerminal1 = commonService.getAllTerminal();
+			String[] time = dateTime.split(" - ");
+			String startDate = time[0];
+			String endDate = time[1];
+
+			try {
+				Page pageD = commonService.pageSearchByTemplateHQL(startDate, endDate, params, page, limit, "Material", "uploadTime desc", ws);
 				List<Material> listM = pageD.getList();
 				List<MaterialDto> list = EntityUtil.getMaterialDtoInfo(listM, listTerminal);
 				// System.out.println("listM" + listM);
@@ -555,20 +623,35 @@ public class MaterialController {
 		if (terminalIds.length == 1) {
 			return searchBroadItem2(params + "terminalId" + ",=," + terminalIds[0] + ",", dateTime, page, limit, orderBy);
 		} else {
-			List<ItemsDto> listDto = new ArrayList<ItemsDto>();
-			PageResultData<ItemsDto> pageResult = searchBroadItem2(params, dateTime, page, limit, orderBy);
-			for (ItemsDto itemsDto : pageResult.getData()) {
-				for (String terminalId : terminalIds) {
-					if (itemsDto.getTerminalId().equals(terminalId)) {
-						listDto.add(itemsDto);
-						break;
-					}
-
+//			List<ItemsDto> listDto = new ArrayList<ItemsDto>();
+//			PageResultData<ItemsDto> pageResult = searchBroadItem2(params, dateTime, page, limit, orderBy);
+//			for (ItemsDto itemsDto : pageResult.getData()) {
+//				for (String terminalId : terminalIds) {
+//					if (itemsDto.getTerminalId().equals(terminalId)) {
+//						listDto.add(itemsDto);
+//						break;
+//					}
+//
+//				}
+//			}
+			int k=0;
+			String terminalIdss = "";
+			for(String terminalId : terminalIds){
+				if(k == 0){
+					terminalIdss = " and terminalId in (" + terminalId;
+					k++;
 				}
+				terminalIdss += "," + terminalId;
 			}
-			pageResult.setData(listDto);
-			pageResult.setCount(listDto.size());
-			return pageResult;
+			terminalIdss += ")";
+			if(dateTime != null){
+				terminalIdss = dateTime + terminalIdss;
+			}
+			return searchBroadItem2(params , terminalIdss, page, limit, orderBy);
+
+//			pageResult.setData(listDto);
+//			pageResult.setCount(listDto.size());
+//			return pageResult;
 		}
 
 	}
@@ -1011,7 +1094,7 @@ public class MaterialController {
 		try {
 			System.out.println(mid);
 			Material material = materialService.getById(mid);
-			
+
 			File file = new File(material.getFilePath());
 			if (!file.exists()) {
 				request.getSession().setAttribute("materialExist", "false");
@@ -1099,12 +1182,16 @@ public class MaterialController {
 
 	@RequestMapping("/checkList")
 	public String checkList(Model model, HttpServletRequest request) {
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminals", listTerminal);
 		return "check/checkList";
 	}
 
     @RequestMapping("/checkSecondList")
     public String checkSecondList(Model model, HttpServletRequest request) {
-        return "check/checkSecondList";
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminals", listTerminal);
+		return "check/checkSecondList";
     }
 
 	@RequestMapping("/notifyFile")
@@ -1261,13 +1348,20 @@ public class MaterialController {
 
 	@RequestMapping(value = "/searchCheckFile")
 	public @ResponseBody PageResultData<Material> searchCheckFile(Model model, HttpServletRequest request, String materialName, String fileType,
-			String statusId, String dateTime, int page, int limit) {
+			String statusId, String dateTime, String terminalId, int page, int limit) {
 		String[] param = initParam(materialName, fileType, statusId);
 		String ws = null;
 		if("5".equals(statusId)){
 			ws = " and status_id = 1 or status_id = 2 or status_id = 4";
 		}else if("6".equals(statusId)){
 			ws = " and status_id = 2 or status_id = 3";
+		}
+		if(!StringUtil.isEmpty(terminalId)){
+			if(!StringUtil.isEmpty(ws)){
+				ws += " and m.terminal.terminalId = " + terminalId;
+			}else {
+				ws = " and m.terminal.terminalId = " + terminalId;
+			}
 		}
 //		if (dateTime == null || "".equals(dateTime)) {
 //			Calendar calendar = Calendar.getInstance();

@@ -226,12 +226,15 @@ public class PlayTableTask extends TimerTask {
 	//一个终端时段生成多天播表
 	public ArrayList<String> generateTb(String terminalId, String periodId, String uid, int start, int length) throws ParseException {
 		ArrayList<String> ignorePids = new ArrayList<String>();
+		ArrayList<Integer> nums = new ArrayList<Integer>();
 		getTableFileMessage(periodId);
 		System.out.println("listFile==" + listFile);
 		if("".equals(periodId)) {
 		}else {
 			TableAutoGenerate t = new TableAutoGenerate();
-			ignorePids = t.deleteNewPlayTb(Integer.parseInt(periodId), start, length);
+
+			//ignorePids = t.deleteNewPlayTb(Integer.parseInt(periodId), start, length);
+			nums = t.deleteNewPlayTb(Integer.parseInt(periodId), start, length);
 			logger.info("删除播表，参数为uid=" + uid + ",periodId=" + periodId + ",start=" + start + ",length=" + length);
 			logger.info("删除播表，忽略播表列表为ignorePids=" + ignorePids);
 		}
@@ -241,7 +244,7 @@ public class PlayTableTask extends TimerTask {
 			getPlayTable(terminalId, periodId, i);
 			System.out.println("listTable---" + listTable);
 			TableAutoGenerate tag = new TableAutoGenerate();
-			tag.PlayTableGenerate(listTable, uid, i);
+			tag.PlayTableGenerate(listTable, uid, i, nums);
 		}
 		System.out.println(listFile);
 

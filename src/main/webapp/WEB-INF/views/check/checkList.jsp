@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -9,6 +10,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+	<style>
+		.layui-laydate-content .laydate-day-mark::after {
+			background-color: red;
+		}
+		.layui-laydate-content td.layui-this .laydate-day-mark::after {
+			display: block !important;
+			background-color: red;
+		}
+	</style>
    <script type="text/javascript" defer="defer">
    $(function(){
 	   init();
@@ -17,11 +27,13 @@
       function init(){
     	  layui.use('laydate', function(){
     		  var laydate = layui.laydate;
-
+			  var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
+			  obj[nowDate] = nowDate.split("-")[2];
 			  //执行一个laydate实例
 			  laydate.render({
 				  elem: '#dateTime' //指定元素
 				  ,range: true
+				  ,mark:obj,
 			  });
     		});
 		  
@@ -36,6 +48,9 @@
 
 		  //时间
 		  var dateTime = $("#dateTime").val();
+
+		  //终端
+		  var terminalId = $("#terminal").val();
 
 		  // if(dateTime == ""){
 			//   var d = new Date();
@@ -142,7 +157,7 @@
       		      ,{fixed: 'right', width:100, event: 'set8', title: '操作', align:'center', toolbar: '#barDemo'}
       		    ]]
     		    ,page: true
-    		    ,where: {"materialName": materialName, "fileType":fileType, "statusId":statusId, "dateTime":dateTime}
+    		    ,where: {"materialName": materialName, "fileType":fileType, "statusId":statusId, "dateTime":dateTime,"terminalId":terminalId}
     		    ,done: function(res, curr, count){
     		    	  //document.getElementById("table1").remove();
     		      }
@@ -217,7 +232,21 @@
 									</select>
 								</div>
 							</div>
-							
+
+							<div class="layui-inline">
+								<label class="layui-form-mid">终端：</label>
+								<div class="layui-input-inline"
+									 style="width: 140px; height: 35px;">
+									<select name="terminal" id="terminal" lay-verify="required" lay-search=""
+											style="width: 140px; height: 35px;">
+										<option value="">直接选择或搜索</option>
+										<c:forEach items="${terminals}" var="terminal" varStatus="status">
+											<option value="${terminal.terminalId}">${terminal.terminalName}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+
 							<div class="layui-inline">
 								<label class="layui-form-mid">状态：</label>
 								<div class="layui-input-inline"
@@ -232,7 +261,7 @@
 							</div>
 
 							<div class="layui-inline">
-								<label class="layui-form-mid">上传日期范围：</label>
+								<label class="layui-form-mid">审核日期范围：</label>
 								<div class="layui-inline" style="">
 									<input type="text" id="dateTime" name="dateTime" autocomplete="off" style="width: 170px; height: 36px;" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
 								</div>

@@ -11,6 +11,15 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1">
 <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+	<style>
+		.layui-laydate-content .laydate-day-mark::after {
+			background-color: red;
+		}
+		.layui-laydate-content td.layui-this .laydate-day-mark::after {
+			display: block !important;
+			background-color: red;
+		}
+	</style>
 <script type="text/javascript" defer="defer">
    var tabIndex=0;
    layui.use(['layer','form', 'element','laydate'], function(){
@@ -18,10 +27,14 @@
 		,form = layui.form
 		,element = layui.element
 	    ,laydate = layui.laydate;
-		
+
+	   var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
+	   obj[nowDate] = nowDate.split("-")[2];
+
 		laydate.render({
 		    elem: '#broadTime' //指定元素
 		    ,range: true
+			,mark : obj
 		  });
 		//监听Tab切换
 		  element.on('tab(demo)', function(data){
@@ -35,6 +48,7 @@
 	    laydate.render({
 		    elem: '#dateTime' //指定元素
 		    ,range: true
+			,mark : obj
 		  });
 	   
 			
@@ -892,7 +906,12 @@
 	<div style="width: 14%; height: 100%; float: left">
 		<br>
 		<lable style="padding-left:0.8em;color: purple;font-size: 1em;">双击打开关闭</lable>
-		<ul id="demo1"></ul>
+		<ul id="demo1">
+			<li data-spread="true" onclick="refresh()">
+				<i class="layui-icon layui-tree-branch" ></i>
+				<city>全部</city>
+			</li>
+		</ul>
 	</div>
 
 	<div style="width: 86%; height: 100%; float: left">

@@ -87,7 +87,7 @@
     		    ,cols: [[
     		      {type: 'checkbox', event: 'set1', fixed: true}
     		      ,{field:'terminalId',width:200, event: 'set2', title: '稿件名', fixed: true, sort: true,hide:true}
-    		      ,{field:'materialName',width:200, event: 'set2', title: '稿件名', fixed: true, sort: true}
+    		      ,{field:'materialName',width:255, event: 'set2', title: '稿件名', fixed: true, sort: true}
     		      ,{field: 'terminalName',width:125, event: 'set3', title: '终端名', sort: false
     		    	  ,templet: function(d){
     		    		  var name = d.terminal;

@@ -10,6 +10,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+	<style>
+		.layui-laydate-content .laydate-day-mark::after {
+			background-color: red;
+		}
+		.layui-laydate-content td.layui-this .laydate-day-mark::after {
+			display: block !important;
+			background-color: red;
+		}
+	</style>
    <script type="text/javascript" defer="defer">
    $(function(){
 	   init();
@@ -21,13 +30,16 @@
     		});
     	  layui.use('laydate', function(){
     		  var laydate = layui.laydate;
-    		  
+			  var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
+			  obj[nowDate] = nowDate.split("-")[2];
     		  laydate.render({
       		    elem: '#startTime' //指定元素
+				  ,mark:obj
       		  });
     		  //执行一个laydate实例
     		  laydate.render({
     		    elem: '#endTime' //指定元素
+				  ,mark:obj
     		  });
     		});
 		  

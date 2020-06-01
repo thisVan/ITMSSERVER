@@ -23,6 +23,9 @@
 		var min = '${min}';
 		var periodName = '${periodName}'; //时段名
 
+		var ptableTotalDuration = '${playTableDuration}';
+		var ptableMaxCommonDivisor = '${playTableMaxCommonDivisor}';
+
 		$(function() {
 			initTable();
 		});
@@ -116,7 +119,7 @@
 								time : 2000
 							});
 						} else if (res.fail == 0) {
-							document.getElementById("ptableNameThree").innerHTML = '<font  size="4"  color="red"> 当前播表名：' + res.msg + '</font>' + '<br>播放日期： ' + ptdate;
+							document.getElementById("ptableNameThree").innerHTML = '<font  size="4"  color="red"> 当前播表名：' + res.msg + '</font>' + '<br>播表总时长: ' + ptableTotalDuration + '&nbsp;&nbsp;&nbsp;&nbsp; 播表基频: ' + ptableMaxCommonDivisor + '&nbsp;&nbsp;&nbsp;&nbsp; 播放日期： ' + ptdate;
 						}
 
 						var arr = [];

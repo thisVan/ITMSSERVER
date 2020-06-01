@@ -172,7 +172,7 @@ public class SqlUtil {
 		//拼类名
 		hql.append(" from ");
 		hql.append(entityClass);
-		hql.append(" where deleted = 0 ");
+		hql.append(" m where deleted = 0 ");
 		//拼where的参数字段
 		if(!whereMap.isEmpty()) {
 			for(Map.Entry<String, ValueParam> entry : whereMap.entrySet()) {
@@ -249,7 +249,7 @@ public class SqlUtil {
 		//拼类名
 		hql.append(" from ");
 		hql.append(entityClass);
-		hql.append(" where deleted = 0 ");
+		hql.append(" m where deleted = 0 ");
 		//拼where的参数字段
 		if(!whereMap.isEmpty()) {
 			for(Map.Entry<String, ValueParam> entry : whereMap.entrySet()) {

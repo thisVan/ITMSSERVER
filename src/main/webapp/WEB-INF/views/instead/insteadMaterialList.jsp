@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -9,6 +10,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+	<style>
+		.layui-laydate-content .laydate-day-mark::after {
+			background-color: red;
+		}
+		.layui-laydate-content td.layui-this .laydate-day-mark::after {
+			display: block !important;
+			background-color: red;
+		}
+	</style>
    <script type="text/javascript" defer="defer">
    var node = [];
    $(function(){
@@ -22,10 +32,13 @@
     	  
     	  layui.use('laydate', function(){
     		  var laydate = layui.laydate;
+			  var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
+			  obj[nowDate] = nowDate.split("-")[2];
     		  //执行一个laydate实例
     		  laydate.render({
     		    elem: '#dateTime' //指定元素
     		    ,range: true
+				  ,mark : obj
     		  });
     		});
     	  
@@ -44,7 +57,8 @@
 		   if(fileType != ""){
 			   param = param + "fileType" + ",=," + fileType + ",";
 		   }
-		   
+		  //终端
+		  var terminalId = $("#terminal").val();
 		   
 		   //状态
 		   var statusId = $("#statusId").val();
@@ -60,7 +74,7 @@
     		  table.render({
     		    elem: '#table1'
     		    ,id: 'flagTwo'
-    		    ,url:'<%=request.getContextPath()%>/material/searchFile.do'
+    		    ,url:'<%=request.getContextPath()%>/material/searchFile1.do'
     		   // ,height: 550
     		    //,cellMinWidth: 120
 				  ,height:'full-200'
@@ -128,7 +142,7 @@
     		      ,{fixed: 'right', width:200, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
     		    ]]
     		    ,page: true
-    		    ,where: {"param": param,"dateTime":dateTime,"field":"uploadTime", "order":"asc"}
+    		    ,where: {"param": param,"dateTime":dateTime,"field":"checkSecondTime", "order":"desc", "terminalId":terminalId}
     		    ,done: function(res, curr, count){
     		    	  //changeBg();
     		      }
@@ -214,7 +228,21 @@
 									</select>
 								</div>
 							</div>
-							
+
+							<div class="layui-inline">
+								<label class="layui-form-mid">终端：</label>
+								<div class="layui-input-inline"
+									 style="width: 140px; height: 35px;">
+									<select name="terminal" id="terminal" lay-verify="required" lay-search=""
+											style="width: 140px; height: 35px;">
+										<option value="">直接选择或搜索</option>
+										<c:forEach items="${terminals}" var="terminal" varStatus="status">
+											<option value="${terminal.terminalId}">${terminal.terminalName}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+
 							<div class="layui-inline">
 								<label class="layui-form-mid">状态：</label>
 								<div class="layui-input-inline"

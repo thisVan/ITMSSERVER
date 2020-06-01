@@ -43,7 +43,7 @@ hr{margin: 30px 0;}
 			<div class="layui-upload">
 				<input type="button" class="layui-btn" style="margin: 2px;"
 					value="当前终端" /> &nbsp;&nbsp;&nbsp;<input id="terminalName"
-					type="button" class="layui-btn" style="margin: 2px;" value="无" />
+					type="button" class="layui-btn" style="margin: 2px;" value="南都" />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<input id="terminalName" type="button" class="layui-btn" onclick="allTable()" style="margin: 5px;display:none;"  value="一键生成所有播表" />	
 				<input id="add" type="hidden" value=""/>

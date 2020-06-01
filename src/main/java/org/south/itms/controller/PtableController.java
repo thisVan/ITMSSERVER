@@ -289,6 +289,17 @@ public class PtableController {
 		commonService.resetPtableState(pid);
 		return "true";
 	}
+
+	@RequestMapping("/resetPLayTableState1")
+	@ResponseBody
+	public String resetPtableState1(String pids[], HttpServletRequest request) {
+		//System.out.println("pid=" + pid);
+		for(int i=0; i<pids.length; i++){
+			commonService.resetPtableState(pids[i]);
+		}
+		return "true";
+	}
+
 	@RequestMapping("/resetMarqueeState")
 	@ResponseBody
 	public String resetMarqueeState(String mid, HttpServletRequest request) {
@@ -328,6 +339,8 @@ public class PtableController {
 	public String ptableCheckFirstList(Model model, HttpServletRequest request) {
 		List<Period> listPeriod = commonService.getAllPeriod();
 		List<User> listUser = userService.getAllUser();
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminalPtable", listTerminal);
 		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("periodL", listPeriod);
 		model.addAttribute("userL", listUser);
@@ -363,6 +376,8 @@ public class PtableController {
 	public String ptableCheckSecondList(Model model, HttpServletRequest request) {
 		List<Period> listPeriod = commonService.getAllPeriod();
 		List<User> listUser = userService.getAllUser();
+		List<Terminal> listTerminal = commonService.getAllTerminal();
+		model.addAttribute("terminalPtable", listTerminal);
 		request.getSession().setAttribute("periodList", listPeriod);
 		model.addAttribute("periodL", listPeriod);
 		model.addAttribute("userL", listUser);
@@ -750,8 +765,8 @@ public class PtableController {
 	}
 
 	@RequestMapping(value = "/searchUnckeckFirstPtable")
-	public @ResponseBody PageResultData<PtableDto> searchUnckeckFirstPtable(String statusId, int page, int limit, String sortName, String sortBy) {
-		String[] param = initUncheckParam(statusId);
+	public @ResponseBody PageResultData<PtableDto> searchUnckeckFirstPtable(String terminalId, String statusId, int page, int limit, String sortName, String sortBy) {
+		String[] param = initUncheckParam1(statusId, terminalId);
 		List<Terminal> list = commonService.getAllTerminal();
 		List<Period> listPeriod = commonService.getAllPeriod();
 		List<User> listUser = commonService.getAllUser();
@@ -811,6 +826,35 @@ public class PtableController {
 			pageResult1.setMsg("查询失败");
 			return pageResult1;
 		}
+	}
+	//by anqi 20200521
+	private String[] initUncheckParam1(String statusId, String terminalId) {
+		int k = 0;
+		if (!"".equals(statusId)) {
+			k++;
+		}
+		if (!"".equals(terminalId)) {
+			k++;
+		}
+		String[] param = new String[k * 3];
+		int len = 0;
+		if (!"".equals(statusId)) {
+			param[len] = "statusId";
+			len++;
+			param[len] = "=";
+			len++;
+			param[len] = statusId;
+			len++;
+		}
+		if (!"".equals(terminalId)) {
+			param[len] = "terminalId";
+			len++;
+			param[len] = "=";
+			len++;
+			param[len] = terminalId;
+			len++;
+		}
+		return param;
 	}
 
 	private String[] initUncheckParam(String statusId) {
@@ -1029,6 +1073,9 @@ public class PtableController {
 		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
 		modelMap.addAttribute("min",playTable.getMin());
 
+		modelMap.addAttribute("playTableDuration", playTable.getPlayTotalTime());
+		modelMap.addAttribute("playTableMaxCommonDivisor", playTable.getBaseFrequency());//基础频次，最大公约数
+
 		List<Material> files = fileDao.findByPtable(pid);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -1049,6 +1096,17 @@ public class PtableController {
 		modelMap.addAttribute("pids", pids);
 		String[] pidss = pids.split(",");
 		modelMap.addAttribute("pid", pidss[0]);
+
+		PlayTable playTable = ptableDao.getById(pidss[0]);
+		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
+		modelMap.addAttribute("startTime",playTable.getStartTime());
+		modelMap.addAttribute("endTime",playTable.getEndTime());
+		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
+		modelMap.addAttribute("min",playTable.getMin());
+
+		modelMap.addAttribute("playTableDuration", playTable.getPlayTotalTime());
+		modelMap.addAttribute("playTableMaxCommonDivisor", playTable.getBaseFrequency());//基础频次，最大公约数
+
 		List<Material> files = fileDao.findByPtable(pidss[0]);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -1066,6 +1124,9 @@ public class PtableController {
 		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
 		modelMap.addAttribute("min",playTable.getMin());
 
+		modelMap.addAttribute("playTableDuration", playTable.getPlayTotalTime());
+		modelMap.addAttribute("playTableMaxCommonDivisor", playTable.getBaseFrequency());//基础频次，最大公约数
+
 		List<Material> files = fileDao.findByPtable(pid);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -1078,6 +1139,17 @@ public class PtableController {
 		modelMap.addAttribute("pids", pids);
 		String[] pidss = pids.split(",");
 		modelMap.addAttribute("pid", pidss[0]);
+
+		PlayTable playTable = ptableDao.getById(pidss[0]);
+		modelMap.addAttribute("playTablePlayDate", new SimpleDateFormat("yyyy-MM-dd").format(playTable.getPlayDate()));
+		modelMap.addAttribute("startTime",playTable.getStartTime());
+		modelMap.addAttribute("endTime",playTable.getEndTime());
+		modelMap.addAttribute("insertFlag",playTable.getInsertFlag());
+		modelMap.addAttribute("min",playTable.getMin());
+
+		modelMap.addAttribute("playTableDuration", playTable.getPlayTotalTime());
+		modelMap.addAttribute("playTableMaxCommonDivisor", playTable.getBaseFrequency());//基础频次，最大公约数
+
 		List<Material> files = fileDao.findByPtable(pidss[0]);
 		request.getSession().setAttribute("tableFirst", files);
 		String rid = (String) request.getSession().getAttribute("rId");
@@ -1484,7 +1556,10 @@ public class PtableController {
 						@Override
 						public void run() {
 							if (restartTerminalAfterAudit(pt.getTerminalId())) {
+								System.out.println("trueeeeeee");
 								timer.cancel();
+							}else{
+								System.out.println("falseeeeeeee");
 							}
 						}
 					}, 3000, 60000); // 指定启动定时器3s之后运行定时器任务run方法，并且若未终止，间隔10s一直执行

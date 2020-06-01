@@ -232,6 +232,8 @@
 			      var tids = [];
 			      var flaglen = 0;
 			      var flagresolution=0;
+			      var mresolutions;
+			      var tresolutions;
 			      for(var i = 0; i < data.length; i++){
 			    	  var mid = data[i].mid;
 			    	  var mresolution=data[i].resolution;
@@ -244,7 +246,11 @@
 			    			  		{
 			    			  			var tledresolution=terminalVal[j].ledLength+'X'+terminalVal[j].ledWidth;
 			    			  			if(tledresolution!=mresolution)
-			    			  				{flagresolution=flagresolution+1;}
+			    			  				{
+			    			  					flagresolution=flagresolution+1;
+			    			  					mresolutions = mresolution;
+			    			  					tresolutions = tledresolution;
+			    			  				}
 			    			  				
 			    			  		}
 			    			  }
@@ -265,7 +271,7 @@
 			      
 			      if(flagresolution!=0){
 			    	  //批量保存
-				      layer.confirm('稿件分辨率与所选终端LED分辨率不一致，确定绑定吗', function(index){
+				      layer.confirm('稿件分辨率: '+mresolutions+' 与所选终端LED分辨率: '+ tresolutions+' 不一致，确定绑定吗?', function(index){
 					         //obj.del();
 					         layer.close(index);
 					         console.log(tids.length);
