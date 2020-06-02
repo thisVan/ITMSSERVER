@@ -10,6 +10,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/layui.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/lay/modules/layer.js"></script>
 	<script type="text/javascript">
 		layui.use('layer', function() {
 			var layer = layui.layer;
@@ -84,6 +87,7 @@
 					,skin:"nob"
 					,cols: [[
 						//{field:'id', width:'1%'}
+						{checkbox: true, event: 'set1', fixed: true},
 						{field:'ptableName',width:280, event: 'set1', title: '插播名称', fixed: true, sort: true}
 						,{field:'playDate',width:120, event: 'set2', title: '插播日期', sort: true
 							,templet: function(d){
@@ -173,6 +177,111 @@
 							layer.msg(res.msg,{icon:5,time:2000});
 						}
 						//console.log(res.msg);
+					}
+				});
+
+				var active = {
+					getDeleteData: function () { //获取选中数据
+						var checkStatus = table.checkStatus('flagOne')
+								, data = checkStatus.data;
+						var insertPtableIds = [];
+						for (var i = 0; i < data.length; i++) {
+							insertPtableIds.push(data[i].pid);
+						}
+
+						if (insertPtableIds.length == 0) {
+							layui.use('layer', function() {
+								var layer = layui.layer;
+								layer.msg('请选择要删除的数据!', {icon: 6, time: 1500});
+								return;
+							});
+						}
+						else{
+
+							layui.use('layer', function() {
+								var layer = layui.layer;
+								layer.confirm('是否删除以下插播？', {
+									btn: ['确认','取消'] //按钮
+								}, function(){
+									<%--$.ajax({--%>
+									<%--	type: "POST",--%>
+									<%--	url: "<%=request.getContextPath()%>/ptable/delPtable.do",--%>
+									<%--	data: {"ids": insertPtableIds},--%>
+									<%--	traditional: true,--%>
+									<%--	dataType: "json",--%>
+									<%--	success: function (data) {--%>
+									<%--		if (data.success) {--%>
+									<%--			refresh();--%>
+									<%--			layer.msg('删除成功!', {icon: 6, time: 2000});--%>
+									<%--		} else {--%>
+									<%--			layer.msg(data.msg, {icon: 5, time: 2000});--%>
+									<%--		}--%>
+									<%--	}--%>
+									<%--});--%>
+									layer.msg('已删除', {icon: 1});
+								}, function(){
+									//refresh();
+								});
+							});
+
+
+						}
+					}
+				};
+
+				$('.operatorTable').on('click', function () {
+					var othis = $(this);
+					var dothing = othis.attr("function");
+					if (dothing == "getDeleteData") {
+						//console.log(dothing);
+						//active.getDeleteData();
+						var checkStatus = table.checkStatus('flagOne')
+								, data = checkStatus.data;
+						var insertPtableIds = [];
+						var insertPtableNameList = [];
+						for (var i = 0; i < data.length; i++) {
+							insertPtableIds.push(data[i].pid);
+							insertPtableNameList.push(data[i].ptableName);
+						}
+
+						if (insertPtableIds.length == 0) {
+							layer.msg('请选择要删除的数据!', {icon: 6, time: 1500});
+						}
+						else{
+							//alert(insertPtableNameList);
+							layui.use('layer', function() {
+								var layer = layui.layer;
+								let content = '<br>是否删除以下插播： </br>';
+								for (var i = 0 ; i < insertPtableNameList.length; i++){
+									content += '<br>插播播表名: ' + insertPtableNameList[i] + '</br>';
+								}
+								content += "<br><strong>确认批量删除吗?</strong></br>";
+								layer.confirm(content, {
+									btn: ['确认','取消'] //按钮
+								}, function(){
+									$.ajax({
+										type: "POST",
+										url: "<%=request.getContextPath()%>/ptable/delPtable.do",
+										data: {"ids": insertPtableIds},
+										traditional: true,
+										dataType: "json",
+										success: function (data) {
+											if (data.success) {
+												init();
+												layer.msg('删除成功!', {icon: 6, time: 2000});
+											} else {
+												layer.msg(data.msg, {icon: 5, time: 2000});
+											}
+										}
+									});
+									//layer.msg('已删除', {icon: 1});
+									//init();
+								}, function(){
+								});
+							});
+
+
+						}
 					}
 				});
 
@@ -664,6 +773,9 @@
 							<button class="layui-btn layui-bg-green" type="button"
 									onclick="addFileMaterial()">
 								<i class="layui-icon">&#xe654;</i>插播
+							</button>
+							<button class="layui-btn layui-btn-danger operatorTable" type="button" function="getDeleteData" data-type="getDeleteData">
+								<i class="layui-icon">&#xe640;</i>批量删除
 							</button>
 						</div>
 					</div>

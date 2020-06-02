@@ -90,6 +90,8 @@
                                     return '<span style="color: #90EE90;">' + '已通过' + '</span>';
                                 } else if (state == 4) {
                                     return '<span style="color: #FF6347;">' + '未通过' + '</span>';
+                                }else if (state == 0){
+                                    return '<span style="color: #FFD133;">' + '已停止' + '</span>';
                                 }
                             }
                         }

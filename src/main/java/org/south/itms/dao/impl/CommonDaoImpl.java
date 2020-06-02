@@ -1034,7 +1034,7 @@ public class CommonDaoImpl implements CommonDao {
 		Query query = this.getCurrentSession().createQuery(hql1);
 		query.setParameter(0, pid);
 		PlayTable ptable = (PlayTable) query.uniqueResult();
-		ptable.setStatusId("1");
+		ptable.setStatusId("0");
 		this.getCurrentSession().update(ptable);
 	}
 

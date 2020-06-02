@@ -138,6 +138,8 @@
                                     return '<span style="color: #FF6347;">' + '未通过(稿件敏感)' + '</span>';
                                 } else if (state == 7) {
                                     return '<span style="color: #FFB800;">' + '未通过(排播有误、稿件敏感)' + '</span>';
+                                }else if (state == 0){
+                                    return '<span style="color: #FFD133;">' + '已停止' + '</span>';
                                 }
                             }
                         }
