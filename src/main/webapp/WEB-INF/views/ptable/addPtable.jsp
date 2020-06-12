@@ -215,7 +215,25 @@
 				}		
 				}
 			});
-			
+
+			table.on('sort(tableEvent)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				console.log(obj.field); //当前排序的字段名
+				console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+				console.log(this) //当前排序的 th 对象*/
+
+				if(insertFlag == '0') {
+					$("[data-field='min']").css('display','none');
+				}
+				//若已经审核则将复制和删除yin cang
+				if(isUnChecked == false){
+					$("#modifyMaterialSort").hide();
+					$("#addMaterial").hide();
+					$("[name='materialCopy']").hide();
+					$("[name='materialDelete']").hide();
+
+				}
+			});
+
 			table.on('tool(tableEvent)', function(obj) {
 				var tmpdata = obj.data;
 				var mid = obj.data.material.mid;

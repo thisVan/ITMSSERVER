@@ -77,6 +77,12 @@
     <listener>
         <listener-class>org.south.itms.util.ClearUserLoginInfoTimerTaskListener</listener-class>
     </listener>
+
+    <!-- 每日7.15的检查播表发送状态的任务监听器-->
+    <listener>
+        <listener-class>org.south.itms.util.CheckPtableStateTimerTaskListener</listener-class>
+    </listener>
+
    
    <!-- 用于启动netty的服务器 -->
    <listener>

@@ -4,14 +4,11 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 
-/**
- * @author bobo
- */
-public class ClearUserLoginInfoTimerTaskListener implements  ServletContextListener {
+public class CheckPtableStateTimerTaskListener implements  ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        new TimerManager();
+        new CheckPtableStateTimerManager();
     }
 
     @Override

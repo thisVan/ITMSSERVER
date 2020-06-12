@@ -14,6 +14,7 @@ import org.south.itms.dao.impl.UserDao;
 import org.south.itms.dto.Result;
 import org.south.itms.entity.Resource;
 import org.south.itms.entity.User;
+import org.south.itms.mail.PtableSendingStateMail;
 import org.south.itms.util.StringUtil;
 import org.south.itms.util.UserLoginListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import static org.south.itms.mail.PtableSendingStateMail.send;
 
 /**
  * @author: yezilong
@@ -57,7 +60,7 @@ public class LoginController {
 	  
 	  @RequestMapping(value = "/loginIn")
 	  @ResponseBody
-	  public Result loginIn(String userAccount, String userPassword, HttpSession session , HttpServletRequest request){
+	  public Result loginIn(String userAccount, String userPassword, HttpSession session , HttpServletRequest request) throws Exception {
 
 		  System.out.println(userAccount + "==" + userPassword);
 

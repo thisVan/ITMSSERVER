@@ -50,11 +50,7 @@ import org.south.itms.entity.PlayTable;
 import org.south.itms.entity.Terminal;
 import org.south.itms.entity.User;
 import org.south.itms.service.impl.*;
-import org.south.itms.util.Constant;
-import org.south.itms.util.EntityUtil;
-import org.south.itms.util.SqlUtil;
-import org.south.itms.util.StringUtil;
-import org.south.itms.util.TimeUtil;
+import org.south.itms.util.*;
 import org.south.netty.NettyChannelMap;
 import org.south.netty.PlayTableTask;
 import org.south.netty.TableAutoGenerate;
@@ -1732,6 +1728,13 @@ public class PtableController {
 					e.printStackTrace();
 				}
 				if (cf.isSuccess()) {
+
+					// 这里更新发送成功的播表状态
+					SqlUpdate sqlUpdate = new SqlUpdate();
+					for (PlayTable pt : playsRs) {
+						sqlUpdate.updatePtableSendingState(pt.getPid(),1);
+					}
+
 					System.out.println("在播播表更新成功，成功更新客户端播表！");
 					logger.info("在播播表更新成功，成功更新客户端播表！");
 					return true;

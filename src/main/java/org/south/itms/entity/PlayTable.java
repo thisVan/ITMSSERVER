@@ -65,6 +65,11 @@ public class PlayTable implements java.io.Serializable {
 	private Time startInterval;
 	private Time endInterval;
 
+
+
+	private int sendingState;
+
+
 	@Id
 	@Column(name = "pid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -323,6 +328,11 @@ public class PlayTable implements java.io.Serializable {
 	public void setEndInterval(Time endInterval) {
 		this.endInterval = endInterval;
 	}
+
+	@Column(name = "sending_state")
+	public int getSendingState() { return sendingState; }
+	public void setSendingState(int sendingState) { this.sendingState = sendingState; }
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

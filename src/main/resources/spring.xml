@@ -20,9 +20,12 @@
     <bean id="springContextHelper" class="org.south.itms.util.SpringContextHelper"></bean>  
     
     <!-- 扫描service自动注入为bean -->  
-    <context:component-scan base-package="org.south.itms.aspect,org.south.itms.controller,org.south.itms.service.impl,org.south.itms.dao.impl;" /> 
-  	
-  	<!-- 下面是切面的注入与配置 -->
+    <context:component-scan base-package="org.south.itms.aspect,org.south.itms.controller,org.south.itms.service.impl,org.south.itms.dao.impl;" />
+
+
+
+
+	<!-- 下面是切面的注入与配置 -->
   	
   	
   	<!-- 稿件管理相关的切点 -->

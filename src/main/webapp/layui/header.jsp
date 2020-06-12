@@ -20,9 +20,11 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/html2canvas.min.js"></script>
 	
 	<link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath()%>/layui/css/daterangepicker.css" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/layui/daterangepicker.js"></script>
+<%--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>--%>
+<%--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/"></script>--%>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/daterangepicker.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/layui/moment.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/layui/jquery.js"></script>
     
  <script type="text/javascript">
     function easyuiDateFormat(value) {

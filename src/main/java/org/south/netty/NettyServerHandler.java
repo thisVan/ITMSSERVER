@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.netty.channel.ChannelFuture;
 import org.south.itms.controller.FileController;
 import org.south.itms.dao.impl.FileDao;
 import org.south.itms.dao.impl.LogDao;
@@ -20,6 +21,7 @@ import org.south.itms.entity.PlayTable;
 import org.south.itms.entity.Terminal;
 import org.south.itms.service.impl.MarqueeService;
 import org.south.itms.util.SpringContextHelper;
+import org.south.itms.util.SqlUpdate;
 import org.south.itms.util.StringUtil;
 import org.south.netty.msg.BaseMsg;
 import org.south.netty.msg.ClientLogMsg;
@@ -109,13 +111,17 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 					System.out.println(data);
 					System.out.println("success!!!!!!!");
 					//List<PlayTable> plays = fileDao.findByTerminalId(termianl.getTerminalId());
+
+					// 这里找的是今天的播表
 					List<PlayTable> plays = terminalDao.findByTerminalId(termianl.getTerminalId());
 					//System.out.println(plays);
 					//SqlUpdate sql = new SqlUpdate();
 					
 					if(plays.size() != 0) {
 						for(PlayTable pt : plays) {
-							if(pt.getInsertFlag() == 1) continue; //是插播的话直接跳过
+							if(pt.getInsertFlag() == 1) {
+								continue; //是插播的话直接跳过
+							}
 							List<Material> fs = fileDao.findByPtable(pt.getPid());
 							//List<Material> fs = sql.findByPtable(pt.getPid());
 							System.out.println("fs=" + fs);
@@ -211,9 +217,24 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 						}
 						data.put(DataKey.MarqueeFiles,marqueefiles);
 					}
-						System.out.println("send data:"+data);
-						resultMsg.setData(data);
-						ctx.writeAndFlush(resultMsg);
+
+					System.out.println("send data:"+data);
+					resultMsg.setData(data);
+					ChannelFuture cf = ctx.writeAndFlush(resultMsg);
+
+					if (cf.isSuccess()){
+
+						// modify by bobo
+						// 这里更新发送成功的播表状态
+						SqlUpdate sqlUpdate = new SqlUpdate();
+						for (PlayTable pt : plays) {
+							sqlUpdate.updatePtableSendingState(pt.getPid(),1);
+						}
+
+						System.out.println("客户端主动请求的播表发送成功");
+					}else{
+						System.out.println("客户端主动请求的播表发送失败");
+					}
 				}
 				break;
 				

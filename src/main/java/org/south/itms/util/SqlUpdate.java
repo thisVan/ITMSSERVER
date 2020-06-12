@@ -459,4 +459,86 @@ public class SqlUpdate {
 			e.printStackTrace();
 		}
 	}
+
+
+	/**
+	 * 更新今天播表的发送状态  1 为已经发送  0 为未发送
+	 * @author bobo
+	 * 2020/6/9
+	 * @param pid
+	 * @param sendingState
+	 */
+	public void updatePtableSendingState(String pid,int sendingState) {
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed()) {
+				System.out.println("Succeeded connecting to the Database!");
+			}
+			// 更新播表状态
+			String sql = "update play_table set sending_state = " + sendingState + "where pid =  " + pid;
+			Statement statement = conn.createStatement();
+			statement.executeUpdate(sql);
+
+			conn.close();
+			} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 查询今天播表的发送状态  1 为已经发送  0 为未发送
+	 * @author bobo
+	 * 2020/6/9
+	 * @param today
+	 */
+	public ArrayList<CheckPtableSendingStateResult> getPtableSendingState(String today){
+
+		ArrayList<CheckPtableSendingStateResult> checkPtableSendingStateResultList = new ArrayList<>();
+		CheckPtableSendingStateResult checkPtableSendingStateResult = new CheckPtableSendingStateResult();
+
+		try {
+			// 加载驱动程序
+			Class.forName(driver);
+			// 连续数据库
+			Connection conn = DriverManager.getConnection(url, user, password);
+			if (!conn.isClosed()) {
+				System.out.println("Succeeded connecting to the Database!");
+			}
+
+			// 更新播表状态
+			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date =" + today;
+			Statement statement = conn.createStatement();
+			ResultSet rs= statement.executeQuery(sql);
+
+			while(rs.next()) {
+				String pid = rs.getString(1);
+				String ptableName = rs.getString(2);
+				String terminalId = rs.getString(3);
+				String terminalName = rs.getString(4);
+				int sendingState = rs.getInt(5);
+
+				checkPtableSendingStateResult.setPid(pid);
+				checkPtableSendingStateResult.setPtableName(ptableName);
+				checkPtableSendingStateResult.setTerminalId(terminalId);
+				checkPtableSendingStateResult.setTerminalName(terminalName);
+				checkPtableSendingStateResult.setSendingState(sendingState);
+
+				checkPtableSendingStateResultList.add(checkPtableSendingStateResult);
+			}
+			conn.close();
+		} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		return checkPtableSendingStateResultList;
+	}
+
+
+
+
+
+
 }
