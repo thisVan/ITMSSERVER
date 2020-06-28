@@ -274,4 +274,32 @@
 		</aop:aspect>
 	</aop:config>
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
+
+	<!-- 反审核相关切点 -->
+	<bean id = "resetOperationAspectPoint" class= "org.south.itms.aspect.ResetOperationAspect"/>
+	<!-- 为稿件反审核配置切面 -->
+	<aop:config>
+		<aop:aspect ref="resetOperationAspectPoint">
+			<aop:after method="completeResetMaterial"
+					   pointcut="execution(* org.south.itms.controller.MaterialController.resetMaterial(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 为播表反审核配置切面 -->
+	<aop:config>
+		<aop:aspect ref="resetOperationAspectPoint">
+			<aop:after method="completeResetPtable"
+					   pointcut="execution(* org.south.itms.controller.PtableController.resetPtableState(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 为LOGO/图片叠加反审核配置切面 -->
+	<aop:config>
+		<aop:aspect ref="resetOperationAspectPoint">
+			<aop:after method="completeResetMarquee"
+					   pointcut="execution(* org.south.itms.controller.PtableController.resetMarqueeState(..))"/>
+		</aop:aspect>
+	</aop:config>
+
+
 </beans>

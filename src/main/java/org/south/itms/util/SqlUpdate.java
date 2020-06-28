@@ -510,7 +510,7 @@ public class SqlUpdate {
 			}
 
 			// 更新播表状态
-			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date =" + today;
+			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date =" + today + "and deleted = 0";
 			Statement statement = conn.createStatement();
 			ResultSet rs= statement.executeQuery(sql);
 

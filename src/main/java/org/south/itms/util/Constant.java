@@ -43,5 +43,8 @@ public class Constant {
 	
     // 在服务器端创建打包下载的临时文件
 	public static final String TmpZipPath = "/dataCenter/tmp/";
+
+	// 管理员邮箱
+	public static String ITMSAdminEmailAddr = "wufc@nfledmedia.com,lis@nfledmedia.com";
 	
 }

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.south.itms.entity.Material;
+import org.south.itms.mail.PtableSendingStateMail;
 import org.south.itms.service.impl.MaterialService;
 import org.south.itms.util.Constant;
 import org.south.itms.util.StringUtil;
@@ -42,6 +43,49 @@ public class DownloadController {
 	
 	
 	private static final String Separated = ",";
+
+	private String[] mids;
+
+	private class MaterialInfo{
+		private String mid;
+		private String terminalId;
+		private String materialName;
+		private String terminalName;
+
+		public String getMid() {
+			return mid;
+		}
+
+		public void setMid(String mid) {
+			this.mid = mid;
+		}
+
+		public String getTerminalId() {
+			return terminalId;
+		}
+
+		public void setTerminalId(String terminalId) {
+			this.terminalId = terminalId;
+		}
+
+		public String getMaterialName() {
+			return materialName;
+		}
+
+		public void setMaterialName(String materialName) {
+			this.materialName = materialName;
+		}
+
+		public String getTerminalName() {
+			return terminalName;
+		}
+
+		public void setTerminalName(String terminalName) {
+			this.terminalName = terminalName;
+		}
+	}
+
+	private ArrayList<MaterialInfo> materialInfoList = new ArrayList<>();
 	
 	
 	/*
@@ -55,23 +99,43 @@ public class DownloadController {
     public String downloadFiles(String fileIds, HttpServletResponse response) {
 		System.out.println("array= " + fileIds);
 		try {
-			if(StringUtil.isEmpty(fileIds)) return null;
+			if(StringUtil.isEmpty(fileIds)) {
+				return null;
+			}
 			// 判断目录是否存在，不存在就创建
 			File directoryFile = new File(Constant.TmpZipPath);
-			if (!directoryFile.exists())
+			if (!directoryFile.exists()) {
 				directoryFile.mkdirs();
+			}
 			
 			
 	        List<File> files = new ArrayList<File>();
 	        String[] fids = fileIds.split(Separated);
+
+	        // 先清空要发送的素材信息表
+			materialInfoList.clear();
+			MaterialInfo materialInfo = new MaterialInfo();
+
 	        for(String fid : fids) {
 	        	Material myFile = materialService.getById(fid);
 	        	if(myFile != null) {
 	        		File file = new File(myFile.getFilePath());
-	        		if(file.exists()) files.add(file);
+
+	        		// 记录信息,为可能的发送错误做准备
+					materialInfo.setMid(fid);
+					materialInfo.setTerminalId(myFile.getTerminal().getTerminalId());
+					materialInfo.setMaterialName(myFile.getMaterialName());
+					materialInfo.setTerminalName(myFile.getTerminal().getTerminalName());
+					materialInfoList.add(materialInfo);
+
+	        		if(file.exists()) {
+						files.add(file);
+					}
 	        	}
 	        } 
-	        if(files.size() < 1) return null;
+	        if(files.size() < 1) {
+				return null;
+			}
 	        
 	        String fileName = UUID.randomUUID().toString() + ".zip";
 	
@@ -80,7 +144,7 @@ public class DownloadController {
 	        FileOutputStream outStream = new FileOutputStream(fileZip);
 	        // 压缩流
 	        ZipOutputStream toClient = new ZipOutputStream(outStream);
-	        //  toClient.setEncoding("gbk");
+	        // toClient.setEncoding("gbk");
 	        zipFile(files, toClient);
 	        toClient.close();
 	        outStream.close();
@@ -174,12 +238,30 @@ public class DownloadController {
     		   }
 
     		}catch (IOException e) {
+
+    			// 这里发生了IO错误，应该发送邮件给管理员
+
+				String content = "<b>南方LED管理员您好!下面是来自稿件传输自检模块的诊断报告:</b>";
+				String senderNickname = "ITMS稿件传输自检模块";
+				String ITMSAdminEmailAddr = Constant.ITMSAdminEmailAddr;
+				String subject = "稿件传输自检结果报告";
+
+
+				for (MaterialInfo m : materialInfoList){
+					String tempContent = "";
+					tempContent += "<p>在终端ID"+ m.getTerminalId() +":" + m.getTerminalName() + "下</p>"
+								+  "<p>稿件ID:" + m.getMid() + "," + m.getMaterialName() +  "可能出现传输问题，请检查处理</p>"
+								+  "<br />";
+					content += tempContent;
+				}
+				PtableSendingStateMail.send(senderNickname,subject,content,ITMSAdminEmailAddr);
     			System.out.println("reason:"+e.getMessage());
-//				e.printStackTrace();
+
 			}finally {
 				try {
-					if(fis!=null)
-					  fis.close();
+					if(fis!=null) {
+						fis.close();
+					}
 					if(toClient!=null) {
 			    		toClient.flush();
 			    		toClient.close();
@@ -200,13 +282,15 @@ public class DownloadController {
 	public void showVedio(String filename, HttpServletResponse response) {
 
 		try {
-			if (StringUtil.isEmpty(filename))
+			if (StringUtil.isEmpty(filename)) {
 				return;
+			}
 
 			File file = new File(Constant.UPLOADDIRECORY + filename);
 
-			if (!file.exists())
+			if (!file.exists()) {
 				return;
+			}
 			downloadFile(file, response, false);
 		} catch (Exception e) {
 			e.printStackTrace();
