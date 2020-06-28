@@ -191,7 +191,7 @@
             video.style.display='block';
             video.addEventListener('ended', play);
             //video.src = "/ITMS/media/" + year + "/" + filename;
-            video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
+            video.src = '<%=request.getContextPath()%>/downloadController/player.do?filename=' + filename;
             video.controls = "controls";
             video.load(); //如果短的话，可以加载完成之后再播放，监听 canplaythrough 事件即可
             video.play();

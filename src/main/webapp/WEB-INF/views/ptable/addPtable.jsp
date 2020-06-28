@@ -224,6 +224,7 @@
 				if(insertFlag == '0') {
 					$("[data-field='min']").css('display','none');
 				}
+
 				//若已经审核则将复制和删除yin cang
 				if(isUnChecked == false){
 					$("#modifyMaterialSort").hide();

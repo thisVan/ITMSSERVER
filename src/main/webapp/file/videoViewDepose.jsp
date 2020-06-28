@@ -83,7 +83,7 @@ function depose(){
 	        play();
 			 function play() {
 		         var video = document.getElementById("video1");
-		         video.src = '<%=request.getContextPath()%>/downloadController/showVedio.do?filename=' + filename;
+		         video.src = '<%=request.getContextPath()%>/downloadController/player.do?filename=' + filename;
 		}
 	}
  }
