@@ -18,7 +18,7 @@ public class CheckPtableStateTimerTask extends TimerTask {
             // 预设变量
             String content = "<b>南方LED管理员您好!下面是来自播表传输自检模块的诊断报告:</b>";
             String senderNickname = "ITMS播表传输自检模块";
-            String ITMSAdminEmailAddr = "wufc@nfledmedia.com,lis@nfledmedia.com";
+            String ITMSAdminEmailAddr = Constant.ITMSAdminEmailAddr;
             String subject = "播表传输自检结果报告";
 
             System.out.println(" CheckPtableState 执行当前时间"+taskFormatter.format(Calendar.getInstance().getTime()));
@@ -31,6 +31,11 @@ public class CheckPtableStateTimerTask extends TimerTask {
 
             // 用今天的日期去检查今日播表的发送状态
             checkPtableSendingStateResultList = sqlUpdate.getPtableSendingState(formatter.format(date));
+
+            // 今天没有新增的
+            if (checkPtableSendingStateResultList.size() == 0){
+                return;
+            }
 
             // 如果有问题则发送邮件
             int okCount = 0;
@@ -48,7 +53,6 @@ public class CheckPtableStateTimerTask extends TimerTask {
                 else{
                     String tempContent = "";
                     tempContent += "<p>在终端ID"+ c.getTerminalId() +":" + c.getTerminalName() + "下</p>"
-                                +  "<br />"
                                 +  "<p>播表ID:" + c.getPid() + "," + c.getPtableName() +  " 出现传输问题，请检查处理</p>"
                                 +  "<br />";
                     content += tempContent;
