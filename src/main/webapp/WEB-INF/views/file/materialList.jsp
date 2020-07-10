@@ -9,15 +9,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <%-- <script src="<%=request.getContextPath()%>/layui/jquery-1.8.2.min.js"></script> --%>
-	<style>
-		.layui-laydate-content .laydate-day-mark::after {
-			background-color: red;
-		}
-		.layui-laydate-content td.layui-this .laydate-day-mark::after {
-			display: block !important;
-			background-color: red;
-		}
-	</style>
    <script type="text/javascript" defer="defer">
    var node = [];
    $(function(){
@@ -32,13 +23,10 @@
     	  
     	  layui.use('laydate', function(){
     		  var laydate = layui.laydate;
-			  var nowDate = moment().format("YYYY-MM-DD"),   obj = {};
-			  obj[nowDate] = nowDate.split("-")[2];
     		  //执行一个laydate实例
     		  laydate.render({
     		    elem: '#dateTime' //指定元素
     		    ,range: true
-				  ,mark : obj
     		  });
     		});
     	  
@@ -76,73 +64,95 @@
     		    ,url:'<%=request.getContextPath()%>/material/searchFile.do'
     		    //,height: 550
     		    //,cellMinWidth: 120
-				  ,height:'full-200'
+				,height:'full-200'
     		    ,limits:[10,25,50,75,100]
     		    ,cols: [[
-    		      //{field:'id', width:'1%'}
-    		      {checkbox: true, event: 'set1', fixed: true}
-    		      ,{field:'materialName',width:280, event: 'set2', title: '稿件名', fixed: true, sort: true}
-    		      ,{field:'terminalName',width:120, event: 'set3', title: '终端名', sort: true
-    		    	  ,templet: function(d){
-    		    		  var tname = d.terminalName;
-    		    		  var name = d.terminal;
-    		    		  var tis = d.tis;
-    		    		  if(tis == '0'){
-    		    			  return '<span style="color: #FF6347;">' + '未选择' + '</span>';
-    		    		  }else{
-    		    			  return '<span style="color: #1E9FFF;">' + name.terminalName + '</span>';
-    		    		  }
-    		    	  }
-    		      }
-    		      ,{field:'statusId',width:100, event: 'set4', title: '审核状态', sort: true
-    		    	  ,templet: function(d){
-    		    		  var state = d.statusId;
-    		    		  if(state == 1){
-    		    			  return '<span style="color: #FF6347;">' + '未审核' + '</span>';
-    		    		  }else if(state == 2){
-    		    			  return '<span style="color: #90EE90;">' + '已初审' + '</span>';
-    		    		  }else if(state == 3){
-    		    			  return '<span style="color: #90EE90;">' + '已通过' + '</span>';
-    		    		  }else if(state == 4){
-    		    			  return '<span style="color: #FF6347;">' + '未通过' + '</span>';
-    		    		  }
-    		    	  }
-    		      }
-					  ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
-    		      ,{field:'size',width:130, event: 'set6', title: '稿件大小'}
-					  ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
-    		      ,{field:'usedNum',width:100, event: 'set8', title: '使用次数', sort: true}
-    		      ,{field:'info',width:100, event: 'set9', title: '排播状态', sort: true
-    		    	  ,templet: function(d){
-    		    		  var state = d.info;
-    		    		  if(state == 0){
-    		    			  return '<span style="color: #FF6347;">' + '未排播' + '</span>';
-    		    		  }else if(state == 1){
-    		    			  return '<span style="color: #90EE90;">' + '已排播' + '</span>';
-    		    		  }
-    		    	  }
-    		      }
-    		      /* ,{field:'playDate',width:200, event: 'set9', title: '播放日期', sort: true}
-    		      ,{field:'playTime',width:200, event: 'set10', title: '播放时段', sort: true}
-    		      ,{field:'frequency',width:100, event: 'set11', title: '频次', sort: true} */
-    		      ,{field:'uploadTime',width:160, event: 'set10', title: '上传时间', sort: true
-    		    	  ,templet: function(d){
-    		    		  var date = new Date(d.uploadTime);
-    		    		  var Y = date.getFullYear() + '-';
-    		    		  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    		    		  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-    		    		  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
-    		    		  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
-    		    		  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
-    		    		  return Y+M+D+h+m+s;
-    		    	  }
-    		      }
-    		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
-    		      ,{field:'checkTime',width:160, event: 'set13', title: '审核时间', sort: true}
-    		      ,{field:'checkName',width:90, event: 'set14', title: '审核人', sort: true}
-					  ,{field:'unAccessReason',width:140, event: 'set15', title: '未通过的理由', sort: true}
-    		      ,{fixed: 'right', width:80, event: 'set12', title: '操作', align:'center', toolbar: '#barDemo'}
-    		    ]]
+      		      //{field:'id', width:'1%'}
+      		      {checkbox: true, event: 'set1', fixed: true}
+      		      ,{field:'materialName',width:280, event: 'set2', title: '稿件名', fixed: true, sort: true}
+      		      ,{field:'terminalName',width:120, event: 'set3', title: '终端名', sort: true
+      		    	,templet: function(d){
+  		    		  var tname = d.tis;
+  		    		  var name = d.terminal;
+  		    		  if(tname == '0'){
+  		    			  return '<span style="color: #FF6347;">' + '未选择' + '</span>';
+  		    		  }else{
+  		    			  return '<span style="color: #1E9FFF;">' + name.terminalName + '</span>';
+  		    		  }
+  		    	  }  
+      		      }
+      		    ,{field:'statusId',width:100, event: 'set4', title: '审核状态', sort: true
+  		    	  ,templet: function(d){
+  		    		  var state = d.statusId;
+  		    		  if(state == 1){
+  		    			  return '<span style="color: #FF6347;">' + '未审核' + '</span>';
+  		    		  }else if(state == 2){
+  		    			  return '<span style="color: #90EE90;">' + '已初审' + '</span>';
+  		    		  }else if(state == 3){
+  		    			  return '<span style="color: #90EE90;">' + '已通过' + '</span>';
+  		    		  }else if(state == 4){
+  		    			  return '<span style="color: #FF6347;">' + '未通过' + '</span>';
+  		    		  }
+  		    	  }
+  		      }
+      		  ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
+      		  ,{field:'size',width:100, event: 'set6', title: '稿件大小'}
+      		  ,{field:'duration',width:80, event: 'set7', title: '时长', sort: true}
+      		,{field:'usedNum',width:80, event: 'set8', title: '使用次数', sort: true}
+  		      ,{field:'info',width:100, event: 'set9', title: '排播状态', sort: true
+  		    	  ,templet: function(d){
+  		    		  var state = d.info;
+  		    		  if(state == 0){
+  		    			  return '<span style="color: #FF6347;">' + '未排播' + '</span>';
+  		    		  }else if(state == 1){
+  		    			  return '<span style="color: #90EE90;">' + '已排播' + '</span>';
+  		    		  }
+  		    	  }
+  		      }
+      		      /* ,{field:'playDate',width:200, event: 'set9', title: '播放日期', sort: true}
+      		      ,{field:'playTime',width:200, event: 'set10', title: '播放时段', sort: true}
+      		      ,{field:'frequency',width:100, event: 'set11', title: '频次', sort: true} */
+      		      ,{field:'uploadTime',width:160, event: 'set10', title: '上传时间', sort: true
+      		    	  ,templet: function(d){
+      		    		  var date = new Date(d.uploadTime);
+      		    		  var Y = date.getFullYear() + '-';
+      		    		  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+      		    		  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+      		    		  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      		    		  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      		    		  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+      		    		  return Y+M+D+h+m+s;
+      		    	  }
+      		      }
+      		      ,{field:'uploadName',width:90, event: 'set11', title: '上传人', sort: true}
+				  ,{field:'checkTime',width:180, event: 'set12', title: '一级审核时间', sort: true
+					  ,templet: function(d){
+						  if (d.checkTime == null) {
+							  return "";
+						  }
+						  return layui.util.toDateString(d.checkTime, "yyyy-MM-dd HH:mm:ss");
+					  }
+				  }
+				  ,{field:'checkName',width:120, event: 'set13', title: '一级审核人', sort: true}
+				  ,{field:'checkSecondTime',width:180, event: 'set14', title: '二级审核时间', sort: true
+					  ,templet: function(d){
+						  if (d.checkSecondTime == null) {
+							  return "";
+						  }
+						  var date = new Date(d.checkSecondTime);
+						  var Y = date.getFullYear() + '-';
+						  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+						  var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+						  var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+						  var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+						  var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+						  return Y+M+D+h+m+s;
+					  }
+				  }
+				  ,{field:'checkSecondName',width:120, event: 'set15', title: '二级审核人', sort: true}
+				  ,{field:'unAccessReason',width:140, event: 'set16', title: '未通过的理由', sort: true}
+      		      ,{fixed: 'right', width:80, event: 'set17', title: '操作', align:'center', toolbar: '#barDemo'}
+      		    ]]
     		    ,page: true
     		    ,where: {"param": param,"dateTime":dateTime, "field":"uploadTime", "order":"desc"}
     		    ,done: function(res, curr, count){
@@ -159,7 +169,6 @@
 					  }
 				  });
 			  });
-
 
 			  table.on('tool(tableEvent)', function(obj){
     			  var tmpdata = obj.data;
@@ -284,10 +293,9 @@
     		    		  }
     		    	  }
     		      }
-					  ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
+    		      ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
     		      ,{field:'size',width:130, event: 'set6', title: '稿件大小'}
-
-					  ,{field:'resolution',width:100, event: 'set5', title: '分辨率'}
+    		      ,{field:'duration',width:100, event: 'set7', title: '时长(秒)', sort: true}
     		      ,{field:'usedNum',width:100, event: 'set8', title: '使用次数', sort: true}
     		      ,{field:'info',width:100, event: 'set9', title: '排播状态', sort: true
     		    	  ,templet: function(d){

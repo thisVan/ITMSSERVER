@@ -15,7 +15,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/highCharts/highcharts.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/highCharts/highcharts-3d.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/highCharts/exporting.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
 <script language="javascript" type="text/javascript" src="<%=request.getContextPath()%>/datepicker/WdatePicker.js"></script>
 <!-- <style>
 body{padding: 50px 50px;}
