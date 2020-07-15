@@ -323,8 +323,8 @@ public class TableAutoGenerate {
 				System.out.println("Succeeded connecting to the Database!");
 			// statement用来执行SQL语句
 			String insertSql = "INSERT INTO play_table"
-					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state, base_frequency, period_name, start_interval, end_interval)"
-					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "(user_id, period_id, terminal_id, status_id, play_date, screen_rate, play_totaltime, all_time, ptable_name, create_time, deleted, insert_flag, min, state, base_frequency, period_name, start_interval, end_interval, sending_state)"
+					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
 			String sql = "INSERT INTO play_table (user_id, period_id, terminal_id, status_id, create_time, deleted)"
 					+ " VALUES (" + 1 + ", " + periodId + ", " + terminalId + ", " + 1 + ", " + timestamp + ", " + 0
@@ -349,6 +349,7 @@ public class TableAutoGenerate {
 			statement.setString(16, periodName);
 			statement.setTime(17,startInterval);
 			statement.setTime(18,endInterval);
+			statement.setInt(19,0);
 			int count = statement.executeUpdate();
 			System.out.println(count);
 			conn.close();

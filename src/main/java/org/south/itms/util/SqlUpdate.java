@@ -310,8 +310,8 @@ public class SqlUpdate {
 //			statement.executeUpdate(sql);
 			
 			String insertSql = "INSERT INTO play_table"+
-                    "(user_id, terminal_id, status_id, play_date, ptable_name, start_time, end_time, min, insert_flag, state, create_time, deleted)"+
-                    "values(?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "(user_id, terminal_id, status_id, play_date, ptable_name, start_time, end_time, min, insert_flag, state, create_time, deleted,sending_state)"+
+                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = (PreparedStatement) conn.prepareStatement(insertSql);
 			statement.setInt(1, Integer.parseInt(ptable.getUserId()));
 			statement.setInt(2, Integer.parseInt(ptable.getTerminalId()));
@@ -325,6 +325,7 @@ public class SqlUpdate {
 			statement.setInt(10, ptable.getState());
 			statement.setTimestamp(11, new Timestamp(System.currentTimeMillis()));
 			statement.setInt(12, 0);
+			statement.setInt(13,0);
 			int count = statement.executeUpdate();
 			
 			/*
@@ -478,7 +479,7 @@ public class SqlUpdate {
 				System.out.println("Succeeded connecting to the Database!");
 			}
 			// 更新播表状态
-			String sql = "update play_table set sending_state = " + sendingState + "where pid =  " + pid;
+			String sql = "update play_table set sending_state = " + sendingState + " where pid =  " + pid;
 			Statement statement = conn.createStatement();
 			statement.executeUpdate(sql);
 
@@ -510,7 +511,7 @@ public class SqlUpdate {
 			}
 
 			// 更新播表状态
-			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date =" + today + "and deleted = 0";
+			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date ='" + today + "' and pt.deleted = 0";
 			Statement statement = conn.createStatement();
 			ResultSet rs= statement.executeQuery(sql);
 

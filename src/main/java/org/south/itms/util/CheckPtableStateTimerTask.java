@@ -50,16 +50,16 @@ public class CheckPtableStateTimerTask extends TimerTask {
                     continue;
                 }
                 // 播表传输异常，发邮件通知管理员
-                else{
+                else {
                     String tempContent = "";
-                    tempContent += "<p>在终端ID"+ c.getTerminalId() +":" + c.getTerminalName() + "下</p>"
-                                +  "<p>播表ID:" + c.getPid() + "," + c.getPtableName() +  " 出现传输问题，请检查处理</p>"
-                                +  "<br />";
+                    tempContent += "<p>" + c.getTerminalName() + "(TID: " + c.getTerminalId() + ") " + "播表: " + c.getPtableName() + "(PID:" + c.getPid() + ")</p >";
                     content += tempContent;
                 }
             }
+            content += "<br />";
+            content += "<p>出现传输问题，请检查处理!</p >";
             content += "<hr />";
-            content += "<p align = 'right'>" + new Date() + "</p>";
+            content += "<p align = 'right'>" + formatter.format(new Date()) + "</p >";
 
             // 发送
 

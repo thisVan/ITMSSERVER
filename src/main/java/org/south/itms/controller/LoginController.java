@@ -15,6 +15,7 @@ import org.south.itms.dto.Result;
 import org.south.itms.entity.Resource;
 import org.south.itms.entity.User;
 import org.south.itms.mail.PtableSendingStateMail;
+import org.south.itms.util.Constant;
 import org.south.itms.util.StringUtil;
 import org.south.itms.util.UserLoginListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -248,7 +249,7 @@ public class LoginController {
 		  if(reqUser == null || StringUtil.isEmpty(reqUser.getUserAccount()) || StringUtil.isEmpty(reqUser.getUserPassword())) {
 			  return new Result("登录失败, 请输入用户名和密码");
 		  }
-		  
+
 		  User user = userDao.getUserByAccountAndPassword(reqUser.getUserAccount(), reqUser.getUserPassword());
 	      if(user != null) {
 	    	  String webPath = this.getClass().getResource("/").getPath().replaceAll("%20", " ");
