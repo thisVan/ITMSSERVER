@@ -499,7 +499,7 @@ public class SqlUpdate {
 	public ArrayList<CheckPtableSendingStateResult> getPtableSendingState(String today){
 
 		ArrayList<CheckPtableSendingStateResult> checkPtableSendingStateResultList = new ArrayList<>();
-		CheckPtableSendingStateResult checkPtableSendingStateResult = new CheckPtableSendingStateResult();
+
 
 		try {
 			// 加载驱动程序
@@ -511,7 +511,7 @@ public class SqlUpdate {
 			}
 
 			// 更新播表状态
-			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date ='" + today + "' and pt.deleted = 0";
+			String sql = "select pt.pid,pt.ptable_name,pt.terminal_id,t.terminal_name,pt.sending_state from play_table pt join terminal t on t.terminal_id = pt.terminal_id where pt.play_date ='" + today + "' and pt.deleted = 0 and pt.state = 2";
 			Statement statement = conn.createStatement();
 			ResultSet rs= statement.executeQuery(sql);
 
@@ -522,6 +522,7 @@ public class SqlUpdate {
 				String terminalName = rs.getString(4);
 				int sendingState = rs.getInt(5);
 
+				CheckPtableSendingStateResult checkPtableSendingStateResult = new CheckPtableSendingStateResult();
 				checkPtableSendingStateResult.setPid(pid);
 				checkPtableSendingStateResult.setPtableName(ptableName);
 				checkPtableSendingStateResult.setTerminalId(terminalId);
